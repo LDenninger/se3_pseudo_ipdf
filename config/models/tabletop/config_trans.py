@@ -19,5 +19,6 @@ tabletop_trans_config_data = {
     'resnet_depth': 18,
     'occlusion': False,
     'full_img':True,
-    'full_eval': True
+    'full_eval': True,
+    'length': 2000
 }

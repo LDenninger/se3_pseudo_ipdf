@@ -7,13 +7,12 @@ from torch.utils.data import DataLoader
 
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-IPDF = True
+IPDF = False
 
 
 
-LENGTH = 15000
 
-def load_dataset(hyper_param, validation_only=False):
+def load_model_dataset(hyper_param, validation_only=False):
 
     # Validation data
 
@@ -26,7 +25,7 @@ def load_dataset(hyper_param, validation_only=False):
                                             full=hyper_param['full_img'],
                                             pseudo_gt = False,
                                             single_gt=True,
-                                            length=LENGTH,
+                                            length=hyper_param["length"],
                                             train_set=False,
                                             train_mode=False if validation_only else True,
                                             full_data=validation_only,
@@ -53,7 +52,7 @@ def load_dataset(hyper_param, validation_only=False):
                                                 full=hyper_param['full_img'],
                                                 pseudo_gt=hyper_param["pseudo_gt"],
                                                 single_gt=IPDF,
-                                                length=LENGTH,
+                                                length=hyper_param["length"],
                                                 train_set=True,
                                                 train_mode=True,
                                                 occlusion=hyper_param['occlusion'],
@@ -69,3 +68,18 @@ def load_dataset(hyper_param, validation_only=False):
 
     return val_loader
 
+def load_pls_dataset(hyper_param):
+    
+    if hyper_param["dataset"]=="tless":
+        dataset = data.TLESSWorkDataset(
+            config=hyper_param
+        )
+    elif hyper_param["dataset"]=="tabletop":
+        dataset = data.TabletopWorkDataset(
+            config=hyper_param
+        )
+    data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False)
+
+    return data_loader
+    
+    

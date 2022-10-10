@@ -14,7 +14,7 @@ import torchvision
 import data
 import registration
 
-VERBOSE = True
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 # img size: (200,400)
@@ -22,9 +22,7 @@ VERBOSE = True
 class TabletopWorkDataset(Dataset):
     OBJ_ID = 3
     BB_SIZE = (560,560)
-    def __init__(self, data_dir, length = 50000, save_dir=None, mesh_data=None, diameter=0,
-                verbose=False,
-                device="cpu"):
+    def __init__(self, config,start=0, end=20000):
         """
         Dataloader for the RGBD dataset to work on the dataset using different modes:
 
@@ -37,19 +35,20 @@ class TabletopWorkDataset(Dataset):
         """
         super().__init__()
 
-        self.data_dir = data_dir
-        self.device = device
-        self.verbose = VERBOSE
+        self.data_dir = data.id_to_path[config["obj_id"]]
+        
+        self.config = config
         self.mesh_data = mesh_data
         self.diameter = diameter
 
-        self.meta_info = load_meta_info(data_dir)
+        self.meta_info = load_meta_info(self.data_dir)
         self.obj_id = self.meta_info[2]['OBJECT_ID']
 
         self.obj_model_sl = utils.load_cad_models(self.obj_id)
         #self.obj_model_sl = None
         
-        self.len = length
+        self.len = end-start
+        self.start = start
 
 
     def __getitem__(self, idx):
@@ -72,7 +71,7 @@ class TabletopWorkDataset(Dataset):
             except:
                 print(f"Data for frame {idx} could not been loaded!")
                 return 0
-        if VERBOSE:
+        if self.config["verbose"]:
             torchvision.utils.save_image(image.permute(2,0,1)/255., "output/tabletop/org_image.png")
             torchvision.utils.save_image(depth_data.unsqueeze(0), "output/tabletop/depth_image.png")
 
@@ -100,7 +99,7 @@ class TabletopWorkDataset(Dataset):
                                                                     device=self.device)
         if pseudo_ground_truth is None:
             return -1
-        if not self.verbose:
+        if not self.config["verbose"]:
             self.save_pseudo_ground_truth(pseudo_ground_truth.cpu(), frame_id)
 
         return 1

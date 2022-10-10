@@ -22,5 +22,6 @@ tabletop_rot_config_data = {
     'pseudo_gt': True,
     'occlusion': False,
     'full_img': False,
-    'full_eval': True
+    'full_eval': True,
+    'length': 20000
 }

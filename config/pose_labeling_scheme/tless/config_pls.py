@@ -1,5 +1,8 @@
-pls_config_data = {
+tless_pls_config_data = {
     "dataset": "tless",
+    "obj_id": 7,
+    "length": 1296,
+    "skip": False,
     "resolution": (400,400),
     "max_iteration": 40,
     "icp_iteration": 1,

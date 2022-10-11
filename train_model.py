@@ -19,15 +19,16 @@ if __name__ == "__main__":
     parser.add_argument('-c_rot', metavar='PATH', type=str, default=None, dest="rot_epoch", help="Checkpoint epoch for the rotation model")
     parser.add_argument('-c_trans', metavar='PATH', type=str, default=None, dest="trans_epoch", help="Checkpoint epoch for the translation model")
     parser.add_argument('-model', type=int, default=0, help="0: Rotation model, 1: Translation model")
-    parser.add_argument('-wandb', action="store_true", help="Observed training using wandb")
+    parser.add_argument('-wandb', action="store_true", dest="log", help="Observed training using wandb")
     args = parser.parse_args()
 
     exp_dir = "experiments/exp_" + args.exp_name
     #autograd.set_detect_anomaly(True)
 
+
     wandb.login()
     # Set up Weights'n'Biases logging
-    if args.wandb:
+    if args.log:
         if args.model==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
             with open(config_file_name, 'r') as f:
@@ -51,7 +52,13 @@ if __name__ == "__main__":
 
                 wandb.watch(model, log='all', log_freq=10)
 
-                se3_ipdf.run_rotation_training(hyper_param, device=DEVICE)
+                se3_ipdf.run_rotation_training(model=model, 
+                                                train_dataset=train_loader,
+                                                val_dataset=val_loader,
+                                                optimizer=optimizer,
+                                                hyper_param=hyper_param,
+                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                start_epoch=start_epoch)
             
         elif args.model==1:
             # with wandb.init(mode="disabled"):
@@ -70,12 +77,18 @@ if __name__ == "__main__":
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_dataset(hyper_param, args)
+                train_loader, val_loader = data.load_model_dataset(hyper_param, args)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param)
                 wandb.watch(model, log='all', log_freq=10)
 
-                se3_ipdf.run_translation_training(hyper_param, device=DEVICE)
+                se3_ipdf.run_translation_training(model=model, 
+                                                train_dataset=train_loader,
+                                                val_dataset=val_loader,
+                                                optimizer=optimizer,
+                                                hyper_param=hyper_param,
+                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                start_epoch=start_epoch)
     
     else:
         if args.model==0:
@@ -93,13 +106,19 @@ if __name__ == "__main__":
                 print("Config file was loaded from: " + config_file_name + "\n")
 
                 
-                train_loader, val_loader = data.load_dataset(hyper_param)
+                train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
                 model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args)
 
                 wandb.watch(model, log='all', log_freq=10)
 
-                se3_ipdf.run_rotation_training(hyper_param, device=DEVICE)
+                se3_ipdf.run_rotation_training(model=model, 
+                                                train_dataset=train_loader,
+                                                val_dataset=val_loader,
+                                                optimizer=optimizer,
+                                                hyper_param=hyper_param,
+                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                start_epoch=start_epoch)
             
         elif args.model==1:
             # with wandb.init(mode="disabled"):
@@ -116,9 +135,15 @@ if __name__ == "__main__":
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_dataset(hyper_param, args)
+                train_loader, val_loader = data.load_model_dataset(hyper_param, args)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param)
                 wandb.watch(model, log='all', log_freq=10)
 
-                se3_ipdf.run_translation_training(hyper_param, device=DEVICE)
+                se3_ipdf.run_translation_training(model=model, 
+                                                train_dataset=train_loader,
+                                                val_dataset=val_loader,
+                                                optimizer=optimizer,
+                                                hyper_param=hyper_param,
+                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                start_epoch=start_epoch)

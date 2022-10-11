@@ -1,12 +1,9 @@
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torchvision.models as models
 import pytorch3d.ops as ops
 import pytorch3d.transforms as tt
-import ipdb
-import viz
+
 
 class IterativeClosestPoint(nn.Module):
     """Module encapsuling the ICP-algorithm used as a baseline for evaluating the ImplicitIPDF models

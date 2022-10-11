@@ -6,7 +6,7 @@ from PIL import Image
 import wandb
 
 
-from evaluation import eval_llh, eval_translation_error, rotation_model_evaluation, translation_model_evaluation
+from .evaluation import eval_llh, eval_translation_error, rotation_model_evaluation, translation_model_evaluation
 
 
 # Global variables
@@ -39,7 +39,7 @@ def run_single_epoch(model, data_loader, hyper_param, num_iter, mode=0, optimize
         
         #update the learning rate using the cosine decay
         for g in optimizer.param_groups:
-            lr = cosine_decay(i+1, hyper_param['warmup_steps'])
+            lr = cosine_decay(i+1, hyper_param)
             g['lr'] = lr
         #backward pass through the network
         optimizer.zero_grad()
@@ -70,6 +70,7 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
         #run a single training epoch
         train_loss = run_single_epoch(model=model,
                                       data_loader=train_dataset,
+                                      hyper_param=hyper_param,
                                       num_iter=hyper_param['num_train_iter'],
                                       mode=0,
                                       optimizer=optimizer)
@@ -126,6 +127,7 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
         #run a single training epoch
         train_loss = run_single_epoch(model=model,
                                       data_loader=train_dataset,
+                                      hyper_param=hyper_param,
                                       num_iter=hyper_param['num_train_iter'],
                                       mode=1,
                                       optimizer=optimizer)

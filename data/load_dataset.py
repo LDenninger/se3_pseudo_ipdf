@@ -36,7 +36,7 @@ def load_model_dataset(hyper_param, validation_only=False):
                                             ground_truth_mode=0,
                                             occlusion=False,
                                             train_set=False,
-                                            train_as_test=False,
+                                            train_as_test=hyper_param["train_as_test"],
                                             device=DEVICE)
 
     val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=0)

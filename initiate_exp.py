@@ -5,7 +5,7 @@ import argparse
 import config
 def initiate_experiment(exp_dir, model_type, dataset, obj_id):
     os.makedirs(exp_dir)
-    vis_dir = os.path.join(exp_dir, "experiments")
+    vis_dir = os.path.join(exp_dir, "visualizations")
     os.makedirs(vis_dir)
     data_dir = os.path.join(exp_dir, "datasets")
     os.makedirs(data_dir)

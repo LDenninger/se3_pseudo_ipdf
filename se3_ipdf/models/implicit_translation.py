@@ -1,10 +1,9 @@
 
-import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from utils import generate_cartesian_grid
+from ..utils import generate_cartesian_grid
 from .backbones import ResNet
 
 

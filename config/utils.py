@@ -1,10 +1,12 @@
 from pathlib import Path as P
 import yaml
 
-import models
+from .pls_config import tless_pls_config_data, tabletop_pls_config_data
+from .se3_ipdf_config import tabletop_rot_config_data, tabletop_trans_config_data, tless_rot_config_data, tless_trans_config_data
 
-MODEL_CONFIG_PATH = P("models")
-PLS_CONFIG_PATH = P("pose_labeling_scheme")
+
+MODEL_CONFIG_PATH = P("config/se3_ipdf_config")
+PLS_CONFIG_PATH = P("config/pls_config")
 
 ## Loading scripts ##
 
@@ -62,14 +64,12 @@ def generate_model_rotation_config(dataset: str, obj_id: str):
 
     config_path = MODEL_CONFIG_PATH / dataset / f"config_rotation_{obj_id}.yml"
     
-    
-
     try:
         
         if dataset=="tless":
-            config = models.tless_rot_config_data
+            config = tless_rot_config_data
         elif dataset=="tabletop":
-            config = models.tabletop_rot_config_data
+            config = tabletop_rot_config_data
         else:
             print("\nDataset is not defined!")
             return -1
@@ -78,8 +78,8 @@ def generate_model_rotation_config(dataset: str, obj_id: str):
         config["dataset"] = dataset
         config["obj_id"] = obj_id
         
-        with open(config_path, "r") as f:
-            yaml.dump(config, f)
+        with open(str(config_path), "w") as f:
+            yaml.safe_dump(config, f)
         print(f"\nConfig was generated and saved to {config_path}")
         
     except Exception:
@@ -94,9 +94,9 @@ def generate_model_translation_config(dataset: str, obj_id: str):
 
     try:
         if dataset=="tless":
-            config = models.tless_trans_config_data
+            config = tless_trans_config_data
         elif dataset=="tabletop":
-            config = models.tabletop_trans_config_data
+            config = tabletop_trans_config_data
         else:
             print("\nDataset is not defined!")
             return -1
@@ -105,12 +105,11 @@ def generate_model_translation_config(dataset: str, obj_id: str):
         config["dataset"] = dataset
         config["obj_id"] = obj_id
 
-        with open(config_path, "r") as f:
-            yaml.dump(config, f)
+        with open(str(config_path), "w") as f:
+            yaml.safe_dump(config, f)
         print(f"\nConfig was generated and saved to {config_path}")
         
     except Exception:
-        print(Exception)
         print("\nConfig could not been created!")
 
     return 1
@@ -121,9 +120,9 @@ def generate_pls_config(dataset: str, obj_id: str):
 
     try:
         if dataset=="tless":
-            config = models.tless_pls_config_data
+            config = tless_pls_config_data
         elif dataset=="tabletop":
-            config = models.tabletop_pls_config_data
+            config = tabletop_pls_config_data
         else:
             print("\nDataset is not defined!")
             return -1
@@ -132,11 +131,10 @@ def generate_pls_config(dataset: str, obj_id: str):
         config["dataset"] = dataset
         config["obj_id"] = obj_id
 
-        with open(config_path, "r") as f:
-            yaml.dump(config, f)
+        with open(str(config_path), "w") as f:
+            yaml.safe_dump(config, f)
             
     except:
-        print(Exception)
         print("\nConfig could not been created!")
     
     return 1

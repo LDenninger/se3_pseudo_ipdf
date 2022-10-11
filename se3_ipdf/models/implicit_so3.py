@@ -3,10 +3,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import pytorch3d.transforms as tt
-import pytorch3d.ops as ops
 
 from .backbones import ResNet
-from utils import generate_healpix_grid
+from ..utils import generate_healpix_grid
 
 
 

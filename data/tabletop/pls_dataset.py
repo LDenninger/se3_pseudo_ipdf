@@ -1,18 +1,9 @@
-import json
 import os
-import json
-import numpy as np
 import torch
 from torch.utils.data import Dataset
-import data
-import ipdb
-import math
-import open3d as o3d
-import random
-import utils
 import torchvision
+
 import data
-import registration
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -38,14 +29,9 @@ class TabletopWorkDataset(Dataset):
         self.data_dir = data.id_to_path[config["obj_id"]]
         
         self.config = config
-        self.mesh_data = mesh_data
-        self.diameter = diameter
 
         self.meta_info = load_meta_info(self.data_dir)
         self.obj_id = self.meta_info[2]['OBJECT_ID']
-
-        self.obj_model_sl = utils.load_cad_models(self.obj_id)
-        #self.obj_model_sl = None
         
         self.len = end-start
         self.start = start
@@ -75,44 +61,17 @@ class TabletopWorkDataset(Dataset):
             torchvision.utils.save_image(image.permute(2,0,1)/255., "output/tabletop/org_image.png")
             torchvision.utils.save_image(depth_data.unsqueeze(0), "output/tabletop/depth_image.png")
 
-        seg_mask = (seg_data==self.obj_id).int()
-        depth_data = depth_data * seg_mask
-
-
+        #seg_mask = (seg_data==self.obj_id).int()
+        #depth_data = depth_data * seg_mask
         intrinsic = torch.tensor([2/self.meta_info[0][0,0], 2/self.meta_info[0][1,1],image.shape[1]/2, image.shape[0]/2])# (fx, fy, cx, cy)
-        projection_matrix = self.meta_info[0]
 
-        # Start the pseudo ground truth generation
-        pseudo_gt_saved = None
-        if os.path.exists(pseudo_gt_dir):
-            pseudo_gt_saved = torch.load(pseudo_gt_dir)
-
-        # Generate pseudo ground truth and save them
-        pseudo_ground_truth = registration.pseudo_labeling_scheme(pts_canonical=self.mesh_data[0],
-                                                                    seg_data=seg_data,
-                                                                    depth_data=depth_data,
-                                                                    obj_id=self.obj_id,
-                                                                    diameter = self.diameter,
-                                                                    intrinsic=intrinsic,
-                                                                    projection_matrix=projection_matrix,
-                                                                    obj_model_sl=self.obj_model_sl,
-                                                                    device=self.device)
-        if pseudo_ground_truth is None:
-            return -1
-        if not self.config["verbose"]:
-            self.save_pseudo_ground_truth(pseudo_ground_truth.cpu(), frame_id)
-
-        return 1
-
-    def save_pseudo_ground_truth(self, pseudo_ground_truth_set, frame_id):
-        save_dir = os.path.join(self.data_dir, frame_id, "pseudo_gt.pth")
-        if os.path.exists(save_dir):
-            pgt_exist = torch.load(save_dir)
-            pseudo_ground_truth_set = torch.cat((pgt_exist, pseudo_ground_truth_set))
-        torch.save(pseudo_ground_truth_set, save_dir)
-            
-
-
+        return {
+            "image": image,
+            "seg_image": seg_data,
+            "depth_image": depth_data,
+            "intrinsic": intrinsic,
+            "loaded": True
+        }
 
     def __len__(self):
         return self.len

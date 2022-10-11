@@ -7,13 +7,12 @@ from pytorch3d.transforms import matrix_to_euler_angles
 
 def visualize_translation_probabilities(translations,
                                         probabilities, 
-                                        translations_gt=None, 
+                                        translation_gt=None, 
                                         save_path=None, 
-                                        display_threshold_probability=0,
-                                        return_img=False):
+                                        display_threshold_probability=0):
     
     assert isinstance(translations, torch.Tensor)
-    assert isinstance(translations_gt, torch.Tensor)
+    assert isinstance(translation_gt, torch.Tensor)
     assert isinstance(probabilities, torch.Tensor)
 
     fig = plt.figure()
@@ -36,12 +35,12 @@ def visualize_translation_probabilities(translations,
     ax.set_zlim(-1,0)
 
 
-    if translations_gt is not None:
+    if translation_gt is not None:
         gt_color = np.array([[1,0,0]])
         ax.scatter(
-            translations_gt[0], 
-            translations_gt[1], 
-            translations_gt[2],
+            translation_gt[0], 
+            translation_gt[1], 
+            translation_gt[2],
             s=10,
             c=gt_color)
     
@@ -49,6 +48,4 @@ def visualize_translation_probabilities(translations,
         plt.show()
     else:
         plt.savefig(save_path)
-    
-    return fig
     

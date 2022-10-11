@@ -1,7 +1,7 @@
 from pathlib import Path as P
 import yaml
+
 import models
-import pose_labeling_scheme
 
 MODEL_CONFIG_PATH = P("models")
 PLS_CONFIG_PATH = P("pose_labeling_scheme")
@@ -74,6 +74,10 @@ def generate_model_rotation_config(dataset: str, obj_id: str):
             print("\nDataset is not defined!")
             return -1
         
+        # set dataset and obj_id in config file
+        config["dataset"] = dataset
+        config["obj_id"] = obj_id
+        
         with open(config_path, "r") as f:
             yaml.dump(config, f)
         print(f"\nConfig was generated and saved to {config_path}")
@@ -97,7 +101,9 @@ def generate_model_translation_config(dataset: str, obj_id: str):
             print("\nDataset is not defined!")
             return -1
 
-        config = models.trans_config_data
+        # set dataset and obj_id in config file
+        config["dataset"] = dataset
+        config["obj_id"] = obj_id
 
         with open(config_path, "r") as f:
             yaml.dump(config, f)
@@ -121,6 +127,10 @@ def generate_pls_config(dataset: str, obj_id: str):
         else:
             print("\nDataset is not defined!")
             return -1
+        
+        # set dataset and obj_id in config file
+        config["dataset"] = dataset
+        config["obj_id"] = obj_id
 
         with open(config_path, "r") as f:
             yaml.dump(config, f)

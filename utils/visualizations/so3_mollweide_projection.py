@@ -4,12 +4,8 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from scipy.spatial.transform import Rotation
 from pytorch3d.transforms import matrix_to_euler_angles
-import ipdb
-import adjustText as adt
-import pytorch3d.transforms as tt
-import io
-import json
-import math
+
+from utils import get_symmetry_ground_truth
 
 def visualize_so3_probabilities(rotations,
                                 probabilities,

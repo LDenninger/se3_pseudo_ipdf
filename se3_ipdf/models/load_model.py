@@ -86,7 +86,6 @@ def load_rotation_model(hyper_param, arguments, load_model=None, init_model=Fals
     
     model = model.to(DEVICE)
 
-  
 
     return model, optimizer, start_epoch
 
@@ -103,7 +102,7 @@ def load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, init_mode
     )
 
     if not init_mode:
-        model_path = os.path.join(arguments.exp_dir, os.path.join("models_ensamble",  arguments.model))
+        model_path = os.path.join(arguments.exp_dir, os.path.join("models_ensamble",  ("ensamble_"+arguments.rot_epoch+arguments.trans_epoch+".pth")))
 
         try:
             model_ensamble.load_state_dict(torch.load(model_path)['model_state_dict'])

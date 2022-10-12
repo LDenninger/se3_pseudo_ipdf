@@ -7,7 +7,6 @@ sl.init_cuda()
 import torch
 import torchvision
 import kornia as K
-import ipdb
 from kornia import morphology as morph
 from pytorch3d.ops import knn_points
 

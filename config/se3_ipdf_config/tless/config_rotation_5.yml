@@ -9,19 +9,18 @@ learning_rate: 0.0001
 mlp_layers:
 - 256
 - 256
-- 256
-- 256
-num_epochs: 30
+num_epochs: 100
 num_fourier_comp: 3
 num_train_iter: 80
 num_train_queries: 4096
 num_val_iter: 40
-obj_id: '5'
-occlusion: false
+obj_id: 5
+occlusion: true
 pseudo_gt: true
 random_seed: 23
 resnet_depth: 18
 save_freq: 5
 start_save: 2
 train_mode: 2
-warmup_steps: 20
+warmup_steps: 8
+train_as_test: true

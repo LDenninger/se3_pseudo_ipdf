@@ -1,12 +1,7 @@
 import pose_labeling_scheme
 import torch
-import numpy as np
 import pytorch3d.ops as ops
-import pytorch3d.transforms as tt
-import torch.nn as nn
-from pytorch3d.structures import Pointclouds
-import ipdb
-import utils
+
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

@@ -174,7 +174,7 @@ def full_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_po
 
     """
 
-def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points):
+def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None):
 
     # Evaluation of the Loglikelihood
     print("______________________________________\nStart computing Loglikelihood:\n")

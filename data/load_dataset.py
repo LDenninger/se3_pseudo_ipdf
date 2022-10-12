@@ -34,12 +34,11 @@ def load_model_dataset(hyper_param, validation_only=False):
     if hyper_param["dataset"]=="tless":
         data_val = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
                                             ground_truth_mode=0,
-                                            occlusion=False,
+                                            occlusion=hyper_param["occlusion"],
                                             train_set=False,
-                                            train_as_test=hyper_param["train_as_test"],
-                                            device=DEVICE)
+                                            train_as_test=hyper_param["train_as_test"])
 
-    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=0)
+    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8)
 
     # Training data
     if not validation_only:
@@ -59,20 +58,23 @@ def load_model_dataset(hyper_param, validation_only=False):
                                                 device=DEVICE)
         if hyper_param["dataset"]=="tless":
             data_train = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
-                                            ground_truth_mode=0,
+                                            ground_truth_mode=1 if hyper_param["pseudo_gt"] else 0,
                                             train_set=True,
-                                            occlusion=True,
-                                            device=DEVICE)
-        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=0)
+                                            occlusion=hyper_param["occlusion"])
+        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=8)
         return train_loader, val_loader
 
     return val_loader
 
-def load_pls_dataset(hyper_param):
+def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):
     
     if hyper_param["dataset"]=="tless":
         dataset = data.TLESSWorkDataset(
-            config=hyper_param
+            config=hyper_param,
+            start=start,
+            return_pgt=return_pgt,
+            return_gt=return_gt,
+            cleaned_pgt=cleaned_pgt
         )
     elif hyper_param["dataset"]=="tabletop":
         dataset = data.TabletopWorkDataset(

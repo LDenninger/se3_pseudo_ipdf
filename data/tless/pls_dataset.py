@@ -11,7 +11,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
 class TLESSWorkDataset(Dataset):
-    def __init__(self, config, start=0):
+    def __init__(self, config, return_pgt=False, cleaned_pgt=True, return_gt=False, start=0):
         
         super().__init__()
 
@@ -20,6 +20,9 @@ class TLESSWorkDataset(Dataset):
         self.len = 1296 if start==0 else 1296-start
         self.start = start
         self.config=config
+        self.return_pgt = return_pgt
+        self.cleaned_pgt = cleaned_pgt
+        self.return_gt = return_gt
 
 
         with open(os.path.join(self.data_dir, "gt.yml"), "r") as f:
@@ -60,12 +63,34 @@ class TLESSWorkDataset(Dataset):
             seg_data =  -torch.eye(4)
             depth_data =  -torch.eye(4)
             loaded=False
+        
 
         if self.config["verbose"]:
 
-            torchvision.utils.save_image(image / 255., "output/tless_2/org_img.png")
-            torchvision.utils.save_image(torch.clip(seg_data, 0, 1).float(), "output/tless_2/seg_image.png")
-            torchvision.utils.save_image(depth_data/1000, "output/tless_2/depth_image.png")
+            torchvision.utils.save_image(image / 255., "output/pose_labeling_scheme/org_img.png")
+            torchvision.utils.save_image(torch.clip(seg_data, 0, 1).float(), "output/pose_labeling_scheme/seg_image.png")
+            torchvision.utils.save_image(depth_data/1000, "output/pose_labeling_scheme/depth_image.png")
+
+        pseudo_ground_truth = -torch.eye(4)
+        ground_truth = -torch.eye(4)
+        # Load already produced pseudo ground truth
+        if self.return_pgt:
+            try:
+                if not self.cleaned_pgt:
+                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir,"pseudo_gt", ("cleaned"+frame_id+ ".pth")))
+                else:
+                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir,"pseudo_gt", (frame_id+ ".pth")))
+
+            except:
+                loaded=False
+        
+        if self.return_gt:
+            ground_truth = torch.eye(4)
+            rotation = self.ground_truth[idx][0]['cam_R_m2c']
+            ground_truth[:3,:3] = torch.reshape(torch.FloatTensor(rotation), (3,3))
+            ground_truth[:3,-1] = torch.FloatTensor(self.ground_truth[idx][0]['cam_t_m2c'])
+
+
 
         K = self.meta_info[idx]['cam_K']
         intrinsic = torch.tensor([K[0], K[4], K[2], K[5]]) # (fx, fy, cx, cy)
@@ -75,6 +100,9 @@ class TLESSWorkDataset(Dataset):
                 "seg_image": seg_data,
                 "depth_image": depth_data,
                 "intrinsic": intrinsic,
+                "pseudo_gt": pseudo_ground_truth,
+                "ground_truth": ground_truth,
+                "index": idx,
                 "loaded": loaded
             }
 

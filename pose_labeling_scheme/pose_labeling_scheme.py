@@ -1,15 +1,10 @@
 import torch
-import pytorch3d.ops as ops
 from scipy.spatial.transform import Rotation as R
 import copy
-import time
-
 import numpy as np
-import ipdb
 
-import registration
-import viz
-import utils
+from .registration import *
+from .utils import *
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -18,15 +13,15 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
 
     # Extract and process point clouds
     # Scale everything to cm for optimization
-    pts_observed = utils.generate_pointcloud_from_rgbd(config["dataset"], seg_data, depth_data, intrinsic)
+    pts_observed = generate_pointcloud_from_rgbd(config["dataset"], seg_data, depth_data, intrinsic)
     pts_canonical = pts_canonical*100
     diameter = diameter*100
     # Construct open3d point clouds. Additionally downsampling, fpfh features, and normals approximation
-    source_down_global, source_fpfh_global = registration.preprocess_point_cloud(pts_canonical, config["voxel_size_global"])
-    target_down_global, target_fpfh_global = registration.preprocess_point_cloud(pts_observed, config["voxel_size_global"])
+    source_down_global, source_fpfh_global = preprocess_point_cloud(pts_canonical, config["voxel_size_global"])
+    target_down_global, target_fpfh_global = preprocess_point_cloud(pts_observed, config["voxel_size_global"])
 
-    source_down_local, source_fpfh_local = registration.preprocess_point_cloud(pts_canonical, config["voxel_size_local"])
-    target_down_local, target_fpfh_local = registration.preprocess_point_cloud(pts_observed, config["voxel_size_local"])
+    source_down_local, source_fpfh_local = preprocess_point_cloud(pts_canonical, config["voxel_size_local"])
+    target_down_local, target_fpfh_local = preprocess_point_cloud(pts_observed, config["voxel_size_local"])
 
     # Construct tensors containing the downsampled point cloud points 
     pts_observed_down = torch.from_numpy(np.asarray(target_down_local.points)).float().to(DEVICE).unsqueeze(0)
@@ -62,7 +57,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         if (pseudo_ground_truth_set != []):
             icp_iter += 1
             offset = 0.1*np.pi*(iter-1)
-            set = registration.generate_init_set_r(pseudo_ground_truth_set[-1][:3,:3], offset)
+            set = generate_init_set_r(pseudo_ground_truth_set[-1][:3,:3], offset)
             init_transform = torch.repeat_interleave(torch.eye(4).unsqueeze(0), set.shape[0], dim=0)
             init_transform[:,:3,-1] = torch.repeat_interleave((pseudo_ground_truth_set[-1][:3,-1]*100).unsqueeze(0), set.shape[0], dim=0)
             init_transform[:,:3,:3] = set
@@ -78,7 +73,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 ## Fast Global Registration ##
 
             # Compute an initial transformation using Fast Global Registration
-            init_transform, result = registration.fast_global_registration(target_down=target_down_global, source_down=source_down_global, 
+            init_transform, result = fast_global_registration(target_down=target_down_global, source_down=source_down_global, 
                                                                             source_fpfh=source_fpfh_global, 
                                                                             target_fpfh=target_fpfh_global,
                                                                             diameter=diameter,
@@ -89,10 +84,10 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
 
             # Define set of initial transformaions for ICP
             init_transform = torch.from_numpy(init_transform).unsqueeze(0)
-            if config["verbose"]:
+            if False and config["verbose"]:
                 t =init_transform.squeeze().to(DEVICE).float()
                 points_rendered = torch.from_numpy(np.asarray(source_down_local.points)).to(DEVICE).float() @ t[:3,:3].T + t[:3,-1]
-                viz.visualize_pointclouds(torch.from_numpy(np.asarray(target_down_local.points)).float(), points_rendered.cpu(), "output/tless_2/global_result.png")
+                visualize_pointclouds(torch.from_numpy(np.asarray(target_down_local.points)).float(), points_rendered.cpu(), "output/tless_2/global_result.png")
 
         if config["verbose"]:
             print("\nFast Global Registration finished!")
@@ -105,24 +100,22 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
 
         ## ICP ##
         # Start Iterative-Closest-Point algorithm for local optimization
-        pseudo_transformation = registration.iterative_closest_point(pts_observed_down, pts_canonical_down, 
-                                                                                        init_transform,
-                                                                                        hyper_param=config)
+        pseudo_transformation = iterative_closest_point(pts_observed_down, pts_canonical_down, init_transform, hyper_param=config)
 
         # Scale translation back to meters
         pseudo_transformation[:,:3,-1] /= 100
         U, S, V = torch.linalg.svd(pseudo_transformation[:,:3,:3])
         pseudo_transformation[:,:3,:3] = torch.bmm(U, V)
         if not config['verbose']:
-            converged = registration.check_convergence_batchwise( depth_original=depth_data,
-                                                                obj_model=obj_model_sl, 
-                                                                transformation_set=pseudo_transformation,
-                                                                threshold=config['threshold'],
-                                                                intrinsic=intrinsic,
-                                                                verbose=config['verbose'],
-                                                                device=DEVICE)
+            converged = check_convergence_batchwise( depth_original=depth_data,
+                                                        obj_model=obj_model_sl, 
+                                                        transformation_set=pseudo_transformation,
+                                                        threshold=config['threshold'],
+                                                        intrinsic=intrinsic,
+                                                        verbose=config['verbose'],
+                                                        device=DEVICE)
         else:
-            converged, d_max, d_avg = registration.check_convergence_batchwise( depth_original=depth_data,
+            converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
                                                                 obj_model=obj_model_sl, 
                                                                 transformation_set=pseudo_transformation,
                                                                 threshold=config['threshold'],
@@ -142,7 +135,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 final_pcd.transform(pgt)
                 pts_obs = torch.from_numpy(np.asarray(target_down_local.points))
                 pts_final = torch.from_numpy(np.asarray(final_pcd.points))
-                viz.visualize_pointclouds(pts_obs, pts_final, "output/tless_2/registration_result.png")
+                visualize_pointclouds(pts_obs, pts_final, "output/tless_2/registration_result.png")
 
                 #print("\nFast Global Registration result: \n", result)
                 #final_pcd = copy.deepcopy(source_down_local)

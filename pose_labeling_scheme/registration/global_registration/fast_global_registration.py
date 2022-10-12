@@ -1,10 +1,5 @@
 import open3d as o3d
 import numpy as np
-import copy
-import torch
-import ipdb
-from scipy.spatial.transform import Rotation as R
-import viz
 
 def fast_global_registration(source_down, target_down, source_fpfh, target_fpfh, hyper_param, diameter, device="cpu"):
 

@@ -47,11 +47,10 @@ class TLESSPoseDataset(Dataset):
     def __init__(self, 
                     obj_id,
                     ground_truth_mode=0,
-                    gamma=0.4,
+                    gamma=0.6,
                     train_set=True,
                     train_as_test=False,
-                    occlusion=False,
-                    device="cpu"):
+                    occlusion=False):
         """
         Arguments:
             ground_truth_mode: 0: original GT, 1: pseudo GT

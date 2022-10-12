@@ -13,7 +13,6 @@ PLS_CONFIG_PATH = P("config/pls_config")
 def load_model_rotation_config(dataset: str, obj_id: str):
     
     config_path = MODEL_CONFIG_PATH / dataset / f"config_rotation_{obj_id}.yml"
-
     try:
         with open(config_path, "r") as f:
             config = yaml.safe_load(f)

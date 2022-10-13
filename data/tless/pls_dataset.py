@@ -56,12 +56,15 @@ class TLESSWorkDataset(Dataset):
             image = torch.load(data_dir)
             seg_data = torch.load(seg_dir)
             depth_data = torch.load(depth_dir)
+            K = self.meta_info[idx]['cam_K']
+            intrinsic = torch.tensor([K[0], K[4], K[2], K[5]]) # (fx, fy, cx, cy)
             loaded = True
 
         except:
             image =  -torch.eye(4)
             seg_data =  -torch.eye(4)
             depth_data =  -torch.eye(4)
+            intrinsic = -1
             loaded=False
         
 
@@ -92,8 +95,7 @@ class TLESSWorkDataset(Dataset):
 
 
 
-        K = self.meta_info[idx]['cam_K']
-        intrinsic = torch.tensor([K[0], K[4], K[2], K[5]]) # (fx, fy, cx, cy)
+        
 
         return {
                 "image": image,

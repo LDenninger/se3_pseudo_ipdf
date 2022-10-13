@@ -17,7 +17,11 @@ class TLESSWorkDataset(Dataset):
 
         self.data_dir = os.path.join("/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect", str(config["obj_id"]).zfill(2))
         self.pseudo_save_dir = os.path.join("/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect", str(config["obj_id"]).zfill(2), "pseudo_gt")
-        self.len = 1296 if start==0 else 1296-start
+
+        if config["obj_id"] in [19, 20]:
+            self.len = 648 - start
+        self.len = 1296 - start
+
         self.start = start
         self.config=config
         self.return_pgt = return_pgt
@@ -44,6 +48,7 @@ class TLESSWorkDataset(Dataset):
         
         
         """
+        
         zfill_len = 4
         idx += self.start
         frame_id = str(idx).zfill(zfill_len)

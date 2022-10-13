@@ -103,10 +103,15 @@ class TLESSPoseDataset(Dataset):
 
     def __getitem__(self, idx):
         if self.train_set or self.train_as_test:
+            if self.obj_id in [19,20]:
+                # Train sets of object 19 and 20 consist of only 648 images
+                idx = idx % 648
             if self.train_as_test:
                 idx *= 6
+
             elif not self.train_set and idx%6==0:
                 return self.__getitem__((idx+1)%self.__len__())
+            
 
             data_dir = os.path.join(self.data_dir, "crops", str(idx).zfill(4), "00_quad_crop_mask_resized.pth")
             try:

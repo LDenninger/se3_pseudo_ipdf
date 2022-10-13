@@ -76,8 +76,8 @@ class TLESSWorkDataset(Dataset):
         # Load already produced pseudo ground truth
         if self.return_pgt:
             try:
-                if not self.cleaned_pgt:
-                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir,"pseudo_gt", ("cleaned"+frame_id+ ".pth")))
+                if self.cleaned_pgt:
+                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir,"pseudo_gt", ("cleaned_"+frame_id+ ".pth")))
                 else:
                     pseudo_ground_truth = torch.load(os.path.join(self.data_dir,"pseudo_gt", (frame_id+ ".pth")))
 

@@ -135,7 +135,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 final_pcd.transform(pgt)
                 pts_obs = torch.from_numpy(np.asarray(target_down_local.points))
                 pts_final = torch.from_numpy(np.asarray(final_pcd.points))
-                visualize_pointclouds(pts_obs, pts_final, "output/tless_2/registration_result.png")
+                #visualize_pointclouds(pts_obs, pts_final, "output/tless_2/registration_result.png")
 
                 #print("\nFast Global Registration result: \n", result)
                 #final_pcd = copy.deepcopy(source_down_local)

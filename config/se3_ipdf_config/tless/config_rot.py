@@ -10,7 +10,7 @@ tless_rot_config_data = {
     'num_fourier_comp': 2,
     'img_size': (224, 224)*2,
     'train_mode': 2,
-    'mlp_layers': [256]*1,
+    'mlp_layers': [256]*2,
     'random_seed': 23,
     'warmup_steps': 8,
     'num_train_queries': 2**12,

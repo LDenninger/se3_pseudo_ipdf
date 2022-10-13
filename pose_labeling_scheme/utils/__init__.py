@@ -10,3 +10,6 @@ from .preprocess_point_cloud import preprocess_point_cloud
 
 # Initialization set generation
 from .init_set_generation import generate_init_set_inv, generate_init_set_noise, generate_init_set_r
+
+# Import data paths 
+from .data import id_to_path

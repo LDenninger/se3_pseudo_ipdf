@@ -4,8 +4,7 @@ import ipdb
 import os
 
 from .registration import check_convergence_batchwise
-from .utils import check_duplicates_averaging
-from ..data import id_to_path
+from .utils import check_duplicates_averaging, id_to_path
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -61,9 +60,15 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
 
     progress_bar = tqdm(enumerate(dataset), total=len(dataset))
 
-    for (i, input) in progress_bar:
+    non_exist = []
 
-        cleaned_pseudo_gt = check_duplicates_averaging(input["pseudo_gt"], angular_threshold=angular_threshold)
+    for (i, input) in progress_bar:
+        
+        if not input["loaded"]:
+            non_exist.append(i)
+            continue
+
+        cleaned_pseudo_gt = check_duplicates_averaging(input["pseudo_gt"].squeeze(0), angular_threshold=angular_threshold)
 
         if hyper_param["dataset"]=="tless":
                 data_dir = "/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect"
@@ -71,6 +76,8 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
         elif hyper_param["dataset"]=="tabletop":
             data_dir = id_to_path[hyper_param["obj_id"]]
             torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
+    
+    print("Frames without pseudo ground truth:", non_exist)
     
     
 

@@ -1,0 +1,16 @@
+dataset: tless
+icp_iteration: 1
+length: 1296
+max_iteration: 40
+obj_id: 23
+resolution:
+- 400
+- 400
+skip: false
+threshold:
+- 200
+- 5
+- 2
+verbose: false
+voxel_size_global: 0.2
+voxel_size_local: 0.2

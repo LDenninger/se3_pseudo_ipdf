@@ -72,15 +72,15 @@ if __name__=="__main__":
                 save_dir = os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))
                 if os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
-                pseudo_ground_truth_set = torch.cat((pgt_exist, pseudo_ground_truth))
-                torch.save(pseudo_ground_truth_set, save_dir)
+                    pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))
+                torch.save(pseudo_ground_truth, save_dir)
 
             elif args.dataset=="tabletop":
                 save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
                 if os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
-                pseudo_ground_truth_set = torch.cat((pgt_exist, pseudo_ground_truth))
-                torch.save(pseudo_ground_truth_set, save_dir)
+                    pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))
+                torch.save(pseudo_ground_truth, save_dir)
         
 
 

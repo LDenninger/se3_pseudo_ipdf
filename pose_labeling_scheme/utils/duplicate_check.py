@@ -33,6 +33,9 @@ def check_duplicates(pseudo_gt, angular_threshold=3):
 def check_duplicates_averaging(pseudo_gt, angular_threshold=15):
     cleaned_pseudo_gt = []
     ind_already_in = []
+
+    if len(pseudo_gt.shape)==2:
+        pseudo_gt = pseudo_gt.unsqueeze(0)
     
     angular_dist = calc_angular_dist(pseudo_gt)
    

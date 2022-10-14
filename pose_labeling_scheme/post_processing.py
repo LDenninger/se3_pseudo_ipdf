@@ -67,8 +67,9 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
         if not input["loaded"]:
             non_exist.append(i)
             continue
-
-        cleaned_pseudo_gt = check_duplicates_averaging(input["pseudo_gt"].squeeze(0), angular_threshold=angular_threshold)
+        
+        cleaned_pseudo_gt = check_duplicates_averaging(input["pseudo_gt"].squeeze(0).to(DEVICE), angular_threshold=angular_threshold)
+        cleaned_pseudo_gt = cleaned_pseudo_gt.cpu()
 
         if hyper_param["dataset"]=="tless":
                 data_dir = "/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect"

@@ -10,7 +10,6 @@ def visualize_pseudo_gt(dataset, hyper_param, save_path):
 
     for (i, input) in  enumerate(dataset):
 
-        
         idx = input["index"].squeeze(0)
 
         if not input["loaded"]:
@@ -18,6 +17,8 @@ def visualize_pseudo_gt(dataset, hyper_param, save_path):
             continue
         
         print(f"\nVisualization of the pseudo ground truth of frame {idx}")
+        if len(input["pseudo_gt"].shape)==3:
+            input["pseudo_gt"] = input["pseudo_gt"].unsqueeze(0)
         dupl_rot = torch.flatten(torch.repeat_interleave(input["pseudo_gt"][...,:3,:3], 2, dim=0), 0, 1)
         visualize_so3_rotations(
             rotations=dupl_rot,

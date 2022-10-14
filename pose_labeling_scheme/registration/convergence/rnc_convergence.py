@@ -92,15 +92,16 @@ def matcher(img_1, img_2, threshold=None, verbose=False):
     #print ('-'*10,"Max: ", d_max,"Mean: ", d_avg)
     #print('-'*10, f" Treshold: max: {threshold[0]}, mean: {threshold[1]}")
 
-    converged = torch.bitwise_and(d_max <= threshold[0], d_avg <= threshold[1])
+    converged = torch.bitwise_or(torch.bitwise_and(d_max <= threshold[0], d_avg <= threshold[1]), d_avg <= threshold[2])
     if verbose:
-        imshow(diff_img, "output/tless_2/edge_diff.png")
+        imshow(diff_img, "output/pose_labeling_scheme/edge_diff.png")
         return converged, d_max, d_avg
     return converged
 
-def check_convergence_batchwise(obj_model, transformation_set, depth_original, threshold, intrinsic, config):
+def check_convergence_batchwise(obj_model, transformation_set, depth_original, intrinsic, config):
     # Render the depth from the final pseudo transformation
     depth_rendered = []
+    threshold = config["threshold"]
     for (i, transformation) in enumerate(transformation_set):
         depth_rendered.append(render_depth_image(obj_model, transformation, intrinsic, config))
     depth_rendered = torch.stack(depth_rendered).to(DEVICE)
@@ -120,8 +121,8 @@ def check_convergence_batchwise(obj_model, transformation_set, depth_original, t
     # Match the edges and calculate the distance, determine if the alignment is tight enough
 
     if config["verbose"]:
-        imshow(edge_original, "output/tless_2/edge_org.png")
-        imshow(edge_rendered, "output/tless_2/edge_rend.png")
+        imshow(edge_original, "output/pose_labeling_scheme/edge_org.png")
+        imshow(edge_rendered, "output/pose_labeling_scheme/edge_rend.png")
 
         return matcher(edge_rendered, edge_original, threshold, config["verbose"])
 

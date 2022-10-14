@@ -45,6 +45,8 @@ if __name__=="__main__":
     else:
         print("\nNo object model for the given dataset/object!")
     
+    object_model = object_model.to(DEVICE)
+
     for (i, input) in progress_bar:
         if i==1296:
             break
@@ -56,10 +58,10 @@ if __name__=="__main__":
         pseudo_ground_truth = pose_labeling_scheme(pts_canonical=object_model,
                                                     seg_data=seg_data,
                                                     depth_data=depth_data,
-                                                    obj_id=args.obj_id,
                                                     diameter = diameter,
                                                     intrinsic=intrinsic,
-                                                    obj_model_sl=object_model_sl)
+                                                    obj_model_sl=object_model_sl,
+                                                    config=config)
         # Save the failed frames
         if pseudo_ground_truth is None:
             failed.append[i]

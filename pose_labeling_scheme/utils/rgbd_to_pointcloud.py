@@ -34,7 +34,7 @@ def convert_rgbd_to_pointcloud_tless(seg_image, depth_image, intrinsic, obj_id=1
         def _set_obj_pixel():
                 seg_pixel = []
                 object_pixel = seg_image==obj_id
-                object_pixel = torch.nonzero(object_pixel).cpu()
+                object_pixel = torch.nonzero(object_pixel)
 
                 return object_pixel
 
@@ -63,7 +63,7 @@ def convert_rgbd_to_pointcloud_tabletop(seg_image, depth_image, intrinsic, obj_i
         def _set_obj_pixel():
                 seg_pixel = []
                 object_pixel = seg_image==obj_id
-                object_pixel = torch.nonzero(object_pixel).cpu()
+                object_pixel = torch.nonzero(object_pixel)
 
                 return object_pixel
 

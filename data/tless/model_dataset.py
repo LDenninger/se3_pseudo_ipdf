@@ -207,6 +207,8 @@ class TLESSPoseDataset(Dataset):
             except:
                 #print(f"No pseudo ground truth found for frame {idx}")
                 return None
+            if pseudo_gt_set.shape[0]==0:
+                return None
             gt = pseudo_gt_set[np.random.randint(pseudo_gt_set.shape[0])]
 
         return gt

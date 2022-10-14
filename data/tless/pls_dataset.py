@@ -91,6 +91,8 @@ class TLESSWorkDataset(Dataset):
 
             except:
                 loaded=False
+        if pseudo_ground_truth.shape[0]==0:
+            return None
         
         if self.return_gt:
             ground_truth = torch.eye(4)

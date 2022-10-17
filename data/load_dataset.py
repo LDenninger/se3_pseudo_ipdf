@@ -84,7 +84,7 @@ def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cle
             return_gt=return_gt,
             cleaned_pgt=cleaned_pgt
         )
-    data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False, num_workers=8)
+    data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False, num_workers=0)
 
     return data_loader
     

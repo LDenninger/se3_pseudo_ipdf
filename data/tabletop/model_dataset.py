@@ -86,7 +86,7 @@ class TabletopPoseDataset(Dataset):
              
             ground_truth = self.load_ground_truth(idx)
 
-            if ground_truth is None:
+            if ground_truth is None or ground_truth.shape[0]==0:
                 return self.__getitem__((idx+1)%self.__len__())
 
             return {

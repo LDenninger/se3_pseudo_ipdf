@@ -81,6 +81,7 @@ class TLESSWorkDataset(Dataset):
         pseudo_ground_truth = -torch.eye(4)
         ground_truth = -torch.eye(4)
         # Load already produced pseudo ground truth
+
         if self.return_pgt:
             try:
                 if self.cleaned_pgt:
@@ -90,7 +91,8 @@ class TLESSWorkDataset(Dataset):
 
             except:
                 loaded=False
-        if pseudo_ground_truth.shape[0]==0:
+        if pseudo_ground_truth is None or pseudo_ground_truth.shape[0]==0:
+            pseudo_ground_truth = -torch.eye(4)
             loaded=False
         
         if self.config["skip"] and os.path.exists(os.path.join(self.pseudo_save_dir, (frame_id+".pth"))):

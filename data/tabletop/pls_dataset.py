@@ -75,6 +75,7 @@ class TabletopWorkDataset(Dataset):
 
         pseudo_ground_truth = -torch.eye(4)
         ground_truth = -torch.eye(4)
+
         if self.return_pgt:
             try:
                 if self.cleaned_pgt:
@@ -83,7 +84,7 @@ class TabletopWorkDataset(Dataset):
                     pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "pseudo_gt.pth"))
             except:
                 loaded=False
-        if pseudo_ground_truth.shape[0]==0:
+        if pseudo_ground_truth is None or pseudo_ground_truth.shape[0]==0:
             loaded=False
 
         if self.return_gt:

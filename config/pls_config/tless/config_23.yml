@@ -6,7 +6,7 @@ obj_id: 23
 resolution:
 - 400
 - 400
-skip: true
+skip: false
 threshold:
 - 200
 - 5

@@ -55,8 +55,7 @@ class TLESSWorkDataset(Dataset):
         data_dir = os.path.join(self.data_dir,"rgb", (frame_id+"_rgb.pth"))#
         depth_dir = os.path.join(self.data_dir,"depth_clean", (frame_id+".pth"))
         seg_dir = os.path.join(self.data_dir, "seg", (frame_id+".pth")) #"00_"+
-        if self.config["skip"] and os.path.exists(os.path.join(self.pseudo_save_dir, (frame_id+".pth"))):
-            return 1
+            
         try:
             image = torch.load(data_dir)
             seg_data = torch.load(seg_dir)
@@ -92,7 +91,10 @@ class TLESSWorkDataset(Dataset):
             except:
                 loaded=False
         if pseudo_ground_truth.shape[0]==0:
-            return None
+            loaded=False
+        
+        if self.config["skip"] and os.path.exists(os.path.join(self.pseudo_save_dir, (frame_id+".pth"))):
+            loaded=False
         
         if self.return_gt:
             ground_truth = torch.eye(4)

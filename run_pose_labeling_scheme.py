@@ -48,9 +48,12 @@ if __name__=="__main__":
     object_model = object_model.to(DEVICE)
 
     for (i, input) in progress_bar:
+
         if i==1296:
             break
-
+        if not input["loaded"]:
+            continue
+        
         seg_data = input["seg_image"].to(DEVICE)
         depth_data = input["depth_image"].to(DEVICE)
         intrinsic = input["intrinsic"].to(DEVICE)

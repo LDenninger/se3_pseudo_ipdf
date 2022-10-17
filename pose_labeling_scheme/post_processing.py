@@ -86,7 +86,7 @@ def run_convention_cleanup(dataset, hyper_param):
 
     non_exist = []
 
-    conv = torch.eye(3).to(DEVICE)
+    conv = torch.eye(3)
     conv[1,1] *= -1
     conv[2,2] *= -1
 
@@ -96,7 +96,7 @@ def run_convention_cleanup(dataset, hyper_param):
         if not input["loaded"]:
             non_exist.append(i)
             continue
-        pgt = input["pseudo_gt"].squeeze(0).to(DEVICE)
+        pgt = input["pseudo_gt"].squeeze(0)
         cleaned_pseudo_gt =  pgt
         cleaned_pseudo_gt[:,:3,:3] =pgt[:,:3,:3] @ conv
         cleaned_pseudo_gt[:,:3,:3] = conv @ cleaned_pseudo_gt[:,:3,:3]

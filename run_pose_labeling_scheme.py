@@ -64,7 +64,7 @@ if __name__=="__main__":
                                                     config=config)
         # Save the failed frames
         if pseudo_ground_truth is None:
-            failed.append[i]
+            failed.append(i)
 
         # Save the pseudo ground truth for the current frame
         if not config["verbose"]:
@@ -82,11 +82,6 @@ if __name__=="__main__":
                     pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))
                 torch.save(pseudo_ground_truth, save_dir)
         
-
-
-
-        if input != 1:
-            failed.append(i)
             
     print("_"*20)
     print("\nPseudo labeling scheme finished")

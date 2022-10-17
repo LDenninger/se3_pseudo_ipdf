@@ -24,9 +24,12 @@ def imshow(input: torch.Tensor, name: str):
 
 def render_depth_image(obj_model, transformation, intrinsic, config):
     # Render the depth using the cad model
-    K = intrinsic # (fx, fy, cx, cy)
     scene = sl.Scene(config["resolution"])
-    scene.set_camera_intrinsics(*K)
+    if config["dataset"]=="tabletop":
+        scene.set_camera_hfov( (90 / 180) * np.pi )
+    else:
+        K = intrinsic # (fx, fy, cx, cy)
+        scene.set_camera_intrinsics(*K)
     scene.ambient_light = torch.tensor([0.9, 0.9, 0.9])
     obj = sl.Object(obj_model)
     # import ipdb; ipdb.set_trace() 
@@ -63,6 +66,7 @@ def matcher(img_1, img_2, threshold=None, verbose=False):
     B = img_1.shape[0]
     d_max = torch.zeros(B)
     d_avg = torch.zeros(B)
+
 
     if verbose:
         diff_img = torch.zeros_like(img_1)
@@ -102,15 +106,17 @@ def check_convergence_batchwise(obj_model, transformation_set, depth_original, i
     # Render the depth from the final pseudo transformation
     depth_rendered = []
     threshold = config["threshold"]
+
     for (i, transformation) in enumerate(transformation_set):
         depth_rendered.append(render_depth_image(obj_model, transformation, intrinsic, config))
     depth_rendered = torch.stack(depth_rendered).to(DEVICE)
-    depth_original = depth_original.unsqueeze(0).to(DEVICE)
-    
-    # Scale to cm
-    depth_rendered = depth_rendered * 100 
-    depth_original = depth_original / 10
+    depth_rendered = depth_rendered * 100 # scale to cm
 
+    depth_original = depth_original.unsqueeze(0).to(DEVICE)
+    if config["dataset"]=="tabletop":
+        depth_original = -1 * depth_original * 100
+    else:
+        depth_original = depth_original / 10
     # Compute edge image of the final result using Canny edge detector
     edge_rendered = process_tensor(depth_rendered)
     edge_rendered = binarize(edge_rendered)   # binarize to get sharp edges

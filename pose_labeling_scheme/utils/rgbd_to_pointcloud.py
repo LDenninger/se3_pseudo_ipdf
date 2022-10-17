@@ -1,8 +1,12 @@
 import torch
 
+from .convention_transforms import convert_points_opencv_opengl
 
 def generate_pointcloud_from_rgbd(dataset: str, seg_image, depth_image, intrinsic, obj_id=1):
-    """Generate a point cloud from an RGBD image. The segmentation image and intrinsic must be provided.
+    """Generate a point cloud from an RGBD image in the camera coordinate system. The camera coordinate system
+    follows the OpenCV convention. In the tabletop the camera follows OpenGL convention and thus the point cloud
+    must be transformed to OpenCV convention before returning.
+    The segmentation image and intrinsic must be provided.
     The point cloud is return in cm.
     
     """
@@ -16,7 +20,7 @@ def generate_pointcloud_from_rgbd(dataset: str, seg_image, depth_image, intrinsi
     elif dataset=="tabletop":
         # Extract point cloud
         pointcloud = convert_rgbd_to_pointcloud_tabletop(seg_image, depth_image, intrinsic, obj_id)
-
+        pointcloud = convert_points_opencv_opengl(pointcloud)
         # Scale to cm
         pointcloud *= 100
     

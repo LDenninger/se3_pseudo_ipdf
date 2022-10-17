@@ -73,7 +73,7 @@ def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cle
             config=hyper_param,
             start=start,
             return_pgt=return_pgt,
-            return_gt=return_gt,
+            return_gt=return_gt or hyper_param["verbose"],
             cleaned_pgt=cleaned_pgt
         )
     elif hyper_param["dataset"]=="tabletop":
@@ -81,7 +81,7 @@ def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cle
             config=hyper_param,
             start=start,
             return_pgt=return_pgt,
-            return_gt=return_gt,
+            return_gt=return_gt or hyper_param["verbose"],
             cleaned_pgt=cleaned_pgt
         )
     data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False, num_workers=0)

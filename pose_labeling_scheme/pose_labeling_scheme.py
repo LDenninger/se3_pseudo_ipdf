@@ -16,9 +16,18 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
     seg_data = seg_data.squeeze()
     depth_data = depth_data.squeeze()
     intrinsic = intrinsic.squeeze()
+    if config["dataset"]=="tabletop":
+        #Mask depth image for tabletop dataset
+        object_pixel = seg_data==config["obj_id"]
+        object_pixel = torch.nonzero(object_pixel)
+        mask = torch.zeros_like(depth_data)
+        mask[object_pixel[:,0], object_pixel[:,1]] = 1
+        depth_data *= mask
+
     # Extract and process point clouds
     # Scale everything to cm for optimization
-    pts_observed = generate_pointcloud_from_rgbd(config["dataset"], seg_data, depth_data, intrinsic)
+    pts_observed = generate_pointcloud_from_rgbd(config["dataset"], seg_data, depth_data, intrinsic,
+                                                    obj_id = config["obj_id"] if config["dataset"]=="tabletop" else 1)
     pts_canonical = pts_canonical*100
     diameter = diameter*100
     # Construct open3d point clouds. Additionally downsampling, fpfh features, and normals approximation
@@ -109,6 +118,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
 
         # Scale translation back to meters
         pseudo_transformation[:,:3,-1] /= 100
+        # SVD for numerical stability
         U, S, V = torch.linalg.svd(pseudo_transformation[:,:3,:3])
         pseudo_transformation[:,:3,:3] = torch.bmm(U, V)
         if not config['verbose']:
@@ -157,11 +167,12 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 #print("\nConverge: ", converge)
                 print("\n_________________________________________________\n")
             ipdb.set_trace()
-
                 #viz.draw_registration_result(final_pcd, target_down_local, np.identity(4), lookat=pseudo_transformation[:3,-1].cpu().numpy())
         #ipdb.set_trace()
     if pseudo_ground_truth_set == []:
         return None
+    if config["dataset"]=="tabletop":
+        pseudo_ground_truth_set = convert_transformation_opencv_opengl(pseudo_ground_truth_set)
     return torch.stack(pseudo_ground_truth_set)
 
 

@@ -44,7 +44,6 @@ class TabletopWorkDataset(Dataset):
         # Define the frame from the given index
         frame_id = str(idx).zfill(6)
         data_frame_dir = os.path.join(self.data_dir, frame_id)
-
         # Load the data needed by the pose labeling scheme
         try:
             image = torch.load(os.path.join(data_frame_dir,"rgb_tensor.pt"))

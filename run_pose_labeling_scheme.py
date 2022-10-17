@@ -2,11 +2,14 @@ import torch
 import argparse
 from tqdm import tqdm
 import os
+import ipdb
 
 import data
 import utils
 import config
 from pose_labeling_scheme import pose_labeling_scheme
+from pose_labeling_scheme.utils import convert_points_opencv_opengl
+import utils.visualizations as visualizations
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -37,8 +40,11 @@ if __name__=="__main__":
 
     # Load the object model
     if args.dataset=="tabletop":
-        object_model, diameter = data.load_tless_object_model(args.obj_id, pointcloud_only=True)
+        object_model, diameter = data.load_ycbv_object_model(args.obj_id, pointcloud_only=True)
+        object_model = convert_points_opencv_opengl(object_model) # Convert opeGL to openCV
         object_model_sl = data.load_sl_cad_model(args.dataset, args.obj_id)
+        # Convert canonical point clouds to fit the OpenCV convention
+
     elif args.dataset=="tless":
         object_model, diameter = data.load_tless_object_model(args.obj_id, pointcloud_only=True)
         object_model_sl = data.load_sl_cad_model(args.dataset, args.obj_id)
@@ -53,10 +59,11 @@ if __name__=="__main__":
             break
         if not input["loaded"]:
             continue
+
         
-        seg_data = input["seg_image"].to(DEVICE)
-        depth_data = input["depth_image"].to(DEVICE)
-        intrinsic = input["intrinsic"].to(DEVICE)
+        seg_data = input["seg_image"].to(DEVICE).squeeze()
+        depth_data = input["depth_image"].to(DEVICE).squeeze()
+        intrinsic = input["intrinsic"].to(DEVICE).squeeze()
         
         pseudo_ground_truth = pose_labeling_scheme(pts_canonical=object_model,
                                                     seg_data=seg_data,
@@ -80,10 +87,21 @@ if __name__=="__main__":
 
             elif args.dataset=="tabletop":
                 save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
-                if os.path.exists(save_dir):
+                if False and os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))
                 torch.save(pseudo_ground_truth, save_dir)
+        else:
+            visualizations.visualize_so3_rotations(
+                rotations=pseudo_ground_truth,
+                dataset=config["dataset"],
+                obj_id=config["obj_id"],
+                rotations_gt=input["ground_truth"],
+                display_gt_set=True,
+                save_path="output/pose_labeling_scheme/pgt_final_result.png"
+            )
+            ipdb.set_trace()
+        
         
             
     print("_"*20)

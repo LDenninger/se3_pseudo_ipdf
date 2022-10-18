@@ -1,6 +1,7 @@
 tless_pls_config_data = {
     "dataset": "tless",
     "obj_id": 7,
+    "conv_metric": "rnc",
     "length": 1296,
     "skip": False,
     "resolution": (400,400),

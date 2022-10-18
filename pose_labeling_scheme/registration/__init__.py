@@ -7,3 +7,4 @@ from .local_registration.iterative_closest_point import iterative_closest_point
 
 # Convergence check methods
 from .convergence.rnc_convergence import check_convergence_batchwise
+from .convergence.convergence_metric import knn_l2_distance

@@ -5,7 +5,7 @@ def fast_global_registration(source_down, target_down, source_fpfh, target_fpfh,
 
 
     #distance_threshold = hyper_param["voxel_size_global"] * 2
-    distance_threshold = 0.4 # 0.4
+    distance_threshold = hyper_param["global_dist_threshold"] # 0.4
     options = o3d.pipelines.registration.FastGlobalRegistrationOption(
         decrease_mu = True,
         division_factor = 4, # obj 7: 0.5

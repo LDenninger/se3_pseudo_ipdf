@@ -117,22 +117,31 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         pseudo_transformation = iterative_closest_point(pts_observed_down, pts_canonical_down, init_transform, hyper_param=config)
 
         # Scale translation back to meters
+        pseudo_transformation = pseudo_transformation.to(DEVICE)
         pseudo_transformation[:,:3,-1] /= 100
         # SVD for numerical stability
         U, S, V = torch.linalg.svd(pseudo_transformation[:,:3,:3])
         pseudo_transformation[:,:3,:3] = torch.bmm(U, V)
-        if not config['verbose']:
-            converged = check_convergence_batchwise( depth_original=depth_data,
-                                                        obj_model=obj_model_sl, 
-                                                        transformation_set=pseudo_transformation,
-                                                        intrinsic=intrinsic,
-                                                        config=config)
-        else:
-            converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
-                                                        obj_model=obj_model_sl, 
-                                                        transformation_set=pseudo_transformation,
-                                                        intrinsic=intrinsic,
-                                                        config=config)
+
+        if config["conv_metric"]=="rnc":
+            if not config['verbose']:
+                converged = check_convergence_batchwise( depth_original=depth_data,
+                                                            obj_model=obj_model_sl, 
+                                                            transformation_set=pseudo_transformation,
+                                                            intrinsic=intrinsic,
+                                                            config=config)
+            else:
+                converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
+                                                            obj_model=obj_model_sl, 
+                                                            transformation_set=pseudo_transformation,
+                                                            intrinsic=intrinsic,
+                                                            config=config)
+        elif config["conv_metric"]=="l2":
+            pts_pseudo = torch.bmm(torch.repeat_interleave(pts_canonical_down, pseudo_transformation.shape[0], dim=0), torch.transpose(pseudo_transformation[:,:3,:3], -2, -1)) + 100*pseudo_transformation[:,:3,-1].unsqueeze(1)
+            l2_distance = knn_l2_distance(pts_pseudo, torch.repeat_interleave(pts_observed_down, pseudo_transformation.shape[0], dim=0))
+            converged = l2_distance <= config["l2_threshold"]
+
+        pseudo_transformation = pseudo_transformation.cpu()
         conv_ind = torch.nonzero(converged)
         for ind in conv_ind:
             pseudo_ground_truth_set.append(pseudo_transformation[ind].squeeze())
@@ -146,7 +155,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 final_pcd.transform(pgt)
                 pts_obs = torch.from_numpy(np.asarray(target_down_local.points))
                 pts_final = torch.from_numpy(np.asarray(final_pcd.points))
-                visualize_pointclouds(pts_obs, pts_final, "output/pose_labeling_scheme/registration_result.png")
+                visualize_pointclouds(pts_obs, pts_final, f"output/pose_labeling_scheme/registration_result_{i+1}.png")
 
                 #print("\nFast Global Registration result: \n", result)
                 #final_pcd = copy.deepcopy(source_down_local)
@@ -161,9 +170,15 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                 #print("\nL2 distance: Mean: ", distance_mean, " Median: ", distance_median)
                 #print("\nNormal angle: Mean: ", angle_mean, ", Median: ", angle_median)
                 print("Convergence results:")
-                print ("Maximum distance: ", d_max[i],"Mean Distance: ", d_avg[i])
-                print("Threshold: Max: ", config["threshold"][0], " Mean: ", config["threshold"][1], " Direct:", config["threshold"][2])
-                print("\nConverged: ", converged[i])
+                if config["conv_metric"]=="rnc":
+                    print ("Maximum distance: ", d_max[i],"Mean Distance: ", d_avg[i])
+                    print("Threshold: Max: ", config["threshold"][0], " Mean: ", config["threshold"][1], " Direct:", config["threshold"][2])
+                    print("\nConverged: ", converged[i])
+                elif config["conv_metric"]=="l2":
+                    print("L2 distance: ", l2_distance[i].item())
+                    print("Threshold: ", config["l2_threshold"])
+                    print("\nConverged", converged[i].item())
+                
                 #print("\nConverge: ", converge)
                 print("\n_________________________________________________\n")
             ipdb.set_trace()
@@ -171,9 +186,10 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         #ipdb.set_trace()
     if pseudo_ground_truth_set == []:
         return None
+    pseudo_ground_truth_set = torch.stack(pseudo_ground_truth_set)
     if config["dataset"]=="tabletop":
         pseudo_ground_truth_set = convert_transformation_opencv_opengl(pseudo_ground_truth_set)
-    return torch.stack(pseudo_ground_truth_set)
+    return pseudo_ground_truth_set
 
 
 def visualize_pointclouds(p_1, p_2, filename):

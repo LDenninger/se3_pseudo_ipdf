@@ -87,16 +87,16 @@ if __name__=="__main__":
 
             elif args.dataset=="tabletop":
                 save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
-                if False and os.path.exists(save_dir):
+                if os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))
                 torch.save(pseudo_ground_truth, save_dir)
         else:
             visualizations.visualize_so3_rotations(
-                rotations=pseudo_ground_truth,
+                rotations=pseudo_ground_truth[:,:3,:3],
                 dataset=config["dataset"],
                 obj_id=config["obj_id"],
-                rotations_gt=input["ground_truth"],
+                rotations_gt=input["ground_truth"][:,:3,:3],
                 display_gt_set=True,
                 save_path="output/pose_labeling_scheme/pgt_final_result.png"
             )

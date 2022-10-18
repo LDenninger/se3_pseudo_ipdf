@@ -1,17 +1,19 @@
-dataset: tless
+dataset: tabletop
 icp_iteration: 1
-length: 1296
+length: 20000
 max_iteration: 40
-obj_id: 23
+obj_id: 4
 resolution:
-- 400
-- 400
+- 1920
+- 1080
 skip: false
 threshold:
-- 200
-- 5
+- 800
+- 20
 - 2
 verbose: false
 voxel_size_global: 0.2
 voxel_size_local: 0.2
-conv_metric: rnc
+conv_metric: l2
+l2_threshold: 0.1
+global_dist_threshold: 0.8

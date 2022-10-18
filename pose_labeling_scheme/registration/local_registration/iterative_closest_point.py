@@ -47,7 +47,7 @@ def iterative_closest_point(points_observed, points_canonical,
     icp_solution = ops.iterative_closest_point(points_observed, points_canonical,
                                                 initial_guess, 
                                                 relative_rmse_thr = 1e-4, 
-                                                max_iterations=100 ,allow_reflection = False, verbose=hyper_param["verbose"])
+                                                max_iterations=200 ,allow_reflection = False, verbose=hyper_param["verbose"])
     # Invert the results of ICP to get the transform: PC_CANONICAL ---> PC_OBS
     # Attention here the rotation matrix is in the pytorch convention, meaning it is applied from the right hand side
     # pts @ R

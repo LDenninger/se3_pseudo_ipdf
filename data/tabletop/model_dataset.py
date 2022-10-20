@@ -185,15 +185,7 @@ class TabletopPoseDataset(Dataset):
         else:
             if self.pseudo_gt:
                 try:
-
                     pseudo_gt_set = torch.load(os.path.join(data,"cleaned_pseudo_gt.pth" ))
-                    cc = torch.repeat_interleave(conv.unsqueeze(0), pseudo_gt_set.shape[0], dim=0)
-                    tmp = torch.bmm(pseudo_gt_set[:,:3,:3], cc)
-                    if self.obj_id!=5:
-                        pseudo_gt_set[:,:3,:3] = torch.bmm(cc, tmp)
-                    else:
-                        pseudo_gt_set[:,:3,:3] = tmp
-
 
                 except:
                     return None

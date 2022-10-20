@@ -55,7 +55,7 @@ if __name__=="__main__":
 
     for (i, input) in progress_bar:
 
-        if i==1296:
+        if i==config["length"]:
             break
         if not input["loaded"]:
             continue

@@ -37,6 +37,7 @@ class ImplicitTranslation(nn.Module):
             is always a grid sampling (for proper normalization).
     """
     def __init__(self, resnet_depth, feat_dim, num_fourier_comp=0,
+                resnet_layer=0,
                 mlp_layer_sizes=[256]*2,
                 num_train_queries=2**12, num_eval_queries=80000,
                 translation_range=torch.tensor([[-0.1,0.1],[-0.1,0.1],[2.4,2.6]])):
@@ -58,7 +59,7 @@ class ImplicitTranslation(nn.Module):
         self._generate_queries(self.num_eval_queries)
 
         # ResNet + MLP
-        self.feature_extractor = ResNet(depth=resnet_depth, pretrained=True) 
+        self.feature_extractor = ResNet(depth=resnet_depth, layer=resnet_layer, pretrained=True) 
         self.FC_vis_emb = nn.Linear(self.feat_dim, mlp_layer_sizes[0])
         self.FC_translation_query_emb = nn.Linear(self.trans_query_dim, mlp_layer_sizes[0])
 

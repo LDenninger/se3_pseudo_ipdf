@@ -16,6 +16,7 @@ tless_rot_config_data = {
     'num_train_queries': 2**12,
     'dataset': "tless",
     'obj_id': 5,
+    'resnet_layer': 0,
     'resnet_depth': 18,
     'train_as_test': True,
     'pseudo_gt': True,

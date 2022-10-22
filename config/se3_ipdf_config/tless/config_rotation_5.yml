@@ -18,6 +18,7 @@ obj_id: 5
 occlusion: true
 pseudo_gt: true
 random_seed: 23
+resnet_layer: 0
 resnet_depth: 18
 save_freq: 5
 start_save: 2

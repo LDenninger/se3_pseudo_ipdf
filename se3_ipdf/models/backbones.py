@@ -2,7 +2,7 @@ import torch.nn as nn
 import torchvision.models as models
 
 class ResNet(nn.Module):
-    def __init__(self, depth=50, pretrained=True):
+    def __init__(self, depth=50, layer=0, pretrained=True):
         super(ResNet, self).__init__()
         assert depth in [18, 34, 50]
         resnet_dict = {
@@ -12,7 +12,7 @@ class ResNet(nn.Module):
         }
         resnet = resnet_dict[depth](pretrained=pretrained)
         # remove last FC layer
-        self.resnet = nn.Sequential(*list(resnet.children())[:-1])
+        self.resnet = nn.Sequential(*list(resnet.children())[:-(1+layer)])
 
     def forward(self, input_):
         out = self.resnet(input_)

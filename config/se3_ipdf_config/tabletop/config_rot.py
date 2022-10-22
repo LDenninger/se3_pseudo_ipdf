@@ -19,6 +19,7 @@ tabletop_rot_config_data = {
     'obj_id': 5,
     'mask': True,
     'resnet_depth': 18,
+    'resnet_layer': 0,
     'pseudo_gt': True,
     'occlusion': False,
     'full_img': False,

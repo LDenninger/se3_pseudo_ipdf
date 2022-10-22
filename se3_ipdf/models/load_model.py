@@ -9,6 +9,19 @@ from .implicit_se3_ensamble import ImplicitSE3_Ensamble
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 translation_range = torch.tensor([[-0.5,0.5],[-0.5,0.5],[-1,0]])
 
+resnet_feature_dim = {
+    18:{
+        0: 512,
+        1: 25088,
+        2: 50176
+    },
+    50:{
+        0: 2048,
+        1: 100352,
+        2: 200704
+    }
+}
+
 def load_translation_model(hyper_param, arguments, load_model=None, init_model=False):
     """Load the translation model. Either it is completely new initialized or the model state is load from
     a checkpoint file.
@@ -16,8 +29,9 @@ def load_translation_model(hyper_param, arguments, load_model=None, init_model=F
     
     """
 
+    feature_dim = resnet_feature_dim[hyper_param["resnet_depth"]][hyper_param["resnet_layer"]]
 
-    model = ImplicitTranslation(resnet_depth=18, feat_dim=512, # 100352
+    model = ImplicitTranslation(resnet_depth=hyper_param["resnet_depth"], resnet_layer=hyper_param["resnet_layer"], feat_dim=feature_dim, # 100352
                                    mlp_layer_sizes=hyper_param['mlp_layers'],
                                    num_fourier_comp=hyper_param['num_fourier_comp'],
                                    num_train_queries=hyper_param['num_train_queries'],
@@ -55,8 +69,11 @@ def load_translation_model(hyper_param, arguments, load_model=None, init_model=F
 
 def load_rotation_model(hyper_param, arguments, load_model=None, init_model=False):
     ## Load the rotation-model from a given checkpoint. If no checkpoint is provided the model will be newly initialized ##
-    model = ImplicitSO3(resnet_depth=hyper_param['resnet_depth'], 
-                                    feat_dim=512 if hyper_param['resnet_depth']==18 else 2048, # 
+
+    feature_dim = resnet_feature_dim[hyper_param["resnet_depth"]][hyper_param["resnet_layer"]]
+
+    model = ImplicitSO3(resnet_depth=hyper_param['resnet_depth'], resnet_layer=hyper_param["resnet_layer"],
+                                    feat_dim=feature_dim, # 
                                     mlp_layer_sizes=hyper_param['mlp_layers'],
                                     num_fourier_comp=hyper_param['num_fourier_comp'],
                                     num_train_queries=hyper_param['num_train_queries'],

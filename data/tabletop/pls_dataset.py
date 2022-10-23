@@ -45,6 +45,7 @@ class TabletopWorkDataset(Dataset):
         frame_id = str(idx).zfill(6)
         data_frame_dir = os.path.join(self.data_dir, frame_id)
         # Load the data needed by the pose labeling scheme
+ 
         try:
             image = torch.load(os.path.join(data_frame_dir,"rgb_tensor.pt"))
             seg_data = torch.load(os.path.join(data_frame_dir, "seg_tensor.pt"))
@@ -82,13 +83,17 @@ class TabletopWorkDataset(Dataset):
                 else:
                     pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "pseudo_gt.pth"))
             except:
+                pseudo_ground_truth = -torch.eye(4)
+
                 loaded=False
         if pseudo_ground_truth is None or pseudo_ground_truth.shape[0]==0:
+            pseudo_ground_truth = -torch.eye(4)
             loaded=False
 
         if self.return_gt:
             ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "ground_truth.pt"))
 
+        
 
         return {
             "image": image,

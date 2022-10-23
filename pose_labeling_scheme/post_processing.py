@@ -67,6 +67,9 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
         if not input["loaded"]:
             non_exist.append(i)
             continue
+        if input["pseudo_gt"] is None:
+            non_exist.append(i)
+            continue
         
         cleaned_pseudo_gt = check_duplicates_averaging(input["pseudo_gt"].squeeze(0).to(DEVICE), angular_threshold=angular_threshold)
         cleaned_pseudo_gt = cleaned_pseudo_gt.cpu()

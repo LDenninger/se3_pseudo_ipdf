@@ -10,22 +10,15 @@ import config
 import se3_ipdf
 import se3_ipdf.models as models
 
+
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Hyperparameters for training")
-    parser.add_argument('-exp_name', type=str, help="experiment's name")
-    parser.add_argument('-c_rot', metavar='PATH', type=str, default=None, dest="rot_epoch", help="Checkpoint epoch for the rotation model")
-    parser.add_argument('-c_trans', metavar='PATH', type=str, default=None, dest="trans_epoch", help="Checkpoint epoch for the translation model")
-    parser.add_argument('-model', type=int, default=0, help="0: Rotation model, 1: Translation model")
-    parser.add_argument('-wandb', action="store_true", dest="log", help="Observed training using wandb")
-    args = parser.parse_args()
-
-    exp_dir = "experiments/exp_" + args.exp_name
-    #autograd.set_detect_anomaly(True)
+## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
+EXP_NAME_LIST = ["tabletop_can_res1_1", "tabletop_can_res2_1", "tabletop_bowl_res1_1", "tabletop_bowl_res2_1", "tabletop_bowl_occ_1", "tabletop_can_occ_1"]
+MODEL_TYPE = [0,0,0,0,0,0]
 
 
+def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
     if args.log:
@@ -147,3 +140,37 @@ if __name__ == "__main__":
                                                 hyper_param=hyper_param,
                                                 checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
                                                 start_epoch=start_epoch)
+        wandb.finish()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Hyperparameters for training")
+    parser.add_argument('-exp_name', type=str, default=None, help="experiment's name")
+    parser.add_argument('-c_rot', metavar='PATH', type=str, default=None, dest="rot_epoch", help="Checkpoint epoch for the rotation model")
+    parser.add_argument('-c_trans', metavar='PATH', type=str, default=None, dest="trans_epoch", help="Checkpoint epoch for the translation model")
+    parser.add_argument('-model', type=int, default=0, help="0: Rotation model, 1: Translation model")
+    parser.add_argument('-wandb', action="store_true", dest="log", help="Observed training using wandb")
+    args = parser.parse_args()
+
+
+    if args.exp_name is not None:
+        experiment_dir_list = [("experiments/exp_" + args.exp_name)]
+        model_type_list = [args.model]
+    else:
+        experiment_dir_list = ["experiments/exp_" + exp_name for exp_name in EXP_NAME_LIST]
+        model_type_list = MODEL_TYPE
+    
+    assert len(model_type_list)==len(experiment_dir_list)
+
+    for (i, exp_dir) in enumerate(experiment_dir_list):
+        print("_"*40)
+        print(f"Start training model (type {model_type_list[i]}) in experiment {exp_dir}...")
+        print("_"*40)
+        
+        train_model()
+
+
+    #autograd.set_detect_anomaly(True)
+    
+
+  

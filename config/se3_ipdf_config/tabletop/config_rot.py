@@ -1,11 +1,11 @@
 tabletop_rot_config_data = {
     'num_epochs': 30,
-    'num_train_iter': 80,
-    'num_val_iter': 40,
+    'num_train_iter': 200,
+    'num_val_iter': 60,
     'start_save': 2,
     'save_freq': 4,
-    'batch_size': 16,
-    'batch_size_val': 8,
+    'batch_size': 64,
+    'batch_size_val': 16,
     'learning_rate': 1e-4,
     'num_fourier_comp': 3,
     'img_size': (224, 224),
@@ -24,5 +24,5 @@ tabletop_rot_config_data = {
     'occlusion': False,
     'full_img': False,
     'full_eval': True,
-    'length': 20000
+    'length': 15000
 }

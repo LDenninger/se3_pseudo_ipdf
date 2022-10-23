@@ -77,7 +77,6 @@ class TabletopPoseDataset(Dataset):
             idx = 15000+idx
         data = os.path.join(self.data_dir, str(idx).zfill(6))
 
-
         if self.train_mode == True:
             # Dataloader for the training process
             image = self.load_image(idx)

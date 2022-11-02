@@ -14,8 +14,8 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
-EXP_NAME_LIST = ["tabletop_can_res1_1", "tabletop_can_res2_1", "tabletop_bowl_res1_1", "tabletop_bowl_res2_1", "tabletop_bowl_occ_1", "tabletop_can_occ_1"]
-MODEL_TYPE = [0,0,0,0,0,0]
+EXP_NAME_LIST = ["tabletop_2_can_4", "tabletop_2_can_occ_4", "tabletop_2_can_res1_4", "tabletop_2_can_res2_6", "tabletop_2_bowl_5", "tabletop_2_bowl_occ_5", "tabletop_2_bowl_res1_5", "tabletop_2_bowl_res2_4", "tabletop_2_crackerbox_3", "tabletop_2_crackerbox_occ_3", "tabletop_2_crackerbox_res1_3", "tabletop_2_crackerbox_res2_3"]
+MODEL_TYPE = [0,0,0,0,0,0,0,0,0,0,0,0]
 
 
 def train_model():
@@ -28,8 +28,8 @@ def train_model():
                 hyper_param = yaml.safe_load(f)     
             #with wandb.init(mode="disabled"):
             with wandb.init(project="SO3_IPDF", entity="ipdf_se3", config=hyper_param, resume="allow",
-                            name=args.exp_name,
-                            id=args.exp_name):
+                            name=exp_name,
+                            id=exp_name):
 
                 ## Run the training for the rotation model ##
 
@@ -59,8 +59,8 @@ def train_model():
             with open(config_file_name, 'r') as f:
                 hyper_param = yaml.safe_load(f)
             with wandb.init(project="Translation_IPDF", entity="ipdf_se3", config=hyper_param, resume="allow",
-                            name=args.exp_name,
-                            id=args.exp_name):
+                            name=exp_name,
+                            id=exp_name):
                 ## Run the training for the translation model ##
                 
 
@@ -155,14 +155,18 @@ if __name__ == "__main__":
 
     if args.exp_name is not None:
         experiment_dir_list = [("experiments/exp_" + args.exp_name)]
+        exp_names = [args.exp_name]
         model_type_list = [args.model]
     else:
         experiment_dir_list = ["experiments/exp_" + exp_name for exp_name in EXP_NAME_LIST]
+        exp_names = EXP_NAME_LIST
         model_type_list = MODEL_TYPE
     
     assert len(model_type_list)==len(experiment_dir_list)
 
     for (i, exp_dir) in enumerate(experiment_dir_list):
+        exp_name = exp_names[i]
+
         print("_"*40)
         print(f"Start training model (type {model_type_list[i]}) in experiment {exp_dir}...")
         print("_"*40)

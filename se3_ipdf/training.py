@@ -44,6 +44,7 @@ def run_single_epoch(model, data_loader, hyper_param, num_iter, mode=0, optimize
         #backward pass through the network
         optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), 1.)
 
         optimizer.step()
 

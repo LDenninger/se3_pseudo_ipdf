@@ -2,6 +2,8 @@ import torch
 import os
 from torch.optim import Adam
 
+from .convNext import load_convnext_model
+from .backbones import ResNet
 from .implicit_so3 import ImplicitSO3
 from .implicit_translation import ImplicitTranslation
 from .implicit_se3_ensamble import ImplicitSE3_Ensamble
@@ -22,12 +24,40 @@ resnet_feature_dim = {
     }
 }
 
+def load_backbone(hyper_param):
+
+    if hyper_param["backbone"]=="resnet18":
+        feature_extractor = ResNet(depth=18, layer=hyper_param["backbone_layer"], pretrained=True)
+        feature_dim = resnet_feature_dim[18][hyper_param["backbone_layer"]]
+    elif hyper_param["backbone"]=="resnet50":
+        feature_extractor = ResNet(depth=50, layer=hyper_param["backbone_layer"], pretrained=True)
+        feature_dim = resnet_feature_dim[50][hyper_param["backbone_layer"]]
+    elif hyper_param["backbone"]=="convnext_tiny":
+        feature_extractor = load_convnext_model(siize="tiny")
+        feature_dim = 0
+    elif hyper_param["backbone"]=="convnext_small":
+        feature_extractor = load_convnext_model(siize="small")
+        feature_dim = 0
+    elif hyper_param["backbone"]=="convnext_base":
+        feature_extractor = load_convnext_model(siize="base")
+        feature_dim = 0
+    elif hyper_param["backbone"]=="convnext_large":
+        feature_extractor = load_convnext_model(siize="large")
+        feature_dim = 0
+
+    return feature_extractor, feature_dim
+
+
+
+
 def load_translation_model(hyper_param, arguments, load_model=None, init_model=False):
     """Load the translation model. Either it is completely new initialized or the model state is load from
     a checkpoint file.
 
     
     """
+
+    feature_extractor, feature_dim = load_backbone(hyper_param)
 
     feature_dim = resnet_feature_dim[hyper_param["resnet_depth"]][hyper_param["resnet_layer"]]
 
@@ -70,9 +100,9 @@ def load_translation_model(hyper_param, arguments, load_model=None, init_model=F
 def load_rotation_model(hyper_param, arguments, load_model=None, init_model=False):
     ## Load the rotation-model from a given checkpoint. If no checkpoint is provided the model will be newly initialized ##
 
-    feature_dim = resnet_feature_dim[hyper_param["resnet_depth"]][hyper_param["resnet_layer"]]
-
-    model = ImplicitSO3(resnet_depth=hyper_param['resnet_depth'], resnet_layer=hyper_param["resnet_layer"],
+    feature_extractor, feature_dim = load_backbone(hyper_param)
+    
+    model = ImplicitSO3(feature_extractor=feature_extractor,
                                     feat_dim=feature_dim, # 
                                     mlp_layer_sizes=hyper_param['mlp_layers'],
                                     num_fourier_comp=hyper_param['num_fourier_comp'],

@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import pytorch3d.transforms as tt
 
-from .backbones import ResNet
 from ..utils import generate_healpix_grid
 
 
@@ -37,7 +36,7 @@ class ImplicitSO3(nn.Module):
         num_eval_queries: The number of queries to use during evaluation, which
             is always a grid sampling (for proper normalization).
     """
-    def __init__(self, resnet_depth, feat_dim, resnet_layer=0, num_fourier_comp=0, mlp_layer_sizes=[256]*4,
+    def __init__(self, feature_extractor,feat_dim, num_fourier_comp=0, mlp_layer_sizes=[256]*4,
                  so3_sampling_mode='grid', num_train_queries=2**15, num_eval_queries=2**16):
         super(ImplicitSO3, self).__init__()
         self.feat_dim = feat_dim
@@ -58,7 +57,7 @@ class ImplicitSO3(nn.Module):
         self._get_closest_avail_grid(self.num_eval_queries)
 
         # ResNet + MLP
-        self.feature_extractor = ResNet(depth=resnet_depth, layer=resnet_layer, pretrained=True) 
+        self.feature_extractor = feature_extractor
         self.FC_vis_emb = nn.Linear(self.feat_dim, mlp_layer_sizes[0])
         self.FC_pose_query_emb = nn.Linear(self.rot_query_dim, mlp_layer_sizes[0])
         self.mlp_layers = nn.ModuleList()

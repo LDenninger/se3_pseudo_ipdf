@@ -3,6 +3,13 @@ import os
 import argparse
 
 import config
+
+EXP_NAME_LIST = ["tabletop_2_can_5", "tabletop_2_can_occ_6", "tabletop_2_can_res1_5", "tabletop_2_can_res2_7", "tabletop_2_bowl_6", "tabletop_2_bowl_occ_6", "tabletop_2_bowl_res1_6", "tabletop_2_bowl_res2_5", "tabletop_2_crackerbox_4", "tabletop_2_crackerbox_occ_4", "tabletop_2_crackerbox_res1_4", "tabletop_2_crackerbox_res2_4"]
+DATASET_LIST = ["tabletop"]*12
+OBJ_ID_LIST = [3]*4+[5]*4+[4]*4
+MODEL_TYPE = [0]*12
+
+
 def initiate_experiment(exp_dir, model_type, dataset, obj_id):
     os.makedirs(exp_dir)
     vis_dir = os.path.join(exp_dir, "visualizations")
@@ -61,15 +68,28 @@ def initiate_experiment(exp_dir, model_type, dataset, obj_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the experiment")
-    parser.add_argument("-exp_name", type=str, help="name of the experiment")
-    parser.add_argument("-dataset", type=str, help="dataset the experiment is performed on")
-    parser.add_argument("-obj_id", type=str, help="object id of the object used in the experiment")
+    parser.add_argument("-exp_name", type=str, default=None, help="name of the experiment")
+    parser.add_argument("-dataset", type=str, default=None, help="dataset the experiment is performed on")
+    parser.add_argument("-obj_id", type=str, default=None, help="object id of the object used in the experiment")
     parser.add_argument("-model", type=int, help="model type: 0: Single rotation IPDF-model, 1: Single translation IPDF-model, 2: Ensamble IPDF-model, 3: ICP-model", default=0)
     args = parser.parse_args()
-    exp_dir = 'experiments/exp_' + args.exp_name
-    model_type = args.model
-    if not os.path.isdir(exp_dir):
-        initiate_experiment(exp_dir, model_type, args.dataset, args.obj_id)
-        print("Experiment directory was created.")
+
+
+    if args.exp_name is not None:
+        exp_dir = 'experiments/exp_' + args.exp_name
+        model_type = args.model
+        if not os.path.isdir(exp_dir):
+            initiate_experiment(exp_dir, model_type, args.dataset, args.obj_id)
+            print("Experiment directory was created.")
+        else:
+            print("Experiment directory already exists.")
+    
     else:
-        print("Experiment directory already exists.")
+        for (i, exp_name) in enumerate(EXP_NAME_LIST):
+            exp_dir = 'experiments/exp_' + exp_name
+            if not os.path.isdir(exp_dir):
+                initiate_experiment(exp_dir, MODEL_TYPE[i], DATASET_LIST[i], OBJ_ID_LIST[i])
+                print("Experiment directory was created.")
+            else:
+                print(f"Experiment directory ({exp_dir}) already exists.")
+

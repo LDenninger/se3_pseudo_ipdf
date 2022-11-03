@@ -13,7 +13,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 class TabletopWorkDataset(Dataset):
     OBJ_ID = 3
     BB_SIZE = (560,560)
-    def __init__(self, config, return_pgt=False, cleaned_pgt=True, return_gt=False, start=0, end=20000):
+    def __init__(self, config, return_pgt=False, cleaned_pgt=True, return_gt=False, start=0, end=20000, material=True):
         """
         Dataloader for the RGBD dataset to work on the dataset using different modes:
 
@@ -26,7 +26,7 @@ class TabletopWorkDataset(Dataset):
         """
         super().__init__()
 
-        self.data_dir = data.id_to_path[config["obj_id"]]
+        self.data_dir = data.id_to_path[config["obj_id"]] if material else data.id_to_path_uniform[config["obj_id"]]
         
         self.config = config
 

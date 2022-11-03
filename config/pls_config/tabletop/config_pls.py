@@ -1,5 +1,6 @@
 tabletop_pls_config_data = {
     "dataset": "tabletop",
+    "material": True,
     "conv_metric": "l2",
     "obj_id": 7,
     "length": 20000,

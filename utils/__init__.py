@@ -6,3 +6,6 @@ from .symmetries import get_symmetry_ground_truth, get_cuboid_syms, produce_grou
 
 # Visualizations
 import utils.visualizations
+
+# Extract data to tensors to speed up data loading
+from tensor_extraction import tensor_extraction

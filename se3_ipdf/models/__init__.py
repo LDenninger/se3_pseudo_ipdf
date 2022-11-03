@@ -1,5 +1,7 @@
 # ResNet backbones
 from .backbones import ResNet
+# ConvNeXt backbone
+from .convNext import load_convnext_model
 # SO(3)-model
 from .implicit_so3 import ImplicitSO3
 # Se(3)-Ensamble model

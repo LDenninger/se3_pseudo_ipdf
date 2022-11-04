@@ -57,13 +57,23 @@ if __name__=="__main__":
 
         if i==config["length"]:
             break
+        
+        ipdb.set_trace()
+        if config["skip"]:
+            if args.dataset=="tless" and os.path.exists(os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))):
+                continue
+            elif args.dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")):
+                continue
         if not input["loaded"]:
+            failed.append(i)
             continue
-
         
         seg_data = input["seg_image"].to(DEVICE).squeeze()
         depth_data = input["depth_image"].to(DEVICE).squeeze()
         intrinsic = input["intrinsic"].to(DEVICE).squeeze()
+        if not (seg_data==config["obj_id"]).any():
+            failed.append(i)
+            continue
         
         pseudo_ground_truth = pose_labeling_scheme(pts_canonical=object_model,
                                                     seg_data=seg_data,
@@ -75,6 +85,7 @@ if __name__=="__main__":
         # Save the failed frames
         if pseudo_ground_truth is None:
             failed.append(i)
+            continue
 
         # Save the pseudo ground truth for the current frame
         if not config["verbose"]:

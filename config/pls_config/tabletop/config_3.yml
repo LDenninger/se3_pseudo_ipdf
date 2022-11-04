@@ -7,7 +7,7 @@ obj_id: 3
 resolution:
 - 1920
 - 1080
-skip: false
+skip: true
 threshold:
 - 800
 - 20

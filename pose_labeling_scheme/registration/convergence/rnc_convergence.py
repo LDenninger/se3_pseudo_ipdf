@@ -37,6 +37,7 @@ def render_depth_image(obj_model, transformation, intrinsic, config):
     scene.add_object(obj)
     renderer = sl.RenderPass()
     result = renderer.render(scene)
+    imshow(result.rgb().permute(2,0,1), "output/pose_labeling_scheme/rgb_rend.png")
 
     depth = result.depth()
     depth[depth==3000] = 0

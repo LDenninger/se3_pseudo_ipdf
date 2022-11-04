@@ -1,6 +1,6 @@
 from utils import tensor_extraction
 
-START_LIST = [10000]*2
+START_LIST = [0]*2
 END_LIST = [20000]*2
 DATA_DIR_LIST = ["/home/nfs/inf6/data/datasets/IPDF_tabletop/bowl_uniform_texture", "/home/nfs/inf6/data/datasets/IPDF_tabletop/cracker_box_uniform_texture"]
 OBJ_ID = [5, 4]

@@ -58,7 +58,6 @@ if __name__=="__main__":
         if i==config["length"]:
             break
         
-        ipdb.set_trace()
         if config["skip"]:
             if args.dataset=="tless" and os.path.exists(os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))):
                 continue

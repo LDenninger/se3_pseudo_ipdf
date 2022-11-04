@@ -120,6 +120,10 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         pseudo_transformation = pseudo_transformation.to(DEVICE)
         pseudo_transformation[:,:3,-1] /= 100
         # SVD for numerical stability
+        ipdb.set_trace()
+        np_t = pseudo_transformation[:,:3,:3].cpu().detach().numpy()
+        U1, S1, V1 = np.linalg.svd(np_t)
+        np_t_2 = torch.bmm(torch.from_numpy(U1), torch.from_numpy(V1))
         U, S, V = torch.linalg.svd(pseudo_transformation[:,:3,:3])
         pseudo_transformation[:,:3,:3] = torch.bmm(U, V)
 

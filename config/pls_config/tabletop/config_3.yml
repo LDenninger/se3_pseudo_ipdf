@@ -1,20 +1,20 @@
 dataset: tabletop
 icp_iteration: 1
-length: 20000
-material: true
+length: 15000
+material: false
 max_iteration: 40
 obj_id: 3
 resolution:
-- 400
-- 400
+- 1920
+- 1080
 skip: false
 threshold:
 - 800
 - 20
 - 2
-verbose: false
+verbose: true
 voxel_size_global: 0.2
 voxel_size_local: 0.2
-conv_metric: l2
+conv_metric: rnc
 l2_threshold: 5
 global_dist_threshold: 0.8

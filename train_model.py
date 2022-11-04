@@ -41,7 +41,7 @@ def train_model():
                 
                 train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
-                model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args)
+                model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)
 
                 wandb.watch(model, log='all', log_freq=10)
 
@@ -72,7 +72,7 @@ def train_model():
 
                 train_loader, val_loader = data.load_model_dataset(hyper_param, args)
                 
-                model, optimizer, start_epoch = models.load_translation_model(hyper_param)
+                model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
                 wandb.watch(model, log='all', log_freq=10)
 
                 se3_ipdf.run_translation_training(model=model, 
@@ -101,7 +101,7 @@ def train_model():
                 
                 train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
-                model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args)
+                model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)
 
                 wandb.watch(model, log='all', log_freq=10)
 
@@ -130,7 +130,7 @@ def train_model():
 
                 train_loader, val_loader = data.load_model_dataset(hyper_param, args)
                 
-                model, optimizer, start_epoch = models.load_translation_model(hyper_param)
+                model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
                 wandb.watch(model, log='all', log_freq=10)
 
                 se3_ipdf.run_translation_training(model=model, 

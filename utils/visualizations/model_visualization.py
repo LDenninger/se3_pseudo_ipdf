@@ -5,7 +5,7 @@ import numpy as np
 import torchvision as tv
 import os
 
-import utils.visualizations
+import utils.visualizations as visualizations
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 world_to_cam = Rotation.from_euler('XYZ', np.float32([0.1, 0.2, 0.3])).as_matrix()

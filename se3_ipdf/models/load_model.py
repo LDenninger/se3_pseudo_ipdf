@@ -33,16 +33,16 @@ def load_backbone(hyper_param):
         feature_extractor = ResNet(depth=50, layer=hyper_param["backbone_layer"], pretrained=True)
         feature_dim = resnet_feature_dim[50][hyper_param["backbone_layer"]]
     elif hyper_param["backbone"]=="convnext_tiny":
-        feature_extractor = load_convnext_model(siize="tiny")
-        feature_dim = 0
+        feature_extractor = load_convnext_model(size="tiny")
+        feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_small":
-        feature_extractor = load_convnext_model(siize="small")
-        feature_dim = 0
+        feature_extractor = load_convnext_model(size="small")
+        feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_base":
-        feature_extractor = load_convnext_model(siize="base")
+        feature_extractor = load_convnext_model(size="base")
         feature_dim = 0
     elif hyper_param["backbone"]=="convnext_large":
-        feature_extractor = load_convnext_model(siize="large")
+        feature_extractor = load_convnext_model(size="large")
         feature_dim = 0
 
     return feature_extractor, feature_dim

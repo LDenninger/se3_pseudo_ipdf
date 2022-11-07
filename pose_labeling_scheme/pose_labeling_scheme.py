@@ -131,11 +131,11 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                                                             intrinsic=intrinsic,
                                                             config=config)
             else:
-                #temp = pseudo_transformation
-                #temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
+                temp = torch.clone(pseudo_transformation)
+                temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
                 converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
                                                             obj_model=obj_model_sl, 
-                                                            transformation_set=pseudo_transformation,
+                                                            transformation_set=temp,
                                                             intrinsic=intrinsic,
                                                             config=config)
         elif config["conv_metric"]=="l2":
@@ -190,7 +190,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         return None
     pseudo_ground_truth_set = torch.stack(pseudo_ground_truth_set)
     if config["dataset"]=="tabletop":
-        pseudo_ground_truth_set = convert_transformation_opencv_opengl(pseudo_ground_truth_set)
+        pseudo_ground_truth_set = pseudo_ground_truth_set
     return pseudo_ground_truth_set
 
 

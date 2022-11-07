@@ -27,9 +27,8 @@ def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param):
             converged = check_convergence_batchwise(depth_original=input["depth_image"].squeeze(),
                                                     obj_model=obj_model_sl, 
                                                     transformation_set=input["pseudo_gt"].squeeze(),
-                                                    threshold=hyper_param['threshold'],
                                                     intrinsic=input["intrinsic"].squeeze(),
-                                                    verbose=False)
+                                                    config=hyper_param)
             conv_ind = torch.nonzero(converged).squeeze()
             conv_pgt = input["pseudo_gt"].squeeze()[conv_ind]
             if hyper_param["dataset"]=="tless":
@@ -43,9 +42,8 @@ def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param):
             converged, d_max, d_avg = check_convergence_batchwise(depth_original=input["depth_image"].squeeze(),
                                                                 obj_model=obj_model_sl, 
                                                                 transformation_set=input["pseudo_gt"].squeeze(),
-                                                                threshold=hyper_param['threshold'],
                                                                 intrinsic=input["intrinsic"].squeeze(),
-                                                                verbose=True)
+                                                                config=hyper_param)
             for j in range(converged.shape[0]):
                 print("_"*20)
                 print(f"\nConvergence Check for frame {i}, PGT no. {j}:\n")

@@ -47,10 +47,11 @@ def generate_init_set_r(init_rotation, offset=0):
     
 
     for i in range(6):
+        lz.append(lz[-1]@rot_z)
         lx.append(lx[-1]@xflip@rot_x)
-        lx.append(lx[-1]@xflip@rot_y)
         lz.append(lz[-1]@xflip@rot_z)
-    
+        lx.append(lx[-1]@zflip@rot_y)
+        lz.append(lz[-1]@zflip@rot_z)
     return torch.stack((lx+ly+lz))
 
 

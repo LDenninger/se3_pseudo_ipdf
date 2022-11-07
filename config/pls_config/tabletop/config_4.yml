@@ -9,12 +9,12 @@ resolution:
 - 1080
 skip: false
 threshold:
-- 800
-- 20
-- 2
+- 2000
+- 100
+- 5
 verbose: false
 voxel_size_global: 0.2
 voxel_size_local: 0.2
-conv_metric: l2
+conv_metric: rnc
 l2_threshold: 0.1
 global_dist_threshold: 0.8

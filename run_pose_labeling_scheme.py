@@ -100,7 +100,7 @@ if __name__=="__main__":
                     save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
                 else:
                     save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
-                if os.path.exists(save_dir):
+                if False and os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     if pgt_exist is not None:
                         pseudo_ground_truth = torch.cat((pgt_exist, pseudo_ground_truth))

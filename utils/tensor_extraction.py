@@ -46,7 +46,7 @@ def tensor_extraction(data_dir, obj_id, frame_list):
     for (i, step) in loop:
         if i == len(frame_list):
             break
-
+        
         # Define frame id and directory
         ind = str(step).zfill(6)
         frame_dir = os.path.join(data_dir, ind)

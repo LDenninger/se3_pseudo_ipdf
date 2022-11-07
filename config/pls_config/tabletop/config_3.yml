@@ -12,9 +12,9 @@ threshold:
 - 100
 - 20
 - 2
-verbose: false
+verbose: true
 voxel_size_global: 0.2
 voxel_size_local: 0.2
 conv_metric: rnc
 l2_threshold: 5
-global_dist_threshold: 0.8
+global_dist_threshold: 0.4

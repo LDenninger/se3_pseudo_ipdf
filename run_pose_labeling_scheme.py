@@ -96,7 +96,10 @@ if __name__=="__main__":
                 torch.save(pseudo_ground_truth, save_dir)
 
             elif args.dataset=="tabletop":
-                save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
+                if config["material"]:
+                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
+                else:
+                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
                 if os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     if pgt_exist is not None:

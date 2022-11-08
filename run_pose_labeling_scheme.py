@@ -61,7 +61,7 @@ if __name__=="__main__":
         if config["skip"]:
             if args.dataset=="tless" and os.path.exists(os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))):
                 continue
-            elif args.dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")):
+            elif args.dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[args.obj_id] if config["material"] else data.id_to_path_uniform[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")):
                 continue
         if not input["loaded"]:
             failed.append(i)

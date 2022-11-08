@@ -44,6 +44,9 @@ def load_backbone(hyper_param):
     elif hyper_param["backbone"]=="convnext_large":
         feature_extractor = load_convnext_model(size="large")
         feature_dim = 0
+    elif hyper_param["backbone"]=="vgg_11":
+        feature_extractor = torch.hub.load('pytorch/vision:v0.10.0', 'vgg11', pretrained=True)
+        feature_dim=0
 
     return feature_extractor, feature_dim
 

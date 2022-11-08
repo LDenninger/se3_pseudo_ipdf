@@ -194,13 +194,6 @@ class TabletopPoseDataset(Dataset):
                     ground_truth = self.produce_ground_truth_analytical(ground_truth)
 
             else:
-                try:
-                    ground_truth = torch.load(os.path.join(data, "gt.pt"))
-                except:
-                    try:
-                        ground_truth = torch.load(os.path.join(data, "ground_truth.pt"))
-                    except:
-                        return None
 
                 ground_truth = self.produce_ground_truth_analytical(ground_truth)
             

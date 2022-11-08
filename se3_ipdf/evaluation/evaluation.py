@@ -94,7 +94,7 @@ def eval_llh(model, dataset, mode=0,
 def eval_recall_error(model, dataset,
                     hyper_param,
                     eval_grid_size=2**15,
-                    threshold=1e-3):
+                    threshold=1e-5):
     """Evaluation of the mean/median angular error of a set of symmetric poses to multiple pose estimates.
     
     """

@@ -170,9 +170,10 @@ if __name__ == "__main__":
         print("_"*40)
         print(f"Start training model (type {model_type_list[i]}) in experiment {exp_dir}...")
         print("_"*40)
-        
-        train_model()
-
+        try:
+            train_model()
+        except:
+            continue
 
     #autograd.set_detect_anomaly(True)
     

@@ -14,8 +14,9 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
-EXP_NAME_LIST = ["tabletop_2_can_6", "tabletop_2_can_occ_7", "tabletop_2_can_res1_6", "tabletop_2_can_res2_8", "tabletop_2_bowl_7", "tabletop_2_bowl_occ_7", "tabletop_2_bowl_res1_7", "tabletop_2_bowl_res2_6", "tabletop_2_crackerbox_5", "tabletop_2_crackerbox_occ_5", "tabletop_2_crackerbox_res1_5", "tabletop_2_crackerbox_res2_5"]
-MODEL_TYPE = [0]*12
+
+EXP_NAME_LIST = ["tless_1_obj_05_ana_1", "tless_1_obj_07_ana_1", "tless_1_obj_17_ana_1", "tless_1_obj_20_ana_1", "tless_1_obj_23_ana_1", "tless_1_obj_27_ana_1"]
+MODEL_TYPE = [0]*6
 
 
 def train_model():
@@ -38,7 +39,6 @@ def train_model():
 
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                
                 train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
                 model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)

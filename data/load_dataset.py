@@ -57,11 +57,18 @@ def load_model_dataset(hyper_param, validation_only=False):
                                                 occlusion=hyper_param['occlusion'],
                                                 device=DEVICE)
         if hyper_param["dataset"]=="tless":
+            if hyper_param["pseudo_gt"]:
+                gt_mode = 1
+            elif hyper_param["single_gt"]:
+                gt_mode = 0
+            else:
+                gt_mode = 2
+
             data_train = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
-                                            ground_truth_mode=1 if hyper_param["pseudo_gt"] else 0,
+                                            ground_truth_mode= gt_mode,
                                             train_set=True,
                                             occlusion=hyper_param["occlusion"])
-        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=8)
+        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=0)
         return train_loader, val_loader
 
     return val_loader

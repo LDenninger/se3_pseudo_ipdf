@@ -3,6 +3,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 import ipdb
+import json
 import math
 import open3d as o3d
 import random
@@ -57,7 +58,6 @@ class TLESSPoseDataset(Dataset):
         
         """
         super().__init__()
-
         if train_set or train_as_test:
             self.data_dir = os.path.join("/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect", str(obj_id).zfill(2))
             self.len = 1296 # 1296
@@ -89,7 +89,13 @@ class TLESSPoseDataset(Dataset):
             for set in range(1,21):    
                 with open(os.path.join(self.data_dir, str(set).zfill(2),"gt.yml"), "r") as f:
                     self.set_gt.append(yaml.load(f, Loader=Loader))
-            
+        
+        if ground_truth_mode==2:
+            with open(os.path.join(self.data_dir, "gt.yml"), "r") as f:
+                self.ground_truth = yaml.load(f, Loader=Loader)
+            self.ground_truth_ana = produce_ground_truth_set_tless(obj_id, 0.1)
+
+
         self.train_as_test = train_as_test
         self.obj_id = obj_id
         self.train_set = train_set
@@ -210,9 +216,115 @@ class TLESSPoseDataset(Dataset):
             if pseudo_gt_set.shape[0]==0:
                 return None
             gt = pseudo_gt_set[np.random.randint(pseudo_gt_set.shape[0])]
+        elif self.ground_truth_mode==2:
+            rand_int = np.random.randint(len(self.ground_truth_ana))
+            gt = torch.eye(4)
+            gt[:3,:3] = torch.reshape(torch.Tensor(self.ground_truth[idx][0]['cam_R_m2c']), (3,3))
+            gt[:3,-1] = torch.Tensor(self.ground_truth[idx][0]['cam_t_m2c'])
 
+            gt[:3,:3] = gt[:3,:3] @ torch.from_numpy(self.ground_truth_ana[rand_int]["R"]).float()
         return gt
 
 
     def __len__(self):
         return self.len
+
+
+def produce_ground_truth_set_tless(obj_id, cont_step=0.01):
+    """Returns a set of symmetry transformations for an object model.
+    :param model_info: See files models_info.json provided with the datasets.
+    :param max_sym_disc_step: The maximum fraction of the object diameter which
+        the vertex that is the furthest from the axis of continuous rotational
+        symmetry travels between consecutive discretized rotations.
+    :return: The set of symmetry transformations.
+    """
+    ## External helper functions ##
+    def unit_vector(data, axis=None, out=None):
+        """Return ndarray normalized by length, i.e. Euclidean norm, along axis.
+        """
+        if out is None:
+            data = np.array(data, dtype=np.float64, copy=True)
+            if data.ndim == 1:
+                data /= math.sqrt(np.dot(data, data))
+            return data
+        else:
+            if out is not data:
+                out[:] = np.array(data, copy=False)
+                data = out
+        length = np.atleast_1d(np.sum(data * data, axis))
+        np.sqrt(length, length)
+        if axis is not None:
+            length = np.expand_dims(length, axis)
+        data /= length
+        if out is None:
+            return data
+
+
+    def rotation_matrix(angle, direction, point=None):
+        """Return matrix to rotate about axis defined by point and direction.
+        """
+        sina = math.sin(angle)
+        cosa = math.cos(angle)
+        direction = unit_vector(direction[:3])
+        # rotation matrix around unit vector
+        R = np.diag([cosa, cosa, cosa])
+        R += np.outer(direction, direction) * (1.0 - cosa)
+        direction *= sina
+        R += np.array([[0.0, -direction[2], direction[1]],
+                            [direction[2], 0.0, -direction[0]],
+                            [-direction[1], direction[0], 0.0]])
+        M = np.identity(4)
+        M[:3, :3] = R
+        if point is not None:
+            # rotation not around origin
+            point = np.array(point[:3], dtype=np.float64, copy=False)
+            M[:3, 3] = point - np.dot(R, point)
+        return M
+
+
+    ## External loading script taken from the BOP-toolkit repository ##
+    # Load the model infos containing the symmetries
+    model_info_path = "/home/nfs/inf6/data/datasets/T-Less/t-less-bop/models_cad/models_info.json"
+    with open(model_info_path, "r") as f:
+      model_info = json.load(f)
+    model_info = model_info[str(obj_id)]
+
+    # Discrete symmetries.
+    trans_disc = [{'R': np.eye(3), 't': np.array([[0, 0, 0]]).T}]  # Identity.
+    if 'symmetries_discrete' in model_info:
+        for sym in model_info['symmetries_discrete']:
+            sym_4x4 = np.reshape(sym, (4, 4))
+            R = sym_4x4[:3, :3]
+            t = sym_4x4[:3, 3].reshape((3, 1))
+            trans_disc.append({'R': R, 't': t})
+
+    # Discretized continuous symmetries.
+    trans_cont = []
+    if 'symmetries_continuous' in model_info:
+        for sym in model_info['symmetries_continuous']:
+            axis = np.array(sym['axis'])
+            offset = np.array(sym['offset']).reshape((3, 1))
+
+        # (PI * diam.) / (max_sym_disc_step * diam.) = discrete_steps_count
+        discrete_steps_count = int(np.ceil(np.pi / cont_step))
+
+        # Discrete step in radians.
+        discrete_step = 2.0 * np.pi / discrete_steps_count
+
+        for i in range(1, discrete_steps_count):
+            R = rotation_matrix(i * discrete_step, axis)[:3, :3]
+            t = -R.dot(offset) + offset
+            trans_cont.append({'R': R, 't': t})
+
+    # Combine the discrete and the discretized continuous symmetries.
+    trans = []
+    for tran_disc in trans_disc:
+        if len(trans_cont):
+            for tran_cont in trans_cont:
+                R = tran_cont['R'].dot(tran_disc['R'])
+                t = tran_cont['R'].dot(tran_disc['t']) + tran_cont['t']
+                trans.append({'R': R, 't': t})
+        else:
+            trans.append(tran_disc)
+
+    return trans

@@ -35,7 +35,7 @@ if __name__=="__main__":
     # Load the data
     data_loader = data.load_pls_dataset(config, start=args.start)
 
-    progress_bar = tqdm(enumerate(data_loader), total= config["length"])
+    progress_bar = tqdm(enumerate(data_loader), total= config["length"]-args.start)
 
     failed = []
 
@@ -56,7 +56,7 @@ if __name__=="__main__":
 
     for (i, input) in progress_bar:
 
-        if i==config["length"]:
+        if i==config["length"]-args.start:
             break
         
         if config["skip"]:
@@ -98,9 +98,9 @@ if __name__=="__main__":
 
             elif args.dataset=="tabletop":
                 if config["material"]:
-                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(input["index"]).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt.pth")
                 else:
-                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(input["index"]).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt.pth")
                 if False and os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     if pgt_exist is not None:

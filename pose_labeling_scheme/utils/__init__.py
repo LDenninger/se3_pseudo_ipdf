@@ -12,7 +12,7 @@ from .preprocess_point_cloud import preprocess_point_cloud
 from .init_set_generation import generate_init_set_inv, generate_init_set_noise, generate_init_set_r
 
 # Import data paths 
-from .data import id_to_path
+from .data import id_to_path, id_to_path_uniform
 
 # Convention transformation
 from .convention_transforms import convert_points_opencv_opengl, convert_transformation_opencv_opengl

@@ -73,7 +73,7 @@ def load_model_dataset(hyper_param, validation_only=False):
 
     return val_loader
 
-def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):
+def starload_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):
     
     if hyper_param["dataset"]=="tless":
         dataset = data.TLESSWorkDataset(

@@ -4,7 +4,7 @@ import ipdb
 import os
 
 from .registration import check_convergence_batchwise
-from .utils import check_duplicates_averaging, id_to_path
+from .utils import check_duplicates_averaging, id_to_path, id_to_path_uniform
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -79,7 +79,7 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
             if hyper_param["material"]:
                 data_dir = id_to_path[hyper_param["obj_id"]]
             else:
-                data_dir = id_to_path[hyper_param["obj_id"]]
+                data_dir = id_to_path_uniform[hyper_param["obj_id"]]
             torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
     
     print("Frames without pseudo ground truth:", non_exist)
@@ -112,7 +112,7 @@ def run_convention_cleanup(dataset, hyper_param):
             if hyper_param["material"]:
                 data_dir = id_to_path[hyper_param["obj_id"]]
             else:
-                data_dir = id_to_path[hyper_param["obj_id"]]
+                data_dir = id_to_path_uniform[hyper_param["obj_id"]]
             torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
     
     print("Conversion was undone!")

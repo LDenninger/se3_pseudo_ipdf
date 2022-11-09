@@ -76,7 +76,10 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
                 data_dir = "/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect"
                 torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(hyper_param["obj_id"]), "pseudo_gt", ("cleaned_"+str(i).zfill(4)+ ".pth")))
         elif hyper_param["dataset"]=="tabletop":
-            data_dir = id_to_path[hyper_param["obj_id"]]
+            if hyper_param["material"]:
+                data_dir = id_to_path[hyper_param["obj_id"]]
+            else:
+                data_dir = id_to_path[hyper_param["obj_id"]]
             torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
     
     print("Frames without pseudo ground truth:", non_exist)
@@ -106,7 +109,10 @@ def run_convention_cleanup(dataset, hyper_param):
                 data_dir = "/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect"
                 torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(hyper_param["obj_id"]), "pseudo_gt", ("cleaned_"+str(i).zfill(4)+ ".pth")))
         elif hyper_param["dataset"]=="tabletop":
-            data_dir = id_to_path[hyper_param["obj_id"]]
+            if hyper_param["material"]:
+                data_dir = id_to_path[hyper_param["obj_id"]]
+            else:
+                data_dir = id_to_path[hyper_param["obj_id"]]
             torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
     
     print("Conversion was undone!")

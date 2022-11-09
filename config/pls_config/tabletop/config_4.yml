@@ -10,9 +10,9 @@ resolution:
 skip: false
 threshold:
 - 2000
-- 200
+- 100
 - 5
-verbose: false
+verbose: true
 voxel_size_global: 0.2
 voxel_size_local: 0.2
 conv_metric: rnc

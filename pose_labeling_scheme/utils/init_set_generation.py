@@ -49,8 +49,10 @@ def generate_init_set_r(init_rotation, offset=0):
 
     for i in range(6):
         lz.append(lz[-1]@rot_z)
+        ly.append(ly[-1]@rot_y)
+        lx.append(lx[-1]@rot_x)
 
-    return torch.stack((lz))
+    return torch.stack((lx+ly+lz))
 
 
 def generate_init_set_noise(init_rotation, num_init=5):

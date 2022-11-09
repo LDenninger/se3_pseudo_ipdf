@@ -26,6 +26,8 @@ def generate_init_set_r(init_rotation, offset=0):
     lx = []
     ly = []
     lz = []
+    lv = []
+    lw = []
 
     xflip = tt.euler_angles_to_matrix(torch.tensor([0,math.pi,0]), "XYZ")
     yflip = tt.euler_angles_to_matrix(torch.tensor([0,0,math.pi]), "XYZ")
@@ -44,14 +46,11 @@ def generate_init_set_r(init_rotation, offset=0):
     rot_z = tt.euler_angles_to_matrix(torch.tensor([0,0,0.25*math.pi]), "XYZ")
     lz.append(init_rotation @ rot_z @ offset_z)
 
-    
 
     for i in range(6):
-        lz.append(lz[-1]@rot_x)
-        lz.append(lz[-1]@rot_y)
         lz.append(lz[-1]@rot_z)
 
-    return torch.stack((lx+ly+lz))
+    return torch.stack((lz))
 
 
 def generate_init_set_noise(init_rotation, num_init=5):

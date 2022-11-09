@@ -1,16 +1,16 @@
 dataset: tabletop
 icp_iteration: 1
 length: 15000
-material: false
+material: true
 max_iteration: 40
 obj_id: 4
 resolution:
 - 1920
 - 1080
-skip: true
+skip: false
 threshold:
 - 2000
-- 100
+- 200
 - 5
 verbose: false
 voxel_size_global: 0.2

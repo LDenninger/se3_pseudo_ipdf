@@ -19,6 +19,7 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")
     parser.add_argument("-dataset", type=str, help="Dataset to run the PLS on")
     parser.add_argument("-obj_id", type=int, help="Object to run the PLS on")
+    parser.add_argument("-start", type=int, default=0)
     parser.add_argument("-rs", type=int, default=42, help="Random seed")
     args = parser.parse_args()
 
@@ -32,7 +33,7 @@ if __name__=="__main__":
     
 
     # Load the data
-    data_loader = data.load_pls_dataset(config)
+    data_loader = data.load_pls_dataset(config, start=args.start)
 
     progress_bar = tqdm(enumerate(data_loader), total= config["length"])
 
@@ -97,9 +98,9 @@ if __name__=="__main__":
 
             elif args.dataset=="tabletop":
                 if config["material"]:
-                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(input["index"]).zfill(6), "pseudo_gt.pth")
                 else:
-                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(i).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(input["index"]).zfill(6), "pseudo_gt.pth")
                 if False and os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     if pgt_exist is not None:

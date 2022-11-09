@@ -42,6 +42,7 @@ class TabletopWorkDataset(Dataset):
 
     def __getitem__(self, idx):
         # Define the frame from the given index
+        idx += self.start
         frame_id = str(idx).zfill(6)
         data_frame_dir = os.path.join(self.data_dir, frame_id)
         # Load the data needed by the pose labeling scheme

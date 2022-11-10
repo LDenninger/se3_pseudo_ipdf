@@ -2,24 +2,24 @@ import torch
 import pytorch3d.transforms as tt
 import numpy as np
 
-def evaluation_acc_error(pseudo_gt, ground_truth, config):
+def evaluation_acc_error(pseudo_gt, ground_truth, obj_id):
 
-    ground_truth_set = produce_ground_truth_set(ground_truth, config["obj_id"])
+    ground_truth_set = produce_ground_truth_set(ground_truth, obj_id)
 
-    errors = []
 
-    for pgt in pseudo_gt:
-        geo_d = geo_dist(torch.repeat_interleave(pgt.unsqueeze(0), ground_truth_set.shape[0], dim=0), ground_truth_set)
-        min_d = np.min(geo_d)
-        errors.append(min_d)
+    geo_d = geo_dist_pairwise(pseudo_gt, ground_truth_set)
 
-    errors = np.rad2deg(errors)
-    mean = np.mean(errors)
+    try:
+        min_geodesic_dist = torch.min(geo_d, dim=-1)[0]
+    except:
+        return None
 
-    return mean
+    mean = torch.mean(min_geodesic_dist).numpy()
 
-def evaluation_recall_error(pseudo_gt, ground_truth, config):
-    ground_truth_set = produce_ground_truth_set(ground_truth, config["obj_id"])
+    return np.rad2deg(mean)
+
+def evaluation_recall_error(pseudo_gt, ground_truth, obj_id):
+    ground_truth_set = produce_ground_truth_set(ground_truth, obj_id)
 
     geo_d = geo_dist_pairwise(ground_truth_set, pseudo_gt)
     try:
@@ -27,7 +27,7 @@ def evaluation_recall_error(pseudo_gt, ground_truth, config):
     except:
         return None
 
-    mean = np.mean(min_geodesic_dist)
+    mean = torch.mean(min_geodesic_dist).numpy()
     
     return np.rad2deg(mean)
 
@@ -73,8 +73,8 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         rotation = tt.euler_angles_to_matrix(rotation, 'ZYX').to(device).float()
         flip = tt.euler_angles_to_matrix(torch.repeat_interleave(torch.tensor([[0, 0, np.pi]]),int(num/2),dim=0), 'ZYX').to(device).float()
         rotation_flip = flip @ rotation
-        sym = torch.cat([rotation, rotation_flip]).to(device)
-        ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), sym)
+        sym = torch.cat([rotation, rotation_flip]).to(device).float()
+        ground_truth_set = rotation_gt.float() @ sym
     if obj_id==4:
         syms = torch.zeros(4,3,3)
         syms[0] = torch.eye(3)
@@ -82,7 +82,7 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         syms[2] = tt.euler_angles_to_matrix(torch.Tensor([0,np.pi,0 ]), 'ZYX').to(device).float()
         syms[3] = syms[1] @ syms[2]
 
-        ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), syms)
+        ground_truth_set = rotation_gt.float() @ syms.float().to(device)
 
 
     if obj_id==5:
@@ -91,8 +91,8 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         rotation = torch.zeros(int(num/2),3)
         rotation[:,0] = rot_mag
         rotation = tt.euler_angles_to_matrix(rotation, 'ZYX')
-        ground_truth_set = rotation.to(device)
-        ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), ground_truth_set)
+        ground_truth_set = rotation.to(device).float()
+        ground_truth_set = rotation_gt.float() @ ground_truth_set
 
 
 

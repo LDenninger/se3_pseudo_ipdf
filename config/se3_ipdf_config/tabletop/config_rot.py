@@ -21,8 +21,10 @@ tabletop_rot_config_data = {
     'backbone': "resnet18",
     'backbone_layer': 0,
     'pseudo_gt': True,
+    'single_gt': False,
     'occlusion': False,
     'full_img': False,
     'full_eval': True,
-    'length': 15000
+    'length': 15000,
+    'material': True
 }

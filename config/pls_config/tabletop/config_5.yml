@@ -1,7 +1,7 @@
 dataset: tabletop
 icp_iteration: 1
 length: 15000
-material: false
+material: true
 max_iteration: 20
 obj_id: 5
 resolution:
@@ -17,4 +17,4 @@ voxel_size_global: 0.2
 voxel_size_local: 0.2
 conv_metric: rnc
 l2_threshold: 0.1
-global_dist_threshold: 0.8
+global_dist_threshold: 0.6

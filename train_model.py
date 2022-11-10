@@ -15,7 +15,7 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
 
-EXP_NAME_LIST = ["tless_1_obj_05_ana_1", "tless_1_obj_07_ana_1", "tless_1_obj_17_ana_1", "tless_1_obj_20_ana_1", "tless_1_obj_23_ana_1", "tless_1_obj_27_ana_1"]
+EXP_NAME_LIST = ["tless_2_obj_05_1", "tless_2_obj_07_1", "tless_2_obj_17_1", "tless_2_obj_20_1", "tless_2_obj_23_1", "tless_2_obj_27_1"]
 MODEL_TYPE = [0]*6
 
 

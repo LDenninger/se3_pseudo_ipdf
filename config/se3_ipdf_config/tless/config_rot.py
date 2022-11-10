@@ -1,6 +1,6 @@
 tless_rot_config_data = {
     'num_epochs': 100,
-    'num_train_iter': 80,
+    'num_train_iter': 100,
     'num_val_iter': 40,
     'start_save': 2,
     'save_freq': 5,
@@ -20,6 +20,7 @@ tless_rot_config_data = {
     'backbone': "resnet18",
     'train_as_test': True,
     'pseudo_gt': True,
+    'single_gt': False,
     'occlusion': True,
     'full_eval': True
 }

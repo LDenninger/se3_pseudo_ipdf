@@ -91,9 +91,10 @@ class TabletopWorkDataset(Dataset):
             loaded=False
 
         if self.return_gt:
-            ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "ground_truth.pt"))
-
-        
+            try:
+                ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "ground_truth.pt"))
+            except:
+                ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "gt.pt"))
 
         return {
             "image": image,

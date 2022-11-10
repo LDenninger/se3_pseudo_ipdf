@@ -19,7 +19,11 @@ def get_symmetry_ground_truth(rotation_gt, obj_id, dataset, num=720):
             ground_truth_set = rotation_gt.float() @ ground_truth_set
             
         if obj_id==4:
-            syms = torch.from_numpy(get_cuboid_syms()).float()
+            syms = torch.zeros(4,3,3)
+            syms[0] = torch.eye(3)
+            syms[1] = tt.euler_angles_to_matrix(torch.Tensor([0,0, np.pi]), 'ZYX').float()
+            syms[2] = tt.euler_angles_to_matrix(torch.Tensor([0,np.pi,0 ]), 'ZYX').float()
+            syms[3] = syms[1] @ syms[2]
             ground_truth_set = rotation_gt.float() @ syms
             
 

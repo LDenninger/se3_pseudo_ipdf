@@ -14,10 +14,10 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
-#EXP_NAME_LIST = ["tabletop_2_can_convnextT_2", "tabletop_2_can_convnextS_2","tabletop_2_can_vgg_1", "tabletop_2_crackerbox_convnextT_2", "tabletop_2_crackerbox_convnextS_2", "tabletop_2_crackerbox_vgg_1", "tabletop_2_bowl_vgg_1"]
+EXP_NAME_LIST = ["tabletop_2_can_vgg_3"]
 
-EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
-MODEL_TYPE = [0]*6
+#EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
+MODEL_TYPE = [0]
 
 
 def train_model():

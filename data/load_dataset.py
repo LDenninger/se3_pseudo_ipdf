@@ -72,7 +72,7 @@ def load_model_dataset(hyper_param, validation_only=False):
                                             ground_truth_mode= gt_mode,
                                             train_set=True,
                                             occlusion=hyper_param["occlusion"])
-        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=8)
+        train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=0)
         return train_loader, val_loader
 
     return val_loader

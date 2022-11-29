@@ -22,6 +22,8 @@ if __name__=="__main__":
     parser.add_argument("-start", type=int, default=0)
     parser.add_argument("-rs", type=int, default=42, help="Random seed")
     parser.add_argument("--uni", action="store_true", default=False)
+    parser.add_argument("--verbose", action="store_true", default=False)
+
     args = parser.parse_args()
 
     utils.set_random_seed(args.rs)
@@ -30,7 +32,7 @@ if __name__=="__main__":
     config = config.load_pls_config(args.dataset, args.obj_id)
     if args.dataset=="tabletop":
         config["material"] = not args.uni
-
+    config["verbose"] = args.verbose
     # Save directory for the pseudo ground truth
     pseudo_save_dir = os.path.join("/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect", str(config["obj_id"]).zfill(2), "pseudo_gt")
     

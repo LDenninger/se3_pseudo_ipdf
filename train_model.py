@@ -14,9 +14,10 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
+EXP_NAME_LIST = ["tabletop_2_can_vgg_3"]
 
-EXP_NAME_LIST = ["tless_2_obj_05_1", "tless_2_obj_07_1", "tless_2_obj_17_1", "tless_2_obj_20_1", "tless_2_obj_23_1", "tless_2_obj_27_1"]
-MODEL_TYPE = [0]*6
+#EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
+MODEL_TYPE = [0]
 
 
 def train_model():
@@ -100,7 +101,6 @@ def train_model():
 
                 
                 train_loader, val_loader = data.load_model_dataset(hyper_param)
-                
                 model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)
 
                 wandb.watch(model, log='all', log_freq=10)

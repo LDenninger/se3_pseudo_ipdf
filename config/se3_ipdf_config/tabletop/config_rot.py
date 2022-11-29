@@ -25,5 +25,6 @@ tabletop_rot_config_data = {
     'occlusion': False,
     'full_img': False,
     'full_eval': True,
-    'length': 15000
+    'length': 15000,
+    'material': True
 }

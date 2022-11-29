@@ -15,9 +15,13 @@ IPDF = False
 def load_model_dataset(hyper_param, validation_only=False):
 
     # Validation data
+    if hyper_param["material"]:
+        data_dir = data.id_to_path[hyper_param["obj_id"]]
+    else:
+        data_dir = data.id_to_path_uniform[hyper_param["obj_id"]]
 
     if hyper_param["dataset"]=="tabletop":
-        data_val = data.TabletopPoseDataset(data_dir=data.id_to_path[hyper_param["obj_id"]], 
+        data_val = data.TabletopPoseDataset(data_dir=data_dir, 
                                             obj_id = hyper_param["obj_id"],
                                             img_size= hyper_param['img_size'],
                                             bb_crop=hyper_param['crop_image'],
@@ -43,7 +47,7 @@ def load_model_dataset(hyper_param, validation_only=False):
     # Training data
     if not validation_only:
         if hyper_param["dataset"]=="tabletop":
-            data_train = data.TabletopPoseDataset(data_dir=data.id_to_path[hyper_param["obj_id"]],
+            data_train = data.TabletopPoseDataset(data_dir=data_dir,
                                                 obj_id = hyper_param["obj_id"],
                                                 img_size= hyper_param['img_size'],
                                                 bb_crop=hyper_param['crop_image'],

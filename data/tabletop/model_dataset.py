@@ -172,7 +172,6 @@ class TabletopPoseDataset(Dataset):
             4: Produce pseudo ground-truths online using the pose labeling scheme
         """
         data = os.path.join(self.data_dir, str(idx).zfill(6))
-
         if self.single_gt==True:
             try:
                     ground_truth = torch.load(os.path.join(data, "gt.pt"))
@@ -189,11 +188,17 @@ class TabletopPoseDataset(Dataset):
                 except:
                     return None
                 ground_truth = pseudo_gt_set[np.random.randint(pseudo_gt_set.shape[0])]
-
-                if self.obj_id==4:
-                    ground_truth = self.produce_ground_truth_analytical(ground_truth)
+                #if self.obj_id==4:
+                #    ground_truth = self.produce_ground_truth_analytical(ground_truth)
 
             else:
+                try:
+                    ground_truth = torch.load(os.path.join(data, "gt.pt"))
+                except:
+                    try:
+                        ground_truth = torch.load(os.path.join(data, "ground_truth.pt"))
+                    except:
+                        return None
 
                 ground_truth = self.produce_ground_truth_analytical(ground_truth)
             
@@ -238,8 +243,12 @@ class TabletopPoseDataset(Dataset):
             rot_z = tt.euler_angles_to_matrix(torch.tensor([0,0, rot_mag]), 'ZYX').float()
             rot = torch.stack([rot_x, rot_y, rot_z])
             ground_truth [:3,:3] = ground_truth[:3,:3] @ rot[np.random.randint(3)]"""
-            set = ground_truth[:3,:3].float() @ self.CUBOID_SYMS
-            ground_truth[:3,:3] = set[np.random.randint(set.shape[0])]
+            syms = torch.zeros(4,3,3)
+            syms[0] = torch.eye(3)
+            syms[1] = tt.euler_angles_to_matrix(torch.Tensor([0,0, np.pi]), 'ZYX').float()
+            syms[2] = tt.euler_angles_to_matrix(torch.Tensor([0,np.pi,0 ]), 'ZYX').float()
+            syms[3] = syms[1] @ syms[2]
+            ground_truth[:3,:3] = ground_truth[:3,:3] @ syms[np.random.randint(syms.shape[0])]
 
         
         if self.obj_id == 5:

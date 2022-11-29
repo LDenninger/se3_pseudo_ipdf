@@ -4,9 +4,9 @@ import argparse
 
 import config
 
-EXP_NAME_LIST = ["tless_2_obj_05_1", "tless_2_obj_07_1", "tless_2_obj_17_1", "tless_2_obj_20_1", "tless_2_obj_23_1", "tless_2_obj_27_1"]
-DATASET_LIST = ["tless"]*6
-OBJ_ID_LIST = [5,7,17,20,23,27]
+EXP_NAME_LIST = ["tabletop_2_can_uni_1","tabletop_2_can_uni_occ_1","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
+DATASET_LIST = ["tabletop"]*6
+OBJ_ID_LIST = [3]*2+[4]*2+ [5]*2
 MODEL_TYPE = [0]*6
 
 

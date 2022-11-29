@@ -21,12 +21,15 @@ if __name__=="__main__":
     parser.add_argument("-obj_id", type=int, help="Object to run the PLS on")
     parser.add_argument("-start", type=int, default=0)
     parser.add_argument("-rs", type=int, default=42, help="Random seed")
+    parser.add_argument("--uni", action="store_true", default=False)
     args = parser.parse_args()
 
     utils.set_random_seed(args.rs)
     
     # Load the config file corresponding to dataset and object
     config = config.load_pls_config(args.dataset, args.obj_id)
+    if args.dataset=="tabletop":
+        config["material"] = not args.uni
 
     # Save directory for the pseudo ground truth
     pseudo_save_dir = os.path.join("/home/nfs/inf6/data/datasets/T-Less/t-less_v2/train_kinect", str(config["obj_id"]).zfill(2), "pseudo_gt")
@@ -98,9 +101,9 @@ if __name__=="__main__":
 
             elif args.dataset=="tabletop":
                 if config["material"]:
-                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt_thesis.pth")
                 else:
-                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt.pth")
+                    save_dir = os.path.join(data.id_to_path_uniform[args.obj_id], str(input["index"].item()).zfill(6), "pseudo_gt_thesis.pth")
                 if False and os.path.exists(save_dir):
                     pgt_exist = torch.load(save_dir)
                     if pgt_exist is not None:

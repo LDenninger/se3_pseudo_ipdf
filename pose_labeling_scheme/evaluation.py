@@ -19,8 +19,19 @@ def evaluation_acc_error(pseudo_gt, ground_truth, obj_id):
     return np.rad2deg(mean)
 
 def evaluation_recall_error(pseudo_gt, ground_truth, obj_id):
-    ground_truth_set = produce_ground_truth_set(ground_truth, obj_id)
 
+    ground_truth_set = produce_ground_truth_set(ground_truth[0], obj_id, m=True).float()
+    try:
+        if ground_truth.shape[0]==1:
+            ground_truth = ground_truth.squeeze()
+            pseudo_gt = ground_truth.T.float() @  pseudo_gt[0].float()
+        else:
+            pgt = []
+            for i in range(ground_truth.shape[0]):
+                pgt.append(ground_truth[i].T.float() @ pseudo_gt[i].float())
+            pseudo_gt = torch.cat(pgt, dim=0)
+    except:
+        import ipdb; ipdb.set_trace()
     geo_d = geo_dist_pairwise(ground_truth_set, pseudo_gt)
     try:
         min_geodesic_dist = torch.min(geo_d, dim=-1)[0]
@@ -61,7 +72,7 @@ def geo_dist(r1, r2):
     return torch.arccos(torch.clip((trace - 1.0) / 2.0, -1.0, 1.0))
 
 
-def produce_ground_truth_set(rotation_gt, obj_id, num=200):
+def produce_ground_truth_set(rotation_gt, obj_id, num=200, m=False):
 
     device = rotation_gt.device
 
@@ -73,8 +84,8 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         rotation = tt.euler_angles_to_matrix(rotation, 'ZYX').to(device).float()
         flip = tt.euler_angles_to_matrix(torch.repeat_interleave(torch.tensor([[0, 0, np.pi]]),int(num/2),dim=0), 'ZYX').to(device).float()
         rotation_flip = flip @ rotation
-        sym = torch.cat([rotation, rotation_flip]).to(device).float()
-        ground_truth_set = rotation_gt.float() @ sym
+        syms = torch.cat([rotation, rotation_flip]).to(device).float()
+        ground_truth_set = rotation_gt.float() @ syms
     if obj_id==4:
         syms = torch.zeros(4,3,3)
         syms[0] = torch.eye(3)
@@ -91,9 +102,10 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         rotation = torch.zeros(int(num/2),3)
         rotation[:,0] = rot_mag
         rotation = tt.euler_angles_to_matrix(rotation, 'ZYX')
-        ground_truth_set = rotation.to(device).float()
-        ground_truth_set = rotation_gt.float() @ ground_truth_set
+        syms = rotation.to(device).float()
+        ground_truth_set = rotation_gt.float() @ syms
 
-
+    if m:
+        return syms
 
     return ground_truth_set

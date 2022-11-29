@@ -13,8 +13,8 @@ import data
 import pose_labeling_scheme as pls
 
 SAVE_PATH = P("output/pose_labeling_scheme")
-LENGTH = 2300
-OBJ_ID = [5]
+LENGTH = 5000
+OBJ_ID = [3]
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")
@@ -47,22 +47,59 @@ if __name__=="__main__":
             p = data_path / idx 
             try:
                 if args.clean:
-                    pgt = torch.load(str(p/"cleaned_pseudo_gt.pth"))
+                    pgt = torch.load(str(p/"cleaned_pseudo_gt.pth"))[:,:3,:3]
                 else:
-                    pgt = torch.load(str(p/"pseudo_gt.pth"))
-                ground_truth = torch.load(str(p/"ground_truth.pt"))
+                    pgt = torch.load(str(p/"pseudo_gt.pth"))[:,:3,:3]
+                ground_truth = torch.load(str(p/"ground_truth.pt"))[:3,:3]
             except:
                 try:
-                    ground_truth = torch.load(str(p/"gt.pt"))
+                    ground_truth = torch.load(str(p/"gt.pt"))[:3,:3]
                 except:
                     continue
             if pgt is None:
                 continue    
-            error.append(pls.evaluation_acc_error(pgt[:,:3,:3], ground_truth[:3,:3], obj_id))
-            recall_error.append(pls.evaluation_recall_error(pgt[:,:3,:3], ground_truth[:3,:3], obj_id))
+            error.append(pls.evaluation_acc_error(pgt, ground_truth, obj_id))
+            recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
+
         p_error = np.mean(error)
         r_error = np.mean(recall_error)
         print("_"*60)
         print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n")
         print("_"*60)
+        failed=False
+        for n in [10, 20]:
+            l = LENGTH
+            progress_bar = tqdm(range(l), total=l)
+            for i in progress_bar:
+                ground_truth = []
+                pgt = []
+                failed=False
+                for j in range(n):
+                    idx = str(args.start+i+j).zfill(6)
+                    p = data_path / idx 
+                    try:
+                        if args.clean:
+                            pgt.append(torch.load(str(p/"cleaned_pseudo_gt.pth"))[:,:3,:3])
+                        else:
+                            pgt.append(torch.load(str(p/"pseudo_gt.pth"))[:,:3,:3])
+                    except:
+                        failed = True
+                    try:
+                        ground_truth.append(torch.load(str(p/"ground_truth.pt"))[:3,:3])
+                    except:
+                        try:
+                            ground_truth.append(torch.load(str(p/"gt.pt"))[:3,:3])
+                        except:
+                            failed=True
+                if failed:
+                    continue
+                
+                recall_error.append(pls.evaluation_recall_error(pgt, torch.stack(ground_truth), obj_id))
+            
+            r_error = np.mean(recall_error)
+            print("_"*60)
+            print(f"\nObject no. {obj_id}: Angular recall error with {n} images: {r_error}\n")
+            print("_"*60)
+        
+        
 

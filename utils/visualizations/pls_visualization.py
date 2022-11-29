@@ -29,4 +29,4 @@ def visualize_pseudo_gt(dataset, hyper_param, save_path):
             save_path=save_path
         )
 
-        #ipdb.set_trace()
+        ipdb.set_trace()

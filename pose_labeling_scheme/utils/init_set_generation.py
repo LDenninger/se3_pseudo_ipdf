@@ -22,7 +22,7 @@ def generate_init_set_inv(init_rotation, num_init=None):
 
     return init_set
 
-def generate_init_set_r(init_rotation, offset=0):
+def generate_init_set_r(init_rotation, iter_number, offset=0):
     lx = []
     ly = []
     lz = []
@@ -44,15 +44,24 @@ def generate_init_set_r(init_rotation, offset=0):
     ly.append(init_rotation @ rot_y @ offset_y)
 
     rot_z = tt.euler_angles_to_matrix(torch.tensor([0,0,0.25*math.pi]), "XYZ")
+    rot_z_2 = tt.euler_angles_to_matrix(torch.tensor([0,0,0.2*math.pi]), "XYZ")
     lz.append(init_rotation @ rot_z @ offset_z)
 
+    if iter_number==1:
+        for i in range(6):
+            lz.append(lz[-1]@rot_z)
+            ly.append(ly[-1]@rot_y)
+            lx.append(lx[-1]@rot_x)
+        
+        set = torch.stack((lx+ly+lz))
+    if iter_number==2:
+        lz.append(lz[-1]@zflip)
+        for i in range(6):
+            lz.append(lz[-1]@rot_z_2)
+        
+        set = torch.stack(lz)
 
-    for i in range(6):
-        lz.append(lz[-1]@rot_z)
-        ly.append(ly[-1]@rot_y)
-        lx.append(lx[-1]@rot_x)
-
-    return torch.stack((lx+ly+lz))
+    return set
 
 
 def generate_init_set_noise(init_rotation, num_init=5):

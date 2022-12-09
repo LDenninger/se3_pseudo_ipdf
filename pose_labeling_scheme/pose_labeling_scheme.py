@@ -71,7 +71,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         if (pseudo_ground_truth_set != []):
             icp_iter += 1
             offset = 0.1*np.pi*(iter-1)
-            set = generate_init_set_r(pseudo_ground_truth_set[-1][:3,:3], offset)
+            set = generate_init_set_r(pseudo_ground_truth_set[-1][:3,:3], icp_iter, offset)
             init_transform = torch.repeat_interleave(torch.eye(4).unsqueeze(0), set.shape[0], dim=0)
             init_transform[:,:3,-1] = torch.repeat_interleave((pseudo_ground_truth_set[-1][:3,-1]*100).unsqueeze(0), set.shape[0], dim=0)
             init_transform[:,:3,:3] = set
@@ -134,11 +134,12 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                                                             intrinsic=intrinsic,
                                                             config=config)
             else:
-                #temp = torch.clone(pseudo_transformation)
-                #temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
+                temp = torch.clone(pseudo_transformation)
+                if config["dataset"]=="tabletop" and config["obj_id"]==5:
+                    temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
                 converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
                                                             obj_model=obj_model_sl, 
-                                                            transformation_set=pseudo_transformation,
+                                                            transformation_set=temp,
                                                             intrinsic=intrinsic,
                                                             config=config)
         elif config["conv_metric"]=="l2":

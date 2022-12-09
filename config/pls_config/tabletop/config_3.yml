@@ -1,5 +1,5 @@
 dataset: tabletop
-icp_iteration: 1
+icp_iteration: 2
 length: 15000
 material: true
 max_iteration: 20
@@ -7,7 +7,7 @@ obj_id: 3
 resolution:
 - 1920
 - 1080
-skip: false
+skip: true
 threshold:
 - 100
 - 20

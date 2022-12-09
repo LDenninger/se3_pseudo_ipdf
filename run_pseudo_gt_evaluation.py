@@ -14,7 +14,7 @@ import pose_labeling_scheme as pls
 
 SAVE_PATH = P("output/pose_labeling_scheme")
 LENGTH = 5000
-OBJ_ID = [4]
+OBJ_ID = [3]
 FILE_NAME = "pseudo_gt_thesis.pth"
 
 if __name__=="__main__":
@@ -46,6 +46,7 @@ if __name__=="__main__":
         for i in progress_bar:
             idx = str(args.start+i).zfill(6)
             p = data_path / idx 
+            pgt = None
             try:
                 if args.clean:
                     pgt = torch.load(str(p/"cleaned_pseudo_gt.pth"))[:,:3,:3]
@@ -59,6 +60,7 @@ if __name__=="__main__":
                     continue
             if pgt is None:
                 continue    
+            
             error.append(pls.evaluation_acc_error(pgt, ground_truth, obj_id))
             recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
 

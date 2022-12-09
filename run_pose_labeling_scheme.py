@@ -102,7 +102,7 @@ def run_pose_labeling_scheme(dataset, obj_id, material):
                 torch.save(pseudo_ground_truth, save_dir)
 
             elif dataset=="tabletop":
-                if config["material"]:
+                if material:
                     save_dir = os.path.join(data.id_to_path[obj_id], str(input["index"].item()).zfill(6), SAVE_NAME)
                 else:
                     save_dir = os.path.join(data.id_to_path_uniform[obj_id], str(input["index"].item()).zfill(6), SAVE_NAME)

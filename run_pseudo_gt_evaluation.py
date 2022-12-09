@@ -14,7 +14,8 @@ import pose_labeling_scheme as pls
 
 SAVE_PATH = P("output/pose_labeling_scheme")
 LENGTH = 5000
-OBJ_ID = [3]
+OBJ_ID = [4]
+FILE_NAME = "pseudo_gt_thesis.pth"
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")
@@ -49,7 +50,7 @@ if __name__=="__main__":
                 if args.clean:
                     pgt = torch.load(str(p/"cleaned_pseudo_gt.pth"))[:,:3,:3]
                 else:
-                    pgt = torch.load(str(p/"pseudo_gt.pth"))[:,:3,:3]
+                    pgt = torch.load(str(p/FILE_NAME))[:,:3,:3]
                 ground_truth = torch.load(str(p/"ground_truth.pt"))[:3,:3]
             except:
                 try:

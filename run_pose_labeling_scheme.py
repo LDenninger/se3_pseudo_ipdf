@@ -65,7 +65,7 @@ def run_pose_labeling_scheme(dataset, obj_id, material):
         if config["skip"]:
             if dataset=="tless" and os.path.exists(os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))):
                 continue
-            elif dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[args.obj_id] if config["material"] else data.id_to_path_uniform[obj_id], str(i).zfill(6), SAVE_NAME)):
+            elif dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[obj_id] if config["material"] else data.id_to_path_uniform[obj_id], str(i).zfill(6), SAVE_NAME)):
                 continue
         if not input["loaded"]:
             failed.append(i)

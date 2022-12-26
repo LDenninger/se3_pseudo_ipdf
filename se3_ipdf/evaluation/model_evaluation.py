@@ -176,61 +176,85 @@ def full_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_po
 
 def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None):
 
-    # Evaluation of the Loglikelihood
-    print("______________________________________\nStart computing Loglikelihood:\n")
+    llh_rot_list = []
+    mean_error_list = []
+    median_error_list = []
+    mae_list = []
+    acc15_list = []
+    acc30_list = []
 
-    llh_rot = eval_llh(model, dataset, mode=0,
-                        num_eval_iter = hyper_param_rot['num_val_iter'],
-                        device = DEVICE)
-    
-    print("\nLoglikelihood rotation: ", llh_rot)
-    print("\n")
+    for (i, dataset_obj) in enumerate(dataset):
+        print(f"\nEvaluation for object no. {i+3}: \n")
+        # Evaluation of the Loglikelihood
+        print("______________________________________\nStart computing Loglikelihood:\n")
 
-    # Evaluation of the recall error
-    print("______________________________________\nStart computing Recall Error:\n")
-    mean_error, median_error = eval_recall_error(model, dataset, hyper_param_rot)
-    print("\nMean Recall Error: ", mean_error)
-    print("\nMedian Recall Error: ", median_error)
+        llh_rot = eval_llh(model, dataset_obj, mode=0,
+                            num_eval_iter = hyper_param_rot['num_val_iter'],
+                            device = DEVICE)
+        
+        print("\nLoglikelihood rotation: ", llh_rot)
+        print("\n")
 
-    # Evaluation of the rotation estimate accuracy
+        # Evaluation of the recall error
+        print("______________________________________\nStart computing Recall Error:\n")
+        mean_error, median_error = eval_recall_error(model, dataset_obj, hyper_param_rot)
+        print("\nMean Recall Error: ", mean_error)
+        print("\nMedian Recall Error: ", median_error)
 
-    print("______________________________________\nStart computing Accuracy:\n")
-    mae, acc15, acc30 = eval_accuracy_angular_error(model, dataset, hyper_param_rot,
-                                                    gradient_ascent=True)
-    print("\nMean Angular Error: ", mae)
-    print("Accuracy15: ", acc15)
-    print("Accuracy30: ", acc30)
-    print("\n")
+        # Evaluation of the rotation estimate accuracy
+
+        print("______________________________________\nStart computing Accuracy:\n")
+        mae, acc15, acc30 = eval_accuracy_angular_error(model, dataset_obj, hyper_param_rot,
+                                                        gradient_ascent=True)
+        print("\nMean Angular Error: ", mae)
+        print("Accuracy15: ", acc15)
+        print("Accuracy30: ", acc30)
+        print("\n")
 
 
-    """print("______________________________________\nStart computing ADD-S:\n")
+        """print("______________________________________\nStart computing ADD-S:\n")
 
-    adds, threshold_distance_adds, mean_distance_adds = eval_adds(model,dataset,
-                                                                batch_size=hyper_param_rot['batch_size_val'],
-                                                                model_points=model_points,
-                                                                threshold_list=THRESHOLD,
-                                                                eval_iter=hyper_param_rot['num_val_iter'],
-                                                                gradient_ascent=True,
-                                                                mode=0,
-                                                                device=device_1)
-    print("\nMean ADD-S Distance: ", mean_distance_adds)
-    print("\nThreshold (percentage): ", THRESHOLD)
-    print("\nThreshold (in centimeters): ", (100*threshold_distance_adds).tolist())
-    print("\nADD-S (at threshold): ", adds)
-    """
-    print("\n\n")
-    print("______________________________________\nEvaluation finished!\n")
+        adds, threshold_distance_adds, mean_distance_adds = eval_adds(model,dataset,
+                                                                    batch_size=hyper_param_rot['batch_size_val'],
+                                                                    model_points=model_points,
+                                                                    threshold_list=THRESHOLD,
+                                                                    eval_iter=hyper_param_rot['num_val_iter'],
+                                                                    gradient_ascent=True,
+                                                                    mode=0,
+                                                                    device=device_1)
+        print("\nMean ADD-S Distance: ", mean_distance_adds)
+        print("\nThreshold (percentage): ", THRESHOLD)
+        print("\nThreshold (in centimeters): ", (100*threshold_distance_adds).tolist())
+        print("\nADD-S (at threshold): ", adds)
+        """
+        print("\n\n")
+        print(f"______________________________________\nEvaluation finished for object no {i+3}!\n")
+        llh_rot_list.append(llh_rot)
+        mean_error_list.append(mean_error)
+        median_error_list.append(median_error)
+        mae_list.append(mae)
+        acc15_list.append(acc15)
+        acc30_list.append(acc30)
 
-    # Log evaluation metrics using WandB
+    # Log evaluation metrics using Wand
+    for i in range(len(llh_rot_list)):
+        wandb.log({
+            f"RotationLoglikelihood(obj_{i+3})": llh_rot_list[i],
+            f"MeanAngularError(obj_{i+3})": mae_list[i],
+            f"Accuracy15(obj_{i+3})": acc15_list[i],
+            f"Accuracy30(obj_{i+3})": acc30_list[i],
+            f"RecallMeanAngularError(obj_{i+3})": mean_error_list[i],
+            f"RecallMedianAngularError(obj_{i+3})": median_error_list[i],
+        })
+
     wandb.log({
-        "RotationLoglikelihood": llh_rot,
-        "MeanAngularError": mae,
-        "Accuracy15": acc15,
-        "Accuracy30": acc30,
-        "RecallMeanAngularError": mean_error,
-        "RecallMedianAngularError": median_error,
-    })
-
+            "RotationLoglikelihood": sum(llh_rot_list)/len(llh_rot_list),
+            "MeanAngularError": sum(mae_list)/len(mae_list),
+            "Accuracy15": sum(acc15_list)/len(acc15_list),
+            "Accuracy30": sum(acc30_list)/len(acc30_list),
+            "RecallMeanAngularError": sum(mean_error_list)/len(mean_error_list),
+            "RecallMedianAngularError": sum(median_error_list)/len(median_error_list),
+        })
     """data = [[x,y] for (x,y) in zip(THRESHOLD, adds)]
     perc_adds_table = wandb.Table(data=data,columns=["threshold", "add_s"])
 

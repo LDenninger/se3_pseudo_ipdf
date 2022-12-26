@@ -78,18 +78,21 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
         # validation
         model.eval()
         with torch.no_grad():
-            llh = eval_llh(model, dataset=val_dataset,
-                                        num_eval_iter=hyper_param['num_val_iter'], 
-                                        mode=0,
-                                        device=DEVICE)
+            
+            llh = []
 
+            for dataset in val_dataset:
+                llh.append(eval_llh(model, dataset=dataset,
+                                            num_eval_iter=hyper_param['num_val_iter'], 
+                                            mode=0,
+                                            device=DEVICE))
         train_losses.append(train_loss)
         loglikelihood.append(llh)
         
         # log the loss values 
         wandb.log({
             'TrainLoss': train_loss,
-            'Loglikelihood': llh
+            'Loglikelihood': sum(llh)/len(llh)
         })
         print("Epoch:", epoch, "....", "TrainLoss: ", train_loss, "Loglikelihood: ", llh)
         # save a checkpoint

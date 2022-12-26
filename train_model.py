@@ -3,6 +3,7 @@ import wandb
 import yaml
 import os
 import torch
+import ipdb
 
 import utils
 import data
@@ -23,6 +24,7 @@ MODEL_TYPE = [0]
 def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
+
     if args.log:
         if args.model==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
@@ -40,7 +42,11 @@ def train_model():
 
                 print("Config file was loaded from: " + config_file_name + "\n")
 
+
                 train_loader, val_loader = data.load_model_dataset(hyper_param)
+                
+
+                
                 
                 model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)
 

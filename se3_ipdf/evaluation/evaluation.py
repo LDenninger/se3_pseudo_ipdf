@@ -120,8 +120,9 @@ def eval_recall_error(model, dataset,
             images = input_['image'].to(device)
             pose_gt = input_['obj_pose_in_camera'].to(device)
             rot_gt = input_['obj_pose_in_camera'][:,:3,:3].to(device)
+            obj_id = input_["obj_id"][0]
             if hyper_param["dataset"] == "tabletop":
-                ground_truth_set = produce_ground_truth_set(rot_gt, hyper_param["obj_id"])
+                ground_truth_set = produce_ground_truth_set(rot_gt, obj_id)
             elif hyper_param["dataset"] == "tless":
                 ground_truth_set = torch.einsum('bij,ajk->baik', rot_gt.float(), obj_sym)
 
@@ -172,8 +173,9 @@ def eval_accuracy_angular_error(model, dataset,
         img = input_['image'].to(device)
         rot_gt = input_['obj_pose_in_camera'][:,:3,:3].to(device)
         pose_gt = input_['obj_pose_in_camera'].to(device)
+        obj_id = input_["obj_id"][0]
         if hyper_param["dataset"] == "tabletop":
-            ground_truth_set = produce_ground_truth_set(rot_gt,hyper_param["obj_id"])
+            ground_truth_set = produce_ground_truth_set(rot_gt,obj_id)
         elif hyper_param["dataset"] == "tless":
             ground_truth_set = torch.einsum('bij,ajk->baik', rot_gt.float(), obj_sym)
 
@@ -410,7 +412,7 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         rotation_flip = flip @ rotation
         sym = torch.cat([rotation, rotation_flip]).to(device)
         ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), sym)
-    if obj_id==4:
+    if obj_id==4 or obj_id==6:
         syms = torch.from_numpy(get_cuboid_syms()).float().to(device)
         ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), syms)
 

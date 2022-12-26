@@ -31,7 +31,6 @@ CLEAN_PSEUDO_GROUND_TRUTH_FILE = "cleaned_pseudo_gt_thesis.pth"
 
 
 class TabletopPoseDataset(Dataset):
-    OBJ_ID = 3
     BB_SIZE = (560,560)
     def __init__(self, data_dir, length, obj_id, img_size=(224, 224),
                 train_mode=True,
@@ -71,7 +70,7 @@ class TabletopPoseDataset(Dataset):
         else:
             self.len = 5000
         
-        if obj_id==4:
+        if obj_id==4 or obj_id==6:
             self.CUBOID_SYMS = torch.from_numpy(self.get_cuboid_syms()).float()
 
     def __getitem__(self, idx):
@@ -93,7 +92,8 @@ class TabletopPoseDataset(Dataset):
 
             return {
                 'image': image,
-                'obj_pose_in_camera': ground_truth
+                'obj_pose_in_camera': ground_truth,
+                'obj_id': self.obj_id
             }
 
         else:
@@ -122,12 +122,15 @@ class TabletopPoseDataset(Dataset):
                     'image_original': image_full,
                     'depth_image': depth_data,
                     'seg_image': seg_data,
-                    'obj_pose_in_camera': ground_truth
+                    'obj_pose_in_camera': ground_truth,
+                    'obj_id': self.obj_id
+
                 }
             return {
                 'image': image,
                 'image_raw': image_raw,
-                'obj_pose_in_camera': ground_truth
+                'obj_pose_in_camera': ground_truth,
+                'obj_id': self.obj_id
             }
             
 

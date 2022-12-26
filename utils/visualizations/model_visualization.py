@@ -24,7 +24,7 @@ def visualize_rotation_model(model, dataset, hyper_param, save_dir, num_batch=1,
         img_raw = batch['image_raw']
         img_org = batch['image_original']
         rot_gt = batch['obj_pose_in_camera'][:,:3,:3]
-
+        obj_id = batch['obj_id'][0]
         # Produce IPDF
         query_rotation, probabalities = model.output_pdf(img.float())
         probabalities = torch.squeeze(probabalities, dim=-1)
@@ -44,7 +44,7 @@ def visualize_rotation_model(model, dataset, hyper_param, save_dir, num_batch=1,
             # Save the visualizations of the model output
             visualizations.visualize_so3_probabilities(rotations=query_rotation, probabilities=probabalities.detach()[i], rotations_gt=rot_gt[i],
                                                     dataset=hyper_param["dataset"],
-                                                    obj_id=hyper_param["obj_id"],
+                                                    obj_id=obj_id,
                                                     canonical_rotation=world_to_cam,
                                                     save_path=os.path.join(save_dir, f"visualization_rot_{step}_{i}.png"),
                                                     display_gt_set=True,

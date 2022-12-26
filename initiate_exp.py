@@ -14,6 +14,11 @@ def initiate_experiment(exp_dir, model_type, dataset, obj_id):
     os.makedirs(exp_dir)
     vis_dir = os.path.join(exp_dir, "visualizations")
     os.makedirs(vis_dir)
+    os.makedirs(os.path.join(vis_dir, "obj_03"))
+    os.makedirs(os.path.join(vis_dir, "obj_04"))
+    os.makedirs(os.path.join(vis_dir, "obj_05"))
+    os.makedirs(os.path.join(vis_dir, "obj_06"))
+
     data_dir = os.path.join(exp_dir, "datasets")
     os.makedirs(data_dir)
 

@@ -46,9 +46,9 @@ if __name__=="__main__":
 
         
         model = models.load_rotation_model(hyper_param=hyper_param_rot, exp_name=args.exp_name, arguments=args)[0]
-        dataset = data.load_model_dataset(hyper_param_rot, validation_only=True)
-
-        visualizations.visualize_rotation_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_rot)
+        dataset_list = data.load_model_dataset(hyper_param_rot, validation_only=True)
+        for (i, dataset) in enumerate(dataset_list):
+            visualizations.visualize_rotation_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, f"visualizations/obj_0{i+3}"), hyper_param=hyper_param_rot)
     
     elif args.trans_epoch is not None:
         # Load the config file for the translation model

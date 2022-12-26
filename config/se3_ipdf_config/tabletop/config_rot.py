@@ -16,7 +16,7 @@ tabletop_rot_config_data = {
     'warmup_steps': 20,
     'num_train_queries': 2**12,
     'dataset': "tless",
-    'obj_id': 5,
+    'obj_id': [5],
     'mask': True,
     'backbone': "resnet18",
     'backbone_layer': 0,

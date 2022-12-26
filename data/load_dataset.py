@@ -77,7 +77,7 @@ def load_model_dataset(hyper_param, validation_only=False):
 
     return val_loader
 
-def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):
+def load_pls_dataset(hyper_param, material=None, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):
     
     if hyper_param["dataset"]=="tless":
         dataset = data.TLESSWorkDataset(
@@ -93,7 +93,7 @@ def load_pls_dataset(hyper_param, start=0,return_gt=False, return_pgt=False, cle
             start=start,
             return_pgt=return_pgt,
             return_gt=return_gt or hyper_param["verbose"],
-            material=hyper_param["material"],
+            material= material if material is not None else hyper_param["material"],
             cleaned_pgt=cleaned_pgt
         )
     data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False, num_workers=0)

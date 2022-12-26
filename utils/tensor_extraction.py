@@ -43,6 +43,9 @@ def tensor_extraction(data_dir, obj_id, frame_list):
 
     loop = tqdm(enumerate(frame_list), total=len(frame_list))
 
+    if obj_id > 5:
+        obj_id = 5
+
     for (i, step) in loop:
         if i == len(frame_list):
             break

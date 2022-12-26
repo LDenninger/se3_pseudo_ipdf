@@ -9,7 +9,7 @@ from .utils import check_duplicates_averaging, id_to_path, id_to_path_uniform
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param):
+def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param, load_file="pseudo_gt.pth", save_file="cleaned_pseudo_gt.pth"):
     """Iterate through the pseudo ground truth already produced for the dataset using the 
     pose labeling scheme. The already existing pseudo ground truth are checked for convergence
     using the render-and-compare framework and saved to a new file.
@@ -36,7 +36,7 @@ def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param):
                 torch.save(conv_pgt, os.path.join(data_dir, str(hyper_param["obj_id"]), "pseudo_gt", ("cleaned_"+str(i).zfill(4)+ ".pth")))
             elif hyper_param["dataset"]=="tabletop":
                 data_dir = id_to_path[hyper_param["obj_id"]]
-                torch.save(conv_pgt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
+                torch.save(conv_pgt, os.path.join(data_dir, str(i).zfill(6), save_file))
 
         else:
             converged, d_max, d_avg = check_convergence_batchwise(depth_original=input["depth_image"].squeeze(),
@@ -54,7 +54,7 @@ def run_convergence_check(dataset, obj_model, obj_model_sl, hyper_param):
                 print("\n")
             ipdb.set_trace()
 
-def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
+def run_duplicate_check(dataset, hyper_param, angular_threshold=15, load_file="pseudo_gt.pth", save_file="cleaned_pseudo_gt.pth"):
 
     progress_bar = tqdm(enumerate(dataset), total=len(dataset))
 
@@ -80,7 +80,7 @@ def run_duplicate_check(dataset, hyper_param, angular_threshold=15):
                 data_dir = id_to_path[hyper_param["obj_id"]]
             else:
                 data_dir = id_to_path_uniform[hyper_param["obj_id"]]
-            torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), "cleaned_pseudo_gt.pth"))
+            torch.save(cleaned_pseudo_gt, os.path.join(data_dir, str(i).zfill(6), save_file))
     
     print("Frames without pseudo ground truth:", non_exist)
 

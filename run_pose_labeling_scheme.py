@@ -13,9 +13,9 @@ import utils.visualizations as visualizations
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-OBJ_ID_LIST = [3]*2+[4]*2+[5]*2
-MATERIAL_LIST = [True, False, True, False, True, False]
-DATASET_LIST = ["tabletop"]*6
+OBJ_ID_LIST = [3]+[4]*2+[5]*2
+MATERIAL_LIST = [False, True, False, True, False]
+DATASET_LIST = ["tabletop"]*5
 
 SAVE_NAME = "pseudo_gt_thesis.pth"
 
@@ -30,7 +30,7 @@ def run_pose_labeling_scheme(dataset, obj_id, material):
     
 
     # Load the data
-    data_loader = data.load_pls_dataset(config, start=args.start)
+    data_loader = data.load_pls_dataset(config, material=material, start=args.start)
 
     progress_bar = tqdm(enumerate(data_loader), total= config["length"]-args.start)
 
@@ -65,7 +65,7 @@ def run_pose_labeling_scheme(dataset, obj_id, material):
         if config["skip"]:
             if dataset=="tless" and os.path.exists(os.path.join(pseudo_save_dir, (str(i).zfill(4)+".pth"))):
                 continue
-            elif dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[obj_id] if config["material"] else data.id_to_path_uniform[obj_id], str(i).zfill(6), SAVE_NAME)):
+            elif dataset=="tabletop" and os.path.exists(os.path.join(data.id_to_path[obj_id] if material else data.id_to_path_uniform[obj_id], str(i).zfill(6), SAVE_NAME)):
                 continue
         if not input["loaded"]:
             failed.append(i)

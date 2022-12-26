@@ -4,6 +4,7 @@ from tqdm import tqdm
 from pathlib import Path as P
 import torch
 import numpy as np
+import ipdb
 
 
 import utils.visualizations as visualizations
@@ -13,7 +14,7 @@ import data
 import pose_labeling_scheme as pls
 
 SAVE_PATH = P("output/pose_labeling_scheme")
-LENGTH = 5000
+LENGTH = 2000
 OBJ_ID = [3]
 FILE_NAME = "pseudo_gt_thesis.pth"
 
@@ -70,15 +71,18 @@ if __name__=="__main__":
         print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n")
         print("_"*60)
         failed=False
-        for n in [10, 20]:
+        index = np.array(range(15000))
+        np.random.shuffle(index)
+        for n in [10,100,200]:
             l = LENGTH
             progress_bar = tqdm(range(l), total=l)
             for i in progress_bar:
                 ground_truth = []
                 pgt = []
                 failed=False
-                for j in range(n):
-                    idx = str(args.start+i+j).zfill(6)
+                np.random.shuffle(index)
+                for j in index[:n]:
+                    idx = str(j).zfill(6)
                     p = data_path / idx 
                     try:
                         if args.clean:
@@ -96,7 +100,6 @@ if __name__=="__main__":
                             failed=True
                 if failed:
                     continue
-                
                 recall_error.append(pls.evaluation_recall_error(pgt, torch.stack(ground_truth), obj_id))
             
             r_error = np.mean(recall_error)

@@ -26,6 +26,9 @@ conv = torch.eye(3)
 conv[1,1] = -1
 conv[2,2] = -1
 
+PSEUDO_GROUND_TRUTH_FILE = "pseudo_gt_thesis.pth"
+CLEAN_PSEUDO_GROUND_TRUTH_FILE = "cleaned_pseudo_gt_thesis.pth"
+
 
 class TabletopPoseDataset(Dataset):
     OBJ_ID = 3
@@ -183,7 +186,7 @@ class TabletopPoseDataset(Dataset):
         else:
             if self.pseudo_gt:
                 try:
-                    pseudo_gt_set = torch.load(os.path.join(data,"cleaned_pseudo_gt.pth" ))
+                    pseudo_gt_set = torch.load(os.path.join(data,CLEAN_PSEUDO_GROUND_TRUTH_FILE))
 
                 except:
                     return None

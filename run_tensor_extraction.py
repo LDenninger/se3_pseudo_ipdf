@@ -1,9 +1,9 @@
 from utils import tensor_extraction
 
-START_LIST = [0]
-END_LIST = [20000]
-DATA_DIR_LIST = ["/home/nfs/inf6/data/datasets/IPDF_tabletop/uniform_texture"]
-OBJ_ID = [3]
+START_LIST = [0]*2
+END_LIST = [20000]*2
+DATA_DIR_LIST = ["/home/nfs/inf6/data/datasets/IPDF_tabletop/sugar_box_material_texture", "/home/nfs/inf6/data/datasets/IPDF_tabletop/sugar_box_uniform_texture"]
+OBJ_ID = [6]*2
 
 
 if __name__=="__main__":

@@ -6,6 +6,8 @@ import torchvision
 import data
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+PGT_LOAD_FILE = "pseudo_gt_thesis.pth"
+CLEAN_PGT_LOAD_FILE = "cleaned_pseudo_gt_thesis.pth"
 
 
 # img size: (200,400)
@@ -79,9 +81,9 @@ class TabletopWorkDataset(Dataset):
         if self.return_pgt:
             try:
                 if self.cleaned_pgt:
-                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "cleaned_pseudo_gt.pth"))
+                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, CLEAN_PGT_LOAD_FILE))
                 else:
-                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, "pseudo_gt.pth"))
+                    pseudo_ground_truth = torch.load(os.path.join(self.data_dir, frame_id, PGT_LOAD_FILE))
             except:
                 pseudo_ground_truth = -torch.eye(4)
 

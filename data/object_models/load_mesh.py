@@ -11,7 +11,8 @@ sl.init_cuda()
 obj_id_to_file= {
     3: ["obj_000001.ply", 1],
     4: ["obj_000002.ply", 2],
-    5: ["obj_000013.ply", 13]
+    5: ["obj_000013.ply", 13],
+    6: ["obj_000003.ply", 3]
 }
 
 

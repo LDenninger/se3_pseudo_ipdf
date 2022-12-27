@@ -90,4 +90,29 @@ def tensor_extraction(data_dir, obj_id, frame_list):
         torch.save(mask_cropped_img, os.path.join(frame_dir, "mask_crop_rgb_tensor.pt"))
         torch.save(resized_cropped_img, os.path.join(frame_dir, "resize_crop_rgb_tensor.pt"))
         torch.save(resized_mask_cropped_img, os.path.join(frame_dir, "resize_mask_crop_rgb_tensor.pt"))
-        torch.save(resized_mask_img, os.path.join(frame_dir, "resize_mask_rgb_tensor.pt"))   
+        torch.save(resized_mask_img, os.path.join(frame_dir, "resize_mask_rgb_tensor.pt"))
+
+def tensor_correction(data_dir, obj_id, frame_list):
+    loop = tqdm(enumerate(frame_list), total=len(frame_list))
+
+    if obj_id > 5:
+        obj_id = 5
+
+    for (i, step) in loop:
+        if i == len(frame_list):
+            break
+            
+
+        # Define frame id and directory
+        ind = str(step).zfill(6)
+        frame_dir = os.path.join(data_dir, ind)
+
+        image = torch.load(os.path.join(frame_dir, "rgb_tensor.pt"))
+        seg_data = torch.load(os.path.join(frame_dir, "seg_tensor.pt"))
+
+        seg_mask = torch.repeat_interleave((seg_data==obj_id).int().unsqueeze(-1), 3, dim=-1)
+        mask_img = seg_mask * image
+
+        mask_img = resizer(mask_img.permute(2,0,1))
+
+        torch.save(mask_img, os.path.join(frame_dir, "resize_mask_rgb_tensor.pt"))

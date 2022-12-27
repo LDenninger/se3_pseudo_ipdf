@@ -18,6 +18,8 @@ tabletop_trans_config_data = {
     'mask': True,
     'backbone': "resnet18",
     'backbone_layer': 0,
+    'single_gt': False,
+    'pseudo_gt': True,
     'occlusion': False,
     'full_img':True,
     'full_eval': True,

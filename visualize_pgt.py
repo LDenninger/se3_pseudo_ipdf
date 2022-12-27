@@ -17,7 +17,7 @@ if __name__=="__main__":
     parser.add_argument("-obj_id", type=int, help="Object to run the PLS on")
     parser.add_argument("-f_name", type=str, default="pgt_test.png", help="File name the visualization is saved to")
     parser.add_argument("--clean", action="store_true", help="Visualize cleaned pgt")
-    parser.add_argument("--uni", default=False, action="set_true")
+    parser.add_argument("--uni", default=False, action="store_true")
     parser.add_argument("-start", type=int, default=0, help="Frame index to start the dataset from")
     parser.add_argument("-rs", type=int, default=42, help="Random seed")
     args = parser.parse_args()

@@ -62,9 +62,8 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
 
     feature_extractor, feature_dim = load_backbone(hyper_param)
 
-    feature_dim = resnet_feature_dim[hyper_param["resnet_depth"]][hyper_param["resnet_layer"]]
 
-    model = ImplicitTranslation(resnet_depth=hyper_param["resnet_depth"], resnet_layer=hyper_param["resnet_layer"], feat_dim=feature_dim, # 100352
+    model = ImplicitTranslation(feature_extractor=feature_extractor, feat_dim=feature_dim, # 100352
                                    mlp_layer_sizes=hyper_param['mlp_layers'],
                                    num_fourier_comp=hyper_param['num_fourier_comp'],
                                    num_train_queries=hyper_param['num_train_queries'],

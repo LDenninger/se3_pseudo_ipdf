@@ -77,9 +77,10 @@ def train_model():
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_model_dataset(hyper_param, args)
+                train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
+
                 wandb.watch(model, log='all', log_freq=10)
 
                 se3_ipdf.run_translation_training(model=model, 
@@ -134,11 +135,10 @@ def train_model():
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_model_dataset(hyper_param, args)
+                train_loader, val_loader = data.load_model_dataset(hyper_param)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
                 wandb.watch(model, log='all', log_freq=10)
-
                 se3_ipdf.run_translation_training(model=model, 
                                                 train_dataset=train_loader,
                                                 val_dataset=val_loader,

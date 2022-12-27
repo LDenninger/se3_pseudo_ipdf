@@ -107,8 +107,8 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
                        chkpt_path
             )
             # For every saved model run a full evaluation if full_evaluation is set to true
-            if hyper_param['full_eval']==True:
-                rotation_model_evaluation(model=model, dataset=val_dataset, hyper_param_rot=hyper_param)
+        if hyper_param['full_eval']==True and epoch % hyper_param["eval_freq"]==0:
+            rotation_model_evaluation(model=model, dataset=val_dataset, hyper_param_rot=hyper_param)
     print("Training finished.")
     print("The final IPDF model was saved to: ", os.path.join(checkpoint_dir, 'checkpoint_final.pth'))
     print("\nFinal evaluation metrics:\n")
@@ -161,7 +161,7 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
                        chkpt_path
             )
             # For every saved model run a full evaluation if full_evaluation is set to true
-            if hyper_param['full_eval']==True:
+            if hyper_param['full_eval']==True and epoch % hyper_param["eval_freq"]==0:
                 translation_model_evaluation(model=model, dataset=val_dataset)
     print("Training finished.")
     print("The final IPDF model was saved to: ", os.path.join(checkpoint_dir, 'checkpoint_final.pth'))

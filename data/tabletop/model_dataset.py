@@ -81,14 +81,16 @@ class TabletopPoseDataset(Dataset):
 
         if self.train_mode == True:
             # Dataloader for the training process
-            image = self.load_image(idx)
-            if image is None:
-                return self.__getitem__((idx+1)%self.__len__())
-             
             ground_truth = self.load_ground_truth(idx)
 
             if ground_truth is None or ground_truth.shape[0]==0:
                 return self.__getitem__((idx+1)%self.__len__())
+
+            image = self.load_image(idx)
+            if image is None:
+                return self.__getitem__((idx+1)%self.__len__())
+             
+            
 
             return {
                 'image': image,
@@ -151,9 +153,13 @@ class TabletopPoseDataset(Dataset):
                     image = self.Resizer(image)
             else:
                 if self.mask:
-                    image = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt"))
+                    image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
+                    image = image.permute(2,0,1)
+                    image = self.Resizer(image)
                 else:
-                    image = torch.load(os.path.join(data, "resize_rgb_tensor.pt"))
+                    image = torch.load(os.path.join(data, "rgb_tensor.pt"))
+                    image = image.permute(2,0,1)
+                    image = self.Resizer(image)
 
 
         except:
@@ -189,7 +195,7 @@ class TabletopPoseDataset(Dataset):
         else:
             if self.pseudo_gt:
                 try:
-                    pseudo_gt_set = torch.load(os.path.join(data,CLEAN_PSEUDO_GROUND_TRUTH_FILE))
+                    pseudo_gt_set = torch.load(os.path.join(data, CLEAN_PSEUDO_GROUND_TRUTH_FILE))
 
                 except:
                     return None

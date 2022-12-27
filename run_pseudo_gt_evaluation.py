@@ -14,9 +14,9 @@ import data
 import pose_labeling_scheme as pls
 
 SAVE_PATH = P("output/pose_labeling_scheme")
-LENGTH = 2000
-OBJ_ID = [3]
-FILE_NAME = "pseudo_gt_thesis.pth"
+LENGTH = 15000
+OBJ_ID = [3,4,5]
+FILE_NAME = "cleaned_pseudo_gt_thesis.pth"
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")
@@ -43,6 +43,7 @@ if __name__=="__main__":
 
         error = []
         recall_error = []
+        num_pgt = []
 
         for i in progress_bar:
             idx = str(args.start+i).zfill(6)
@@ -61,19 +62,22 @@ if __name__=="__main__":
                     continue
             if pgt is None:
                 continue    
-            
+            num_pgt.append(pgt.shape[0])
             error.append(pls.evaluation_acc_error(pgt, ground_truth, obj_id))
-            recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
+            #recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
 
         p_error = np.mean(error)
-        r_error = np.mean(recall_error)
+        #r_error = np.mean(recall_error)
+        r_error = 0.0
+        num_avg = np.mean(num_pgt)
         print("_"*60)
         print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n")
+        print(f"Average number of pseudo groun-truth labels: {num_avg}\n")
         print("_"*60)
         failed=False
         index = np.array(range(15000))
         np.random.shuffle(index)
-        for n in [10,100,200]:
+        for n in []:
             l = LENGTH
             progress_bar = tqdm(range(l), total=l)
             for i in progress_bar:

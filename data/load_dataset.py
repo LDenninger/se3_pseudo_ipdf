@@ -84,7 +84,7 @@ def load_model_dataset(hyper_param, validation_only=False):
         return val_loader_list
 
     training_concat_dataset = torch.utils.data.ConcatDataset(training_datasets)
-    train_loader = DataLoader(dataset=training_concat_dataset, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=0)
+    train_loader = DataLoader(dataset=training_concat_dataset, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=8)
     return train_loader, val_loader_list
 
 def load_pls_dataset(hyper_param, material=None, start=0,return_gt=False, return_pgt=False, cleaned_pgt=False):

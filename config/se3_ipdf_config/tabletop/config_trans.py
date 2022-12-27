@@ -1,17 +1,21 @@
 tabletop_trans_config_data = {
     'num_epochs': 10,
     'num_train_iter': 200,
+    'dataset': "tabletop",
+    'obj_id': [3],
     'num_val_iter': 100,
     'start_save': 2,
-    'save_freq': 2,
-    'batch_size': 64,
+    'save_freq': 10,
+    'eval_freq': 5,
+    'batch_size': 32,
     'batch_size_val': 16,
     'learning_rate': 1e-4,
     'num_fourier_comp': 1,
     'img_size': (224, 224),
     'crop_image': True,
     'train_mode': 2,
-    'mlp_layers': [256]*4,
+    'material': True,
+    'mlp_layers': [256]*2,
     'random_seed': 11,
     'warmup_steps': 20,
     'num_train_queries': 2**12,
@@ -23,5 +27,5 @@ tabletop_trans_config_data = {
     'occlusion': False,
     'full_img':True,
     'full_eval': True,
-    'length': 2000
+    'length': 15000
 }

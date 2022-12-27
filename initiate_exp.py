@@ -4,9 +4,9 @@ import argparse
 
 import config
 
-EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_1", "tabletop_3_can_resnet18_1_1", "tabletop_3_can_resnet18_2_1","tabletop_3_can_resnet50_1", "tabletop_3_can_convnextT_1", "tabletop_3_can_convnextS_1", "tabletop_3_can_convnextT_1", "tabletop_3_can_convnextS_1", "tabletop_3_can_convnextB_1", "tabletop_3_can_vgg_1", 
-                "tabletop_3_crackerbox_resnet18_0_1", "tabletop_3_crackerbox_resnet18_1_1", "tabletop_3_crackerbox_resnet18_2_1","tabletop_3_crackerbox_resnet50_1", "tabletop_3_crackerbox_convnextT_1", "tabletop_3_crackerbox_convnextS_1", "tabletop_3_crackerbox_convnextT_1", "tabletop_3_crackerbox_convnextS_1", "tabletop_3_crackerbox_convnextB_1", "tabletop_3_crackerbox_vgg_1", 
-                "tabletop_3_bowl_resnet18_0_1", "tabletop_3_bowl_resnet18_1_1", "tabletop_3_bowl_resnet18_2_1","tabletop_3_bowl_resnet50_1", "tabletop_3_bowl_convnextT_1", "tabletop_3_bowl_convnextS_1", "tabletop_3_bowl_convnextT_1", "tabletop_3_bowl_convnextS_1", "tabletop_3_bowl_convnextB_1", "tabletop_3_bowl_vgg_1"]
+EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_1", "tabletop_3_can_resnet18_1_1", "tabletop_3_can_resnet18_2_1","tabletop_3_can_resnet50_1", "tabletop_3_can_convnextT_1", "tabletop_3_can_convnextS_1","tabletop_3_can_convnextB_1", "tabletop_3_can_vgg_1", 
+                "tabletop_3_crackerbox_resnet18_0_1", "tabletop_3_crackerbox_resnet18_1_1", "tabletop_3_crackerbox_resnet18_2_1","tabletop_3_crackerbox_resnet50_1", "tabletop_3_crackerbox_convnextT_1", "tabletop_3_crackerbox_convnextS_1","tabletop_3_crackerbox_convnextB_1", "tabletop_3_crackerbox_vgg_1", 
+                "tabletop_3_bowl_resnet18_0_1", "tabletop_3_bowl_resnet18_1_1", "tabletop_3_bowl_resnet18_2_1","tabletop_3_bowl_resnet50_1", "tabletop_3_bowl_convnextT_1", "tabletop_3_bowl_convnextS_1","tabletop_3_bowl_convnextB_1", "tabletop_3_bowl_vgg_1"]
 DATASET_LIST = ["tabletop"]*24
 OBJ_ID_LIST = [3]*8+[4]*8+ [5]*8
 MODEL_TYPE = [2]*24

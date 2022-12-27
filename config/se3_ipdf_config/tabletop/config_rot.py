@@ -16,7 +16,7 @@ tabletop_rot_config_data = {
     'random_seed': 44,
     'warmup_steps': 40,
     'num_train_queries': 2**12,
-    'dataset': "tless",
+    'dataset': "tabletop",
     'obj_id': [5],
     'mask': True,
     'backbone': "resnet18",

@@ -75,7 +75,7 @@ def generate_model_rotation_config(dataset: str, obj_id: str):
         
         # set dataset and obj_id in config file
         config["dataset"] = dataset
-        config["obj_id"] = obj_id
+        config["obj_id"] = [obj_id]
         
         with open(str(config_path), "w") as f:
             yaml.safe_dump(config, f)
@@ -102,7 +102,7 @@ def generate_model_translation_config(dataset: str, obj_id: str):
 
         # set dataset and obj_id in config file
         config["dataset"] = dataset
-        config["obj_id"] = obj_id
+        config["obj_id"] = [obj_id]
 
         with open(str(config_path), "w") as f:
             yaml.safe_dump(config, f)

@@ -9,7 +9,7 @@ import utils
 import config
 import data
 
-SAVE_PATH = P("output/pose_labeling_scheme")
+SAVE_PATH = P("output/apls_results")
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")

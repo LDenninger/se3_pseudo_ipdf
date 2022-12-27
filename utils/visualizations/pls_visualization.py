@@ -3,6 +3,7 @@ from tqdm import tqdm
 import ipdb
 import torch
 import torchvision
+import os
 
 from .so3_mollweide_projection import visualize_so3_rotations
 
@@ -12,7 +13,7 @@ def visualize_pseudo_gt(dataset, hyper_param, save_path):
     for (i, input) in  enumerate(dataset):
         idx = input["index"].squeeze(0)
         img = input["image"].squeeze().permute(2,0,1)/255.
-        torchvision.utils.save_image(img, "output/pgt_test_img.png")
+        torchvision.utils.save_image(img, os.path.join(save_path, "pgt_test_img.png"))
         if not input["loaded"]:
             print(f"\nNo pseudo ground truth found for frame {idx}")
             continue

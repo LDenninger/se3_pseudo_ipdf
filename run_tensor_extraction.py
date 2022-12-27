@@ -22,5 +22,7 @@ if __name__=="__main__":
         split = range(START_LIST[i], END_LIST[i])
 
         #tensor_extraction(data_dir, OBJ_ID[i], split)
-        tensor_correction(data_dir, OBJ_ID[i], split)
-
+        try:
+            tensor_correction(data_dir, OBJ_ID[i], split)
+        except:
+            continue

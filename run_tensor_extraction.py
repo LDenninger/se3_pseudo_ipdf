@@ -2,10 +2,10 @@ from utils import tensor_extraction, tensor_correction
 from data import id_to_path, id_to_path_uniform
 
 
-START_LIST = [0]*8
-END_LIST = [20000]*8
+START_LIST = [0]*2
+END_LIST = [20000]*2
 DATA_DIR_LIST = [""]
-OBJ_ID = [3]*2+[4]*2+[5]*2+[6]*2
+OBJ_ID = [8]*2
 
 
 if __name__=="__main__":
@@ -21,8 +21,7 @@ if __name__=="__main__":
         print("End: ", END_LIST[i])
         split = range(START_LIST[i], END_LIST[i])
 
-        #tensor_extraction(data_dir, OBJ_ID[i], split)
         try:
-            tensor_correction(data_dir, OBJ_ID[i], split)
+            tensor_extraction(data_dir, OBJ_ID[i], split)
         except:
             continue

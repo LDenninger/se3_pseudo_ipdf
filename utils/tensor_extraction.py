@@ -43,7 +43,7 @@ def tensor_extraction(data_dir, obj_id, frame_list):
 
     loop = tqdm(enumerate(frame_list), total=len(frame_list))
 
-    if obj_id > 5:
+    if obj_id == 6:
         obj_id = 5
 
     for (i, step) in loop:
@@ -63,7 +63,6 @@ def tensor_extraction(data_dir, obj_id, frame_list):
         seg_data = torch.from_numpy(meta_data['seg_tensor'].astype("int32"))
         depth_data = torch.from_numpy(meta_data['depth_tensor'])
         ground_truth = meta_data['obj_in_cam']
-
         seg_mask = torch.repeat_interleave((seg_data==obj_id).int().unsqueeze(-1), 3, dim=-1)
         mask_img = seg_mask * image
         # Create a resized image for the input of the ResNet
@@ -76,7 +75,7 @@ def tensor_extraction(data_dir, obj_id, frame_list):
         resized_img = resizer(torch.clone(image.permute(2,0,1)))
         resized_cropped_img = resizer(torch.clone(cropped_img))
         resized_mask_cropped_img = resizer(torch.clone(mask_cropped_img))
-        resized_mask_img = resizer(torch.clone(mask_img))
+        resized_mask_img = resizer(torch.clone(mask_img.permute(2,0,1)))
 
 
         # Save the extracted tensors seperately

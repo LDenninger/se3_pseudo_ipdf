@@ -43,8 +43,7 @@ if __name__=="__main__":
                 model = models.load_rotation_model(
                     hyper_param=hyper_param,
                     arguments=args
-
-                )
+                )[0]
                 # Load the dataset
                 dataset = data.load_model_dataset(hyper_param=hyper_param, validation_only=True)
 
@@ -132,6 +131,7 @@ if __name__=="__main__":
     
     else:
         if args.mode==0:
+
             with wandb.init(mode='disabled'):
                 wandb.run.name = args.exp_name
                 config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
@@ -142,16 +142,15 @@ if __name__=="__main__":
                 model = models.load_rotation_model(
                     hyper_param=hyper_param,
                     arguments=args
-
-                )
+                )[0]
                 # Load the dataset
                 dataset = data.load_model_dataset(hyper_param=hyper_param, validation_only=True)
 
                 # Load the object model
                 if hyper_param["dataset"]=="tabletop":
-                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"], pointcloud_only=True)
+                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"][0], pointcloud_only=True)
                 elif hyper_param["dataset"]=="tless":
-                    obj_model, diameter = data.load_tless_object_model(hyper_param["obj_id"], pointcloud_only=True)
+                    obj_model, diameter = data.load_tless_object_model(hyper_param["obj_id"][0], pointcloud_only=True)
                 else:
                     print("Object model for dataset/object was not found!")
 

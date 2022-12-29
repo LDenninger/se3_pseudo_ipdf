@@ -26,7 +26,6 @@ MODEL_TYPE = [0]*24
 def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
-
     if args.log:
         if args.model==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")

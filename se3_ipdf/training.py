@@ -88,7 +88,6 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
                                             device=DEVICE))
         train_losses.append(train_loss)
         loglikelihood.append(llh)
-        
         # log the loss values 
         wandb.log({
             'TrainLoss': train_loss,

@@ -31,7 +31,7 @@ def eval_llh(model, dataset, mode=0,
     llh_rot_all = []
     llh_trans_all = []
     llh_all = []
-    progress_bar = tqdm(enumerate(dataset), total=num_eval_iter)    
+    progress_bar = tqdm(enumerate(dataset), total=num_eval_iter)  
     for (step, batch) in progress_bar:
         if num_eval_iter is not None and step >= num_eval_iter:
             break
@@ -60,6 +60,7 @@ def eval_llh(model, dataset, mode=0,
 
                 prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
                 llh = np.log(prob_gt*cartesian_grid.shape[0]/1**3)
+
                 llh_trans_all.append(llh)
 
                 continue
@@ -81,6 +82,7 @@ def eval_llh(model, dataset, mode=0,
             
             prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
             llh = np.log(prob_gt*so3_grid.shape[0]/np.pi**2)
+
             llh_all.append(llh)
 
         if verbose == True:

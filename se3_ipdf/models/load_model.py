@@ -81,7 +81,7 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
         load_model = "checkpoint_" + arguments.trans_epoch +".pth"
 
     if load_model is not None:
-        chkpt_dir = os.path.join(("experiments/exp_"+ exp_name), 'models_translation') 
+        chkpt_dir = os.path.join(("experiments/exp_"+ arguments.exp_name), 'models_translation') 
 
         chkpt_path = os.path.join(chkpt_dir, load_model)
 
@@ -100,6 +100,7 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
     return model, optimizer, start_epoch
 
 def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, init_model=False):
+
     ## Load the rotation-model from a given checkpoint. If no checkpoint is provided the model will be newly initialized ##
 
     feature_extractor, feature_dim = load_backbone(hyper_param)
@@ -121,7 +122,7 @@ def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, 
         load_model = "checkpoint_" + arguments.rot_epoch +".pth"
 
     if load_model is not None:     
-        chkpt_dir = os.path.join(("experiments/exp_"+ exp_name), 'models_rotation') 
+        chkpt_dir = os.path.join(("experiments/exp_"+ arguments.exp_name), 'models_rotation') 
 
         chkpt_path = os.path.join(chkpt_dir, load_model)
         try:

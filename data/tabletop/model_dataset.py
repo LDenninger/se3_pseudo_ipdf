@@ -260,7 +260,7 @@ class TabletopPoseDataset(Dataset):
             syms[1] = tt.euler_angles_to_matrix(torch.Tensor([0,0, np.pi]), 'ZYX').float()
             syms[2] = tt.euler_angles_to_matrix(torch.Tensor([0,np.pi,0 ]), 'ZYX').float()
             syms[3] = syms[1] @ syms[2]
-            ground_truth[:3,:3] = ground_truth[:3,:3] @ syms[np.random.randint(syms.shape[0])]
+            ground_truth[:3,:3] = ground_truth[:3,:3].double() @ syms[np.random.randint(syms.shape[0])].double()
 
         
         if self.obj_id == 5:

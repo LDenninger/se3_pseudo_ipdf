@@ -27,7 +27,7 @@ conv[1,1] = -1
 conv[2,2] = -1
 
 PSEUDO_GROUND_TRUTH_FILE = "pseudo_gt_thesis.pth"
-CLEAN_PSEUDO_GROUND_TRUTH_FILE = "cleaned_pseudo_gt_thesis.pth"
+CLEAN_PSEUDO_GROUND_TRUTH_FILE = "cleaned_pseudo_gt.pth"
 
 
 class TabletopPoseDataset(Dataset):

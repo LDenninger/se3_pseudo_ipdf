@@ -40,7 +40,7 @@ def load_backbone(hyper_param):
         feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_base":
         feature_extractor = load_convnext_model(size="base")
-        feature_dim = 0
+        feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_large":
         feature_extractor = load_convnext_model(size="large")
         feature_dim = 0

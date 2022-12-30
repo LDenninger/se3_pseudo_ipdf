@@ -170,8 +170,12 @@ class ImplicitSO3(nn.Module):
             max_rotations = torch.reshape(max_rotations, [-1, 3, 3])
             return max_rotations
         
-        step_size = 1e-2
-        num_iteration = 50
+        initial_step_size = step_size = 1e-3
+        #step_size_list = [1e-2, 1e-3, 1e-4]
+        #step_size = step_size_list[0]
+        decay_param = 1
+        #step_size_scheduler = lambda x: initial_step_size * 1/(1+decay_param*x)
+        num_iteration = 70
         query_rot_quat= tt.matrix_to_quaternion(max_rotations)
         query_rot_quat.requires_grad = True
         #query_rot_quat = torch.autograd.Variable(query_rot_quat, requires_grad=True )
@@ -193,6 +197,12 @@ class ImplicitSO3(nn.Module):
             return
             
         for _ in range(num_iteration):
+            #step_size = step_size_scheduler(_)
+            #print(f"Step Size: {str(step_size)}")
+            """if num_iteration==10:
+                step_size = step_size_list[1]
+            if num_iteration==50:
+                step_size = step_size_list[2]"""
             _grad_asc_step(query_rot_quat)
         
         max_rotations = tt.quaternion_to_matrix(query_rot_quat)

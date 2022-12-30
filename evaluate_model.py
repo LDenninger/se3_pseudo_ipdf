@@ -5,9 +5,35 @@ import errno
 import os
 import yaml
 
+
 import se3_ipdf.evaluation as evaluation
 import se3_ipdf.models as models
 import data
+
+
+def tune(model, dataset, hyper_param_rot, model_points=None):
+
+    llh_rot_list = []
+    mean_error_list = []
+    median_error_list = []
+    mae_list = []
+    acc15_list = []
+    acc30_list = []
+
+
+    for (i, dataset_obj) in enumerate(dataset):
+
+        # Evaluation of the rotation estimate accuracy
+
+        print("______________________________________\nStart computing Accuracy:\n")
+        mae, acc5, acc15, acc30 = evaluation.eval_accuracy_angular_error(model, dataset_obj, hyper_param_rot,
+                                                        gradient_ascent=True)
+        print("\nMean Angular Error: ", mae)
+        print("Accuracy5: ", acc5)
+        print("Accuracy15: ", acc15)
+        print("Accuracy30: ", acc30)
+        print("\n")
+
             
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for evaluation")
@@ -28,6 +54,7 @@ if __name__=="__main__":
     # Define the directory the evaluation results are saved to
     
     wandb.login()
+
 
     if args.wandb == True:
 
@@ -59,7 +86,6 @@ if __name__=="__main__":
                 if not os.path.isdir(save_dir):
                         os.makedirs(save_dir)
                 evaluation.rotation_model_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param, model_points=obj_model)
-
         if args.mode==1:
             with wandb.init(project="Translation_IPDF", entity="ipdf_se3", resume="allow", id=args.exp_name):
                 wandb.run.name = args.exp_name
@@ -157,7 +183,8 @@ if __name__=="__main__":
                 save_dir=os.path.join(exp_dir, os.path.join("experiments", ("evaluation_"+args.rot_epoch)))
                 if not os.path.isdir(save_dir):
                         os.makedirs(save_dir)
-                evaluation.rotation_model_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param, model_points=obj_model)
+                #evaluation.rotation_model_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param, model_points=obj_model)
+                tune(model=model, dataset=dataset, hyper_param_rot=hyper_param, model_points=obj_model)
 
 
         if args.mode==1:

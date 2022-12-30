@@ -126,7 +126,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         if config["conv_metric"]=="rnc":
             if not config['verbose']:
                 temp = torch.clone(pseudo_transformation)
-                if config["dataset"]=="tabletop" and config["obj_id"]==5:
+                if config["dataset"]=="tabletop" and config["obj_id"] in [5,8]:
                     temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
                 converged = check_convergence_batchwise( depth_original=depth_data,
                                                             obj_model=obj_model_sl, 
@@ -135,7 +135,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
                                                             config=config)
             else:
                 temp = torch.clone(pseudo_transformation)
-                if config["dataset"]=="tabletop" and config["obj_id"]==5:
+                if config["dataset"]=="tabletop" and config["obj_id"] in [5,8]:
                     temp[:,:3,:3] = convert_transformation_opencv_opengl(torch.clone(temp))[:,:3,:3]
                 converged, d_max, d_avg = check_convergence_batchwise( depth_original=depth_data,
                                                             obj_model=obj_model_sl, 
@@ -194,7 +194,7 @@ def pose_labeling_scheme(pts_canonical, seg_data, depth_data, diameter, intrinsi
         return None
     pseudo_ground_truth_set = torch.stack(pseudo_ground_truth_set)
     if config["dataset"]=="tabletop":
-        if config["obj_id"]==5:
+        if config["obj_id"] in [5,8]:
             pseudo_ground_truth_set = pseudo_ground_truth_set
         else:
             pseudo_ground_truth_set = convert_transformation_opencv_opengl(pseudo_ground_truth_set)

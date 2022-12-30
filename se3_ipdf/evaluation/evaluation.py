@@ -118,7 +118,6 @@ def eval_recall_error(model, dataset,
         for (i, input_) in progress_bar:
             if i == hyper_param['num_val_iter']:
                 break      
-
             images = input_['image'].to(device)
             pose_gt = input_['obj_pose_in_camera'].to(device)
             rot_gt = input_['obj_pose_in_camera'][:,:3,:3].to(device)
@@ -190,11 +189,12 @@ def eval_accuracy_angular_error(model, dataset,
 
     geodesic_errors = np.rad2deg(geodesic_errors)
     mean_angular_error = np.mean(geodesic_errors)
+    accuracy5 = np.average(geodesic_errors <= 5)
     accuracy15 = np.average(geodesic_errors <= 15)
     accuracy30 = np.average(geodesic_errors <= 30)
 
 
-    return mean_angular_error, accuracy15, accuracy30                
+    return mean_angular_error, accuracy5, accuracy15, accuracy30                
 
 
 def eval_spread(model, dataset,
@@ -415,7 +415,13 @@ def produce_ground_truth_set(rotation_gt, obj_id, num=200):
         sym = torch.cat([rotation, rotation_flip]).to(device)
         ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), sym)
     if obj_id==4 or obj_id==6:
-        syms = torch.from_numpy(get_cuboid_syms()).float().to(device)
+        syms = torch.zeros(4,3,3)
+
+        syms[0] = torch.eye(3)
+        syms[1] = tt.euler_angles_to_matrix(torch.Tensor([0,0, np.pi]), 'ZYX').float()
+        syms[2] = tt.euler_angles_to_matrix(torch.Tensor([0,np.pi,0 ]), 'ZYX').float()
+        syms[3] = syms[1] @ syms[2]
+        syms = syms.to(device)
         ground_truth_set = torch.einsum('bij,ajk->baik', rotation_gt.float(), syms)
 
 

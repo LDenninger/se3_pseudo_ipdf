@@ -13,9 +13,9 @@ import utils.visualizations as visualizations
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-OBJ_ID_LIST = [3]+[4]*2+[5]*2
-MATERIAL_LIST = [False, True, False, True, False]
-DATASET_LIST = ["tabletop"]*5
+OBJ_ID_LIST = [8]*2
+MATERIAL_LIST = [True, False]
+DATASET_LIST = ["tabletop"]*2
 
 SAVE_NAME = "pseudo_gt_thesis.pth"
 

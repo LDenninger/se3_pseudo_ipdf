@@ -180,8 +180,10 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
     mean_error_list = []
     median_error_list = []
     mae_list = []
+    acc5_list = []
     acc15_list = []
     acc30_list = []
+
 
     for (i, dataset_obj) in enumerate(dataset):
         print(f"\nEvaluation for object no. {i+3}: \n")
@@ -194,7 +196,6 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
         
         print("\nLoglikelihood rotation: ", llh_rot)
         print("\n")
-
         # Evaluation of the recall error
         print("______________________________________\nStart computing Recall Error:\n")
         mean_error, median_error = eval_recall_error(model, dataset_obj, hyper_param_rot)
@@ -204,9 +205,10 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
         # Evaluation of the rotation estimate accuracy
 
         print("______________________________________\nStart computing Accuracy:\n")
-        mae, acc15, acc30 = eval_accuracy_angular_error(model, dataset_obj, hyper_param_rot,
+        mae, acc5, acc15, acc30 = eval_accuracy_angular_error(model, dataset_obj, hyper_param_rot,
                                                         gradient_ascent=True)
         print("\nMean Angular Error: ", mae)
+        print("Accuracy5: ", acc5)
         print("Accuracy15: ", acc15)
         print("Accuracy30: ", acc30)
         print("\n")
@@ -233,6 +235,7 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
         mean_error_list.append(mean_error)
         median_error_list.append(median_error)
         mae_list.append(mae)
+        acc5_list.append(acc5)
         acc15_list.append(acc15)
         acc30_list.append(acc30)
 
@@ -242,6 +245,7 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
             f"RotationLoglikelihood(obj_{i+3})": llh_rot_list[i],
             f"MeanAngularError(obj_{i+3})": mae_list[i],
             f"Accuracy15(obj_{i+3})": acc15_list[i],
+            f"Accuracy15(obj_{i+3})": acc15_list[i],
             f"Accuracy30(obj_{i+3})": acc30_list[i],
             f"RecallMeanAngularError(obj_{i+3})": mean_error_list[i],
             f"RecallMedianAngularError(obj_{i+3})": median_error_list[i],
@@ -250,6 +254,7 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
     wandb.log({
             "RotationLoglikelihood": sum(llh_rot_list)/len(llh_rot_list),
             "MeanAngularError": sum(mae_list)/len(mae_list),
+            "Accuracy5": sum(acc5_list)/len(acc5_list),
             "Accuracy15": sum(acc15_list)/len(acc15_list),
             "Accuracy30": sum(acc30_list)/len(acc30_list),
             "RecallMeanAngularError": sum(mean_error_list)/len(mean_error_list),

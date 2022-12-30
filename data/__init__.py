@@ -8,7 +8,7 @@ from .tless.pls_dataset import TLESSWorkDataset
 
 # Loading scripts
 # Loading scripts for datasets used in the models
-from .load_dataset import load_model_dataset
+from .load_dataset import load_model_dataset, load_single_model_dataset
 
 # Loading scripts for datasets used in the pose labeling scheme
 from .load_dataset import load_pls_dataset

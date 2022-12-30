@@ -35,13 +35,8 @@ def get_symmetry_ground_truth(rotation_gt, obj_id, dataset, num=720):
             ground_truth_set = rotation
             ground_truth_set = rotation_gt.float() @ ground_truth_set
         
-        if dataset=="tless":
-            obj_sym = []
-            sym_set = produce_ground_truth_set_tless(obj_id)
-            for sym in sym_set:
-                obj_sym.append(torch.from_numpy(sym['R']))
-            obj_sym = torch.stack(obj_sym).float()
-            ground_truth_set = rotation_gt.float() @ obj_sym
+        if obj_id==8:
+            ground_truth_set = rotation_gt
 
     elif dataset=="tless":
         obj_sym = []

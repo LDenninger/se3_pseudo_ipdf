@@ -136,11 +136,10 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
                                       optimizer=optimizer)
         # validation
         model.eval()
-        with torch.no_grad():
-            error = eval_translation_error(model, dataset=val_dataset,
-                                        batch_size=hyper_param['batch_size_val'],
-                                        eval_iter=hyper_param['num_val_iter'],
-                                        gradient_ascent=False)
+        error = eval_translation_error(model, dataset=val_dataset,
+                                    batch_size=hyper_param['batch_size_val'],
+                                    eval_iter=hyper_param['num_val_iter'],
+                                    gradient_ascent=True)
         # log the loss values 
         wandb.log({
             'TrainLoss': train_loss,
@@ -159,9 +158,9 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
                        },
                        chkpt_path
             )
-            # For every saved model run a full evaluation if full_evaluation is set to true
-            if hyper_param['full_eval']==True and epoch % hyper_param["eval_freq"]==0:
-                translation_model_evaluation(model=model, dataset=val_dataset)
+        # For every saved model run a full evaluation if full_evaluation is set to true
+        """if hyper_param['full_eval']==True and epoch % hyper_param["eval_freq"]==0:
+            translation_model_evaluation(model=model, dataset=val_dataset)"""
     print("Training finished.")
     print("The final IPDF model was saved to: ", os.path.join(checkpoint_dir, 'checkpoint_final.pth'))
 

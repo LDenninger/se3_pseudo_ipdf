@@ -92,7 +92,7 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
             start_epoch = checkpoint['epoch']
             print("Checkpoint was loaded from: " + chkpt_path + "\n")
         except:
-            print("Rotation model could not be loaded...\n")
+            print("Translation model could not be loaded...\n")
     
     model = model.to(DEVICE)
     

@@ -153,9 +153,7 @@ class TabletopPoseDataset(Dataset):
                     image = self.Resizer(image)
             else:
                 if self.mask:
-                    image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
-                    image = image.permute(2,0,1)
-                    image = self.Resizer(image)
+                    image = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt"))
                 else:
                     image = torch.load(os.path.join(data, "rgb_tensor.pt"))
                     image = image.permute(2,0,1)

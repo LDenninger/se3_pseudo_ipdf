@@ -58,11 +58,11 @@ if __name__=="__main__":
             hyper_param_trans = yaml.safe_load(f)
 
         
-        model = models.load_translation_model(hyper_param=hyper_param_trans,exp_name=args.exp_name, arguments=args)
+        model = models.load_translation_model(hyper_param=hyper_param_trans,exp_name=args.exp_name, arguments=args)[0]
 
         dataset = data.load_model_dataset(hyper_param_trans, validation_only=True)
 
-        visualizations.visualize_translation_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_trans)[0]
+        visualizations.visualize_translation_model(model=model, dataset=dataset[0], save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_trans)
 
     else:
         print("\nPlease define a model to be loaded and evaluated!")

@@ -316,7 +316,7 @@ def eval_translation_error(model, dataset,
                             eval_accuracy=False,
                             model_points=None,
                             threshold_list=[],
-                            gradient_ascent=False):
+                            gradient_ascent=True):
     def euclidean_distance(p_1, p_2):
         dist = (p_1-p_2)**2
         dist = torch.sqrt(torch.sum(dist, dim=-1))

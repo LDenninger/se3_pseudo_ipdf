@@ -89,7 +89,7 @@ def train_model():
                                                 val_dataset=val_loader,
                                                 optimizer=optimizer,
                                                 hyper_param=hyper_param,
-                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                checkpoint_dir=os.path.join(exp_dir,"models_translation"),
                                                 start_epoch=start_epoch)
     
     else:
@@ -145,7 +145,7 @@ def train_model():
                                                 val_dataset=val_loader,
                                                 optimizer=optimizer,
                                                 hyper_param=hyper_param,
-                                                checkpoint_dir=os.path.join(exp_dir,"models_rotation"),
+                                                checkpoint_dir=os.path.join(exp_dir,"models_translation"),
                                                 start_epoch=start_epoch)
         wandb.finish()
 

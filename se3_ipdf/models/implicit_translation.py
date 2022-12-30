@@ -39,7 +39,7 @@ class ImplicitTranslation(nn.Module):
     def __init__(self, feature_extractor, feat_dim, num_fourier_comp=0,
                 mlp_layer_sizes=[256]*2,
                 num_train_queries=2**12, num_eval_queries=80000,
-                translation_range=torch.tensor([[-0.1,0.1],[-0.1,0.1],[2.4,2.6]])):
+                translation_range=torch.tensor([[-1,1],[-1,1],[1,1]])):
         super(ImplicitTranslation, self).__init__()
         self.feat_dim = feat_dim
         self.translation_dim = 3
@@ -161,7 +161,7 @@ class ImplicitTranslation(nn.Module):
         if not gradient_ascent:
             return max_rotations
         step_size = 1e-3
-        num_iteration = 30
+        num_iteration = 50
         query_translation = max_rotations
         query_translation.requires_grad = True
         #query_rot_quat = torch.autograd.Variable(query_rot_quat, requires_grad=True )

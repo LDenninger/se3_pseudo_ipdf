@@ -68,7 +68,7 @@ def visualize_translation_model(model, dataset, hyper_param, save_dir, num_batch
         probabalities = torch.squeeze(probabalities, dim=-1)
 
         img = img.cpu()
-        query_rotation = query_rotation.cpu()
+        query_translation = query_translation.cpu()
         probabalities = probabalities.cpu()
 
         # Loop for saving the visualizations and image data

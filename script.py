@@ -7,9 +7,9 @@ import ipdb
 
 import data
 
-EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_3", "tabletop_3_can_resnet18_1_2", "tabletop_3_can_resnet18_2_2","tabletop_3_can_resnet50_2", "tabletop_3_can_convnextT_2", "tabletop_3_can_convnextS_2","tabletop_3_can_convnextB_2", "tabletop_3_can_vgg_2", 
-                "tabletop_3_crackerbox_resnet18_0_2", "tabletop_3_crackerbox_resnet18_1_2", "tabletop_3_crackerbox_resnet18_2_2","tabletop_3_crackerbox_resnet50_2", "tabletop_3_crackerbox_convnextT_2", "tabletop_3_crackerbox_convnextS_2","tabletop_3_crackerbox_convnextB_2", "tabletop_3_crackerbox_vgg_2", 
-                "tabletop_3_bowl_resnet18_0_2", "tabletop_3_bowl_resnet18_1_2", "tabletop_3_bowl_resnet18_2_2","tabletop_3_bowl_resnet50_2", "tabletop_3_bowl_convnextT_2", "tabletop_3_bowl_convnextS_2","tabletop_3_bowl_convnextB_2", "tabletop_3_bowl_vgg_2"]
+EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_4", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_2_3","tabletop_3_can_resnet50_3", "tabletop_3_can_convnextT_3", "tabletop_3_can_convnextS_3","tabletop_3_can_convnextB_3", "tabletop_3_can_vgg_3", 
+                "tabletop_3_crackerbox_resnet18_0_3", "tabletop_3_crackerbox_resnet18_1_3", "tabletop_3_crackerbox_resnet18_2_3","tabletop_3_crackerbox_resnet50_3", "tabletop_3_crackerbox_convnextT_3", "tabletop_3_crackerbox_convnextS_3","tabletop_3_crackerbox_convnextB_3", "tabletop_3_crackerbox_vgg_3", 
+                "tabletop_3_bowl_resnet18_0_3", "tabletop_3_bowl_resnet18_1_3", "tabletop_3_bowl_resnet18_2_3","tabletop_3_bowl_resnet50_3", "tabletop_3_bowl_convnextT_3", "tabletop_3_bowl_convnextS_3","tabletop_3_bowl_convnextB_3", "tabletop_3_bowl_vgg_3"]
 OBJ_ID = 3
 MATERIAL = False
 
@@ -25,7 +25,6 @@ data = P(data.id_to_path[OBJ_ID] if MATERIAL else data.id_to_path_uniform[OBJ_ID
     ipdb.set_trace()"""
 
 
-
 for n in EXP_NAME_LIST:
 
     f1 = P("experiments/") / P(("exp_"+n)) / P("config_rotation.yaml")
@@ -35,8 +34,9 @@ for n in EXP_NAME_LIST:
     with open(f1, "r") as f:
         config = yaml.safe_load(f)
     
-    config["num_train_iter"] = 200
-    config["warmup_steps"] = 20
+    config["num_epochs"] = 80
+    #config["num_train_iter"] = 200
+    #config["warmup_steps"] = 20
 
 
     with open(f1, "w") as f:
@@ -44,6 +44,11 @@ for n in EXP_NAME_LIST:
     
     with open(f2, "r") as f:
         config = yaml.safe_load(f)
+
+    config["num_epochs"] = 30
+    config["num_fourier_comp"] = 2
+    config["num_val_iter"] = 20
+    config["eval_freq"] = 100
 
 
 

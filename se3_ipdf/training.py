@@ -77,6 +77,7 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
                                       optimizer=optimizer)
         # validation
         model.eval()
+
         with torch.no_grad():
             
             llh = []
@@ -134,6 +135,7 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
                                       num_iter=hyper_param['num_train_iter'],
                                       mode=1,
                                       optimizer=optimizer)
+
         # validation
         model.eval()
         error = eval_translation_error(model, dataset=val_dataset,

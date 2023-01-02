@@ -26,7 +26,7 @@ def load_convnext_model(size):
                 CNBlockConfig(384, 768, 27),
                 CNBlockConfig(768, None, 3),
                 ], 0.4],
-        "base": [None,
+        "base": [torch.load("se3_ipdf/models/weights/ConvNeXt_Base_Weights.pth"),
                 [
                 CNBlockConfig(128, 256, 3),
                 CNBlockConfig(256, 512, 3),

@@ -122,7 +122,7 @@ def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, 
         load_model = "checkpoint_" + arguments.rot_epoch +".pth"
 
     if load_model is not None:     
-        chkpt_dir = os.path.join(("experiments/exp_"+ arguments.exp_name), 'models_rotation') 
+        chkpt_dir = os.path.join(("experiments/exp_"+ exp_name), 'models_rotation') 
 
         chkpt_path = os.path.join(chkpt_dir, load_model)
         try:

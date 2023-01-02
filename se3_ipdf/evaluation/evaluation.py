@@ -35,7 +35,7 @@ def eval_llh(model, dataset, mode=0,
     for (step, batch) in progress_bar:
         if num_eval_iter is not None and step >= num_eval_iter:
             break
-
+        
         images = batch['image'].to(device).float()
         trans_gt = batch['obj_pose_in_camera'][:,:3,-1].to(device).float()
         rot_gt = batch['obj_pose_in_camera'][:,:3,:3].to(device).float()
@@ -79,8 +79,8 @@ def eval_llh(model, dataset, mode=0,
        
             probabilities = probabilities.cpu().detach().numpy()
 
-            
             prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
+            prob_gt = np.clip(prob_gt, a_min=1e-10, a_max=10000000)
             llh = np.log(prob_gt*so3_grid.shape[0]/np.pi**2)
 
             llh_all.append(llh)

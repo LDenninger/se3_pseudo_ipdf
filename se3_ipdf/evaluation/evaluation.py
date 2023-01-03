@@ -324,7 +324,6 @@ def eval_translation_error(model, dataset,
     
     device = next(model.parameters()).device
 
-
     
     distance_list = []
     progress_bar = tqdm(enumerate(dataset), total=eval_iter)

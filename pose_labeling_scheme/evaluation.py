@@ -18,6 +18,17 @@ def evaluation_acc_error(pseudo_gt, ground_truth, obj_id):
 
     return np.rad2deg(mean)
 
+def evaluation_translation_error(pseudo_gt, ground_truth):
+
+    pseudo_trans = pseudo_gt[...,:3,-1]
+    trans_gt = ground_truth[:3,-1]
+
+    dist = torch.sqrt(torch.sum((pseudo_trans-trans_gt)**2, -1))
+
+    mean = torch.mean(dist)
+
+    return mean.numpy()
+
 def evaluation_recall_error(pseudo_gt, ground_truth, obj_id):
 
     ground_truth_set = produce_ground_truth_set(ground_truth[0], obj_id, m=True).float()

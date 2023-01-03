@@ -15,11 +15,11 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
-EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_4", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_2_3","tabletop_3_can_resnet50_3",
-                "tabletop_3_crackerbox_resnet18_0_3", "tabletop_3_crackerbox_resnet18_1_3", "tabletop_3_crackerbox_resnet18_2_3","tabletop_3_crackerbox_resnet50_3"]
+EXP_NAME_LIST = ["tabletop_3_can_resnet18_0_4", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_2_3","tabletop_3_can_resnet50_3",  "tabletop_3_can_convnextT_3", "tabletop_3_can_convnextS_3", "tabletop_3_can_convnextB_3", 
+                "tabletop_3_crackerbox_resnet18_0_3", "tabletop_3_crackerbox_resnet18_1_3", "tabletop_3_crackerbox_resnet18_2_3","tabletop_3_crackerbox_resnet50_3", "tabletop_3_crackerbox_convnextT_3", "tabletop_3_crackerbox_convnextS_3", "tabletop_3_crackerbox_convnextB_3", ]
 
 #EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
-MODEL_TYPE = [0]*8
+MODEL_TYPE = [0]*14
 
 
 def train_model():

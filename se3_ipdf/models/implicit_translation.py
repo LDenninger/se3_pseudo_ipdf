@@ -38,7 +38,7 @@ class ImplicitTranslation(nn.Module):
     """
     def __init__(self, feature_extractor, feat_dim, num_fourier_comp=0,
                 mlp_layer_sizes=[256]*2,
-                num_train_queries=2**12, num_eval_queries=80000,
+                num_train_queries=2**12, num_eval_queries=100000,
                 translation_range=torch.tensor([[-1,1],[-1,1],[1,1]])):
         super(ImplicitTranslation, self).__init__()
         self.feat_dim = feat_dim

@@ -124,7 +124,6 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
     
     """
     num_epochs = hyper_param['num_epochs']
-
     for epoch in range(start_epoch+1, num_epochs+1):
         # training
         model.train()

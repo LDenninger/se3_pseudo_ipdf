@@ -10,9 +10,7 @@ import se3_ipdf.models as models
 import data
 
 
-EXP_NAME_LIST = ["tabletop_3_can_convnextT_3", "tabletop_3_can_convnextS_3",
-                "tabletop_3_crackerbox_convnextT_3", "tabletop_3_crackerbox_convnextS_3",
-                "tabletop_3_bowl_convnextT_3", "tabletop_3_bowl_convnextS_3"]
+EXP_NAME_LIST = ["tabletop_3_bowl_convnextT_3", "tabletop_3_bowl_convnextS_3", "tabletop_3_bowl_convnextB_3"]
 
 
 
@@ -23,7 +21,6 @@ def evaluate_model(exp_name):
     if not os.path.isdir(exp_dir):
         raise FileNotFoundError(
             errno.ENOENT, os.strerror(errno.ENOENT), exp_dir)
-
 
     if args.wandb == True:
 

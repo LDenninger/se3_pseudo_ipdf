@@ -53,6 +53,17 @@ def evaluation_recall_error(pseudo_gt, ground_truth, obj_id):
     
     return np.rad2deg(mean)
 
+def evaluation_mann(pseudo_gt):
+    
+    import ipdb; ipdb.set_trace()
+    distance = geo_dist_pairwise(pseudo_gt[:,:3,:3], pseudo_gt[:,:3,:3])
+
+    min_dist = torch.min(distance, dim=-1)
+
+    mean = torch.mean(min_dist)
+
+    return mean.item()
+
 
 
 def geo_dist_pairwise(r1, r2):

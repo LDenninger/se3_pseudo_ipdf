@@ -44,6 +44,7 @@ if __name__=="__main__":
         error = []
         l2_error = []
         recall_error = []
+        mann_dist = []
         num_pgt = []
 
         for i in progress_bar:
@@ -66,6 +67,7 @@ if __name__=="__main__":
             num_pgt.append(pgt.shape[0])
             error.append(pls.evaluation_acc_error(pgt[:,:3,:3], ground_truth[:3,:3], obj_id))
             l2_error.append(pls.evaluation_translation_error(pgt, ground_truth))
+            mann_dist.append(pls.evaluation_mann(pgt))
             #recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
 
         p_error = np.mean(error)
@@ -73,8 +75,9 @@ if __name__=="__main__":
         r_error = 0.0
         num_avg = np.mean(num_pgt)
         trans_error = np.mean(l2_error)
+        mann_avg = np.mean(mann_dist)
         print("_"*60)
-        print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n, Translation error: {trans_error}\n")
+        print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n, Translation error: {trans_error}\n, MANN: {mann_avg}\n")
         print(f"Average number of pseudo groun-truth labels: {num_avg}\n")
         print("_"*60)
         failed=False

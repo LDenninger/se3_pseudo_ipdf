@@ -57,12 +57,15 @@ def evaluation_mann(pseudo_gt):
     
     import ipdb; ipdb.set_trace()
     distance = geo_dist_pairwise(pseudo_gt[:,:3,:3], pseudo_gt[:,:3,:3])
+    min_dist = []
 
-    min_dist = torch.min(distance, dim=-1)
+    for (i, d) in enumerate(distance):
+        d_ = torch.cat((d[:i], d[(i+1):]))
+        min_dist.append(torch.min(d_)[0])
 
-    mean = torch.mean(min_dist)
+    mean = np.mean(np.rad2deg(min_dist))
 
-    return mean.item()
+    return mean
 
 
 

@@ -62,6 +62,7 @@ def script_1():
 
 def script_2():
     OBJ_ID = 5
+    import ipdb; ipdb.set_trace()
     path = [P(data.id_to_path_uniform[OBJ_ID])]
     for p in path:
         progress_bar = tqdm(range(15000), total=15000)
@@ -69,7 +70,7 @@ def script_2():
             if i==15000:
                 break
             index = str(i).zfill(6)
-            dPath = p / index / "cleaned_pseudo_gt_thesis.pth"
+            dPath = p / index / "cleaned_pseudo_gt.pth"
             try:
                 pgt = torch.load(str(dPath))
             except:
@@ -126,7 +127,7 @@ def script_4():
             torch.save(pgt_1, str(dPath_1)) 
 
 def script_5():
-    
+    return None
 
 if __name__=="__main__":
     script_2()

@@ -196,7 +196,14 @@ class TabletopPoseDataset(Dataset):
                     pseudo_gt_set = torch.load(os.path.join(data, CLEAN_PSEUDO_GROUND_TRUTH_FILE))
 
                 except:
-                    return None
+                    if self.obj_id == 5:
+                        try:
+                            pseudo_gt_set = torch.load(os.path.join(data, "cleaned_pseudo_gt.pth"))
+
+                        except:
+                            return None
+                    else:
+                        return None
                 ground_truth = pseudo_gt_set[np.random.randint(pseudo_gt_set.shape[0])]
                 #if self.obj_id==4:
                 #    ground_truth = self.produce_ground_truth_analytical(ground_truth)

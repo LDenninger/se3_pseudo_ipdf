@@ -81,7 +81,7 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
         load_model = "checkpoint_" + arguments.trans_epoch +".pth"
 
     if load_model is not None:
-        chkpt_dir = os.path.join(("experiments/exp_"+ arguments.exp_name), 'models_translation') 
+        chkpt_dir = os.path.join(("experiments/exp_"+exp_name), 'models_translation') 
 
         chkpt_path = os.path.join(chkpt_dir, load_model)
 

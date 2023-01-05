@@ -1,6 +1,11 @@
 import torch
 import pytorch3d.transforms as tt
+import pytorch3d.ops as ops
 import numpy as np
+import math
+import matplotlib.pyplot as plt
+
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def evaluation_acc_error(pseudo_gt, ground_truth, obj_id):
 
@@ -15,7 +20,6 @@ def evaluation_acc_error(pseudo_gt, ground_truth, obj_id):
         return None
 
     mean = torch.mean(min_geodesic_dist).numpy()
-
     return np.rad2deg(mean)
 
 def evaluation_translation_error(pseudo_gt, ground_truth):
@@ -55,17 +59,69 @@ def evaluation_recall_error(pseudo_gt, ground_truth, obj_id):
 
 def evaluation_mann(pseudo_gt):
     
-    import ipdb; ipdb.set_trace()
     distance = geo_dist_pairwise(pseudo_gt[:,:3,:3], pseudo_gt[:,:3,:3])
     min_dist = []
 
     for (i, d) in enumerate(distance):
         d_ = torch.cat((d[:i], d[(i+1):]))
-        min_dist.append(torch.min(d_)[0])
+        min_dist.append(torch.min(d_))
 
     mean = np.mean(np.rad2deg(min_dist))
 
     return mean
+
+def evaluation_adds(pseudo_gt, ground_truth, object_model, diameter, obj_id):
+
+
+    pseudo_gt = pseudo_gt.to(DEVICE).float()
+    ground_truth = ground_truth.to(DEVICE).float()
+    object_model = object_model.float()
+
+    batch_size = pseudo_gt.shape[0]
+
+
+    """if obj_id==5:
+        pseudo_gt[:,:3,-1] = torch.repeat_interleave(torch.mean(pseudo_gt[:,:3,-1], dim=0).unsqueeze(0), batch_size, dim=0)"""
+
+    threshold = torch.arange(start=1, end=150, step=1)*1e-3*diameter
+
+
+    point_cloud_gt = object_model @ ground_truth[:3,:3].T + ground_truth[:3,-1]
+    point_cloud_gt = torch.repeat_interleave(point_cloud_gt.unsqueeze(0), batch_size, dim=0)
+
+    point_cloud_pgt = torch.einsum('aj,bjk->bak', object_model, torch.transpose(pseudo_gt[:,:3,:3], -2, -1)) +  pseudo_gt[:,:3,-1].unsqueeze(1)
+
+    adds_distance, idx, nn = ops.knn_points(point_cloud_pgt, point_cloud_gt)
+    adds_distance = torch.mean(adds_distance.squeeze(), dim=-1)
+
+    under_threshold = []
+
+    mean_distance = torch.mean(adds_distance)
+
+    """for t in threshold:
+        tmp = adds_distance < t
+        tmp = torch.sum(torch.nonzero(tmp))/batch_size
+        under_threshold.append(tmp)"""
+    
+    return mean_distance.item()
+
+
+def visualize_pointclouds(p_1, p_2, filename="output/test.png"):
+    """ p_1 is painted green and p_2 is painted red 
+    
+    """
+    center = torch.mean(p_1, dim=0, keepdim=True).squeeze()
+
+    fig = plt.figure(figsize=(12,12))
+    ax = fig.add_subplot(projection='3d')
+    ax.scatter(p_1[:,0], p_1[:,1], p_1[:,2], s=1, color="green", alpha=0.3)
+    ax.scatter(p_2[:,0], p_2[:,1], p_2[:,2], s=1, color="red", alpha=0.3)
+    ax.set_xlim(center[0]-0.2, center[0]+0.2)
+    ax.set_ylim(center[1]-0.2, center[1]+0.2)
+    ax.set_zlim(center[2]-0.2, center[2]+0.2)
+
+    fig.savefig(filename)
+    plt.close()
 
 
 

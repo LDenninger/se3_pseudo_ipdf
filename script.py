@@ -62,7 +62,7 @@ def script_1():
 
 def script_2():
     OBJ_ID = 5
-    path = [P(data.id_to_path[OBJ_ID]), P(data.id_to_path_uniform[OBJ_ID])]
+    path = [P(data.id_to_path_uniform[OBJ_ID])]
     for p in path:
         progress_bar = tqdm(range(15000), total=15000)
         for i in progress_bar:
@@ -73,12 +73,60 @@ def script_2():
             try:
                 pgt = torch.load(str(dPath))
             except:
+                continue
                 print(f"pgt does not exist for frame {index}")
+            
+            if (pgt[:,2,-1]<=0).any():
+                continue
 
             correction_matrix = tt.euler_angles_to_matrix(torch.tensor([math.pi, 0,0]), "XYZ")
             pgt[:,:3,-1] = pgt[:,:3,-1] @ correction_matrix.T
 
             torch.save(pgt, str(dPath))
+
+def script_3():
+    OBJ_ID = 5
+    path = [P(data.id_to_path[OBJ_ID]), P(data.id_to_path_uniform[OBJ_ID])]
+    for p in path:
+        progress_bar = tqdm(range(15000), total=15000)
+        for i in progress_bar:
+            if i==15000:
+                break
+            index = str(i).zfill(6)
+            dPath = p / index / "cleaned_pseudo_gt_thesis.pth"
+            try:
+                os.remove(str(dPath))
+            except:
+                continue
+
+def script_4():
+    OBJ_ID = 5
+    path = [P(data.id_to_path_uniform[OBJ_ID])]
+    import ipdb; ipdb.set_trace()
+    for p in path:
+        progress_bar = tqdm(range(15000), total=15000)
+        for i in progress_bar:
+            if i==15000:
+                break
+            index = str(i).zfill(6)
+            dPath_1 = p / index / "cleaned_pseudo_gt_thesis.pth"
+            dPath_2 = p / index / "cleaned_pseudo_gt.pth"
+
+            try:
+                pgt_1 = torch.load(str(dPath_1))
+                pgt_2 = torch.load(str(dPath_2))
+
+            except:
+                print(f"pgt does not exist for frame {index}")
+                continue
+
+            trans_gt = torch.mean(pgt_2[:,:3,-1], dim=0)
+            pgt_1[:,:3,-1] = torch.repeat_interleave(trans_gt.unsqueeze(0), pgt_1.shape[0], dim=0)
+
+            torch.save(pgt_1, str(dPath_1)) 
+
+def script_5():
+    
 
 if __name__=="__main__":
     script_2()

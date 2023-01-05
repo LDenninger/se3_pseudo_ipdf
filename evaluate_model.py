@@ -10,7 +10,8 @@ import se3_ipdf.models as models
 import data
 
 
-EXP_NAME_LIST = ["tabletop_3_bowl_convnextT_3", "tabletop_3_bowl_convnextS_3", "tabletop_3_bowl_convnextB_3"]
+EXP_NAME_LIST = ["tabletop_3_can_convnextB_4","tabletop_3_can_convnextT_4","tabletop_3_can_convnextS_4", "tabletop_3_can_resnet18_0_3", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_3_3","tabletop_3_can_resnet50_4",
+                "tabletop_3_bowl_convnextB_4","tabletop_3_bowl_convnextT_4","tabletop_3_bowl_convnextS_4", "tabletop_3_bowl_resnet18_0_4", "tabletop_3_bowl_resnet18_1_4", "tabletop_3_bowl_resnet18_3_4","tabletop_3_bowl_resnet50_3"]
 
 
 
@@ -21,7 +22,7 @@ def evaluate_model(exp_name):
     if not os.path.isdir(exp_dir):
         raise FileNotFoundError(
             errno.ENOENT, os.strerror(errno.ENOENT), exp_dir)
-
+    import ipdb; ipdb.set_trace()
     if args.wandb == True:
 
         if args.mode==0:
@@ -73,7 +74,7 @@ def evaluate_model(exp_name):
 
                 # Load the object model
                 if hyper_param["dataset"]=="tabletop":
-                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"], pointcloud_only=True)
+                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"][0], pointcloud_only=True)
                 elif hyper_param["dataset"]=="tless":
                     obj_model, diameter = data.load_tless_object_model(hyper_param["obj_id"], pointcloud_only=True)
                 else:
@@ -176,7 +177,7 @@ def evaluate_model(exp_name):
 
                 # Load the object model
                 if hyper_param["dataset"]=="tabletop":
-                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"], pointcloud_only=True)
+                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"][0], pointcloud_only=True)
                 elif hyper_param["dataset"]=="tless":
                     obj_model, diameter = data.load_tless_object_model(hyper_param["obj_id"], pointcloud_only=True)
                 else:

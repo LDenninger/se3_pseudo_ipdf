@@ -28,6 +28,7 @@ def eval_llh(model, dataset, mode=0,
     Returns:
         Average log likelihood and average spread (in degrees)
     """
+    import ipdb; ipdb.set_trace()   
     llh_rot_all = []
     llh_trans_all = []
     llh_all = []

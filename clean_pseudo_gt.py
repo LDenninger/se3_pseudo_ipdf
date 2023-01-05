@@ -7,11 +7,11 @@ import utils
 import config
 import pose_labeling_scheme
 
-OBJ_ID_LIST = [5]
-MATERIAL_LIST = [True]
-DATASET_LIST = ["tabletop"]
+OBJ_ID_LIST = [5]*2
+MATERIAL_LIST = [True, False]
+DATASET_LIST = ["tabletop"]*2
 SAVE_FILE = "cleaned_pseudo_gt_thesis.pth"
-ANG_THRESHOLD = [5]
+ANG_THRESHOLD = [5]*2
 
 
 if __name__=="__main__":

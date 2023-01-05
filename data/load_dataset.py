@@ -166,4 +166,17 @@ def load_pls_dataset(hyper_param, material=None, start=0,return_gt=False, return
 
     return data_loader
     
-    true
+def load_demonstration_dataset(obj_id, mode, img_size=(224,224)):
+
+    poses = data.generate_dataset(mode=mode)
+    size = poses.shape[0]
+
+    dataset = data.YCBPoseDataset(
+        obj_id = obj_id,
+        img_size = img_size,
+        poses = poses
+    )
+
+    data_loader = DataLoader(dataset=dataset, batch_size=1, drop_last=False, shuffle=False, num_workers = 0)
+
+    return data_loader, size

@@ -16,7 +16,11 @@ import pose_labeling_scheme as pls
 SAVE_PATH = P("output/pose_labeling_scheme")
 LENGTH = 15000
 OBJ_ID = [3,4,5]
-FILE_NAME = "cleaned_pseudo_gt_thesis.pth"
+FILE_NAME = "pseudo_gt_thesis.pth"
+
+
+DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the pose labeling scheme")
@@ -31,7 +35,6 @@ if __name__=="__main__":
     utils.set_random_seed(args.rs)
     
     # Load the config file corresponding to dataset and object
-
     # Load the data
     for obj_id in OBJ_ID:
         progress_bar = tqdm(range(LENGTH), total=LENGTH)
@@ -41,10 +44,14 @@ if __name__=="__main__":
             data_path = P(data.id_to_path[obj_id])
 
 
+        obj_model, diameter = data.load_ycbv_object_model(obj_id, pointcloud_only=True)
+        obj_model = obj_model.to(DEVICE)
+
         error = []
         l2_error = []
         recall_error = []
         mann_dist = []
+        adds_list = []
         num_pgt = []
 
         for i in progress_bar:
@@ -53,7 +60,7 @@ if __name__=="__main__":
             pgt = None
             try:
                 if args.clean:
-                    pgt = torch.load(str(p/"cleaned_pseudo_gt.pth"))
+                    pgt = torch.load(str(p/"cleaned_pseudo_gt_thesis.pth"))
                 else:
                     pgt = torch.load(str(p/FILE_NAME))
                 ground_truth = torch.load(str(p/"ground_truth.pt"))
@@ -67,8 +74,11 @@ if __name__=="__main__":
             num_pgt.append(pgt.shape[0])
             error.append(pls.evaluation_acc_error(pgt[:,:3,:3], ground_truth[:3,:3], obj_id))
             l2_error.append(pls.evaluation_translation_error(pgt, ground_truth))
-            mann_dist.append(pls.evaluation_mann(pgt))
+            adds_list.append(pls.evaluation_adds(pgt, ground_truth, obj_model, diameter, obj_id))
+            if pgt.shape[0]!=1:
+                mann_dist.append(pls.evaluation_mann(pgt))
             #recall_error.append(pls.evaluation_recall_error([pgt], ground_truth.unsqueeze(0), obj_id))
+
 
         p_error = np.mean(error)
         #r_error = np.mean(recall_error)
@@ -76,8 +86,9 @@ if __name__=="__main__":
         num_avg = np.mean(num_pgt)
         trans_error = np.mean(l2_error)
         mann_avg = np.mean(mann_dist)
+        adds_mean = np.mean(adds_list)
         print("_"*60)
-        print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n, Translation error: {trans_error}\n, MANN: {mann_avg}\n")
+        print(f"\nObject no. {obj_id}: Angular precision error: {p_error}, Angular recall error: {r_error}\n, Translation error: {trans_error}\n, MANN: {mann_avg}\n, ADD-S: {adds_mean}")
         print(f"Average number of pseudo groun-truth labels: {num_avg}\n")
         print("_"*60)
         failed=False

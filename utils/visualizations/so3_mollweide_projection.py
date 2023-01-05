@@ -283,7 +283,7 @@ def visualize_so3_rotations(rotations,
       rotations_gt = rotations_gt.unsqueeze(0)
     display_rotations = rotations @ canonical_rotation
     cmap = plt.cm.hsv
-    scatterpoint_scaling = 4e2
+    scatterpoint_scaling = 2e2
     eulers_queries = matrix_to_euler_angles(display_rotations, 'XYZ')
     xyz = display_rotations[:, :, 0]
     tilt_angles = eulers_queries[:, 0]

@@ -28,7 +28,6 @@ def eval_llh(model, dataset, mode=0,
     Returns:
         Average log likelihood and average spread (in degrees)
     """
-    import ipdb; ipdb.set_trace()   
     llh_rot_all = []
     llh_trans_all = []
     llh_all = []
@@ -70,19 +69,23 @@ def eval_llh(model, dataset, mode=0,
                 so3_grid, probabilities = model.output_pdf(images)
                 max_inds = find_closest_rot_inds(so3_grid, rot_gt).squeeze()
                 max_inds = np.array(max_inds.cpu())
+
+                probabilities = probabilities.cpu().detach().numpy()
+
+                prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
+                prob_gt = np.clip(prob_gt, a_min=1e-10, a_max=10000000)
+                llh = np.log(prob_gt*so3_grid.shape[0]/np.pi**2)
             
             if mode==1:
                 cartesian_grid, probabilities = model.output_pdf(images)
                 max_inds = find_closest_trans_inds(cartesian_grid, trans_gt)
                 max_inds = np.array(max_inds.cpu())
-            
-            
-       
-            probabilities = probabilities.cpu().detach().numpy()
+        
+                probabilities = probabilities.cpu().detach().numpy()
 
-            prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
-            prob_gt = np.clip(prob_gt, a_min=1e-10, a_max=10000000)
-            llh = np.log(prob_gt*so3_grid.shape[0]/np.pi**2)
+                prob_gt = np.float32([probabilities[i][max_inds[i]] for i in range (max_inds.shape[0])])
+                prob_gt = np.clip(prob_gt, a_min=1e-10, a_max=10000000)
+                llh = np.log(prob_gt*cartesian_grid.shape[0]/1**3)
 
             llh_all.append(llh)
 

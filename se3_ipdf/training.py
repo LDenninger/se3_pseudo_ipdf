@@ -134,20 +134,35 @@ def run_translation_training(model, train_dataset, val_dataset, optimizer, hyper
                                       num_iter=hyper_param['num_train_iter'],
                                       mode=1,
                                       optimizer=optimizer)
-
         # validation
+        
+            
+        llh = eval_llh(model, dataset=val_dataset,
+                                            num_eval_iter=hyper_param['num_val_iter'], 
+                                            mode=1,
+                                            device=DEVICE)
+
         model.eval()
-        error = eval_translation_error(model, dataset=val_dataset,
+        error = 0.0
+        if epoch % hyper_param["eval_freq"] == 0:
+            error = eval_translation_error(model, dataset=val_dataset,
                                     batch_size=hyper_param['batch_size_val'],
                                     eval_iter=hyper_param['num_val_iter'],
                                     gradient_ascent=True)
         # log the loss values 
-        wandb.log({
-            'TrainLoss': train_loss,
-            'EstimateError': error
-        })
+            wandb.log({
+                'TrainLoss': train_loss,
+                'Loglikelihood': llh,
+                'EstimateError': error
+            })
+        else:
+            wandb.log({
+                'TrainLoss': train_loss,
+                'Loglikelihood': llh
+            })
 
-        print("Epoch:", epoch, "....", "TrainLoss: ", train_loss, "Estimate Error: ", error)
+
+        print("Epoch:", epoch, "....", "TrainLoss: ", train_loss, " Loglikelihood: ", llh, " Estimate Error: ", error)
         # save a checkpoint
         if ((epoch % hyper_param['save_freq'] == 0) and epoch>=hyper_param['start_save']) or epoch == num_epochs:
             chkpt_name = f'checkpoint_{epoch}.pth' if epoch != num_epochs else f'checkpoint_final.pth'

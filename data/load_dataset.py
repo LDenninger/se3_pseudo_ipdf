@@ -68,7 +68,7 @@ def load_single_model_dataset(hyper_param, validation_only=False):
 
     return val_loader
 
-def load_model_dataset(hyper_param, validation_only=False):
+def load_model_dataset(hyper_param, include_translation=False, validation_only=False):
 
     validation_datasets = []
     training_datasets = []

@@ -53,7 +53,7 @@ def load_backbone(hyper_param):
 
 
 
-def load_translation_model(hyper_param, arguments, exp_name=None, load_model=None, init_model=False):
+def load_translation_model(hyper_param, arguments, exp_name=None, load_model=None, only_model=False, init_model=False):
     """Load the translation model. Either it is completely new initialized or the model state is load from
     a checkpoint file.
 
@@ -95,11 +95,14 @@ def load_translation_model(hyper_param, arguments, exp_name=None, load_model=Non
             print("Translation model could not be loaded...\n")
     
     model = model.to(DEVICE)
+
+    if only_model:
+        return model
     
 
     return model, optimizer, start_epoch
 
-def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, init_model=False):
+def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, init_model=False, only_model=False):
 
     ## Load the rotation-model from a given checkpoint. If no checkpoint is provided the model will be newly initialized ##
 
@@ -136,30 +139,31 @@ def load_rotation_model(hyper_param, arguments, exp_name=None, load_model=None, 
     
     model = model.to(DEVICE)
 
-
+    if only_model:
+        return model
     return model, optimizer, start_epoch
 
-def load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, init_mode=False):
+def load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, exp_name=None, init_mode=False):
 
-    model_rot = load_rotation_model(hyper_param_rot, arguments, init_model=(not init_mode))
+    model_rot = load_rotation_model(hyper_param_rot, arguments, exp_name, only_model=True, init_model=(not init_mode))
 
-    model_trans = load_translation_model(hyper_param_trans, arguments, init_model=(not init_mode))
+    model_trans = load_translation_model(hyper_param_trans, arguments, exp_name, only_model=True, init_model=(not init_mode))
     # Initialize ensamble SE(3) model
 
     model_ensamble = ImplicitSE3_Ensamble(
         rotation_model=model_rot,
-        translation_model=model_trans
+        translation_model=model_trans,
     )
 
     if not init_mode:
-        model_path = os.path.join(arguments.exp_dir, os.path.join("models_ensamble",  ("ensamble_"+arguments.rot_epoch+arguments.trans_epoch+".pth")))
+        model_path = os.path.join("experiments/exp_"+ exp_name, os.path.join("models_ensamble",  ("ensamble_"+arguments.rot_epoch+"_"+arguments.trans_epoch+".pth")))
 
         try:
             model_ensamble.load_state_dict(torch.load(model_path)['model_state_dict'])
             print("Model was load from: ", model_path) 
-        except IOError:
+        except:
             print("Model could not be loaded...\nTrying to initialize new ensamble model from existing models...\n")
-            return load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, init_mode=True)
+            return load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, exp_name, init_mode=True)
 
     model_ensamble = model_ensamble.to(DEVICE)
 

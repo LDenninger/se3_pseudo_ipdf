@@ -37,15 +37,17 @@ class ImplicitSE3_Ensamble(nn.Module):
 
         return pose_probability
 
-    def predict_pose(self, images, gradient_ascent=False):
+    def predict_pose(self, image_rot, image_trans=None, gradient_ascent=False):
         """The models predict the rotation and translation respectively using gradient ascent.
         The rotation concatenated with the translation is given out as the single most likely pose
         """
+        if image_trans is None:
+            image_trans = image_rot
 
-        rotation_estimate = self.rotation_model.predict_rotation(images, gradient_ascent=gradient_ascent)
-        translation_estimate = self.translation_model.predict_translation(images, gradient_ascent=gradient_ascent)
+        rotation_estimate = self.rotation_model.predict_rotation(image_rot, gradient_ascent=gradient_ascent)
+        translation_estimate = self.translation_model.predict_translation(image_trans, gradient_ascent=gradient_ascent)
 
-        pose_estimate = torch.repeat_interleave(torch.eye(4).unsqueeze(0), images.shape[0], dim=0).to(images.device)
+        pose_estimate = torch.repeat_interleave(torch.eye(4).unsqueeze(0), image_rot.shape[0], dim=0).to(image_rot.device)
         pose_estimate[:,:3,:3] = rotation_estimate
         pose_estimate[:,:3,-1] = translation_estimate
 

@@ -3,8 +3,30 @@ import wandb
 
 from .evaluation import eval_llh, eval_adds, eval_accuracy_angular_error, eval_recall_error, eval_spread, eval_translation_error, eval_adds
 
-THRESHOLD = [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.02, 0.05, 0.1, 0.2, 0.3, 0.5]
+THRESHOLD = [0.0001, 0.0005, 0.001, 0.005, 0.01, 0.02, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5]
 DEVICE= torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+def adds_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_points, diameter):
+
+    adds, threshold_distance_adds, mean_distance_adds = eval_adds(model,dataset,
+                                                                batch_size=hyper_param_rot['batch_size_val'],
+                                                                model_points=model_points,
+                                                                threshold_list=THRESHOLD,
+                                                                eval_iter=hyper_param_rot['num_val_iter'],
+                                                                gradient_ascent=True,
+                                                                diameter=diameter,
+                                                                mode=2,
+                                                                device=DEVICE)
+    print("\nMean ADD-S Distance: ", mean_distance_adds)
+    print("\nThreshold (percentage): ", THRESHOLD)
+    print("\nThreshold (in centimeters): ", (100*threshold_distance_adds).tolist())
+    print("\nADD-S (at threshold): ", adds)
+
+    print("\n\n")
+    print("______________________________________\nEvaluation finished!\n")
+
+
+    return adds, threshold_distance_adds, mean_distance_adds                                                          
 
 
 def full_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_points):

@@ -3,6 +3,7 @@ import torch
 import argparse
 import errno
 import os
+from pathlib import Path as P
 import yaml
 
 import se3_ipdf.evaluation as evaluation
@@ -10,9 +11,26 @@ import se3_ipdf.models as models
 import data
 
 
-EXP_NAME_LIST = ["tabletop_3_can_convnextB_4","tabletop_3_can_convnextT_4","tabletop_3_can_convnextS_4", "tabletop_3_can_resnet18_0_3", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_3_3","tabletop_3_can_resnet50_4",
-                "tabletop_3_bowl_convnextB_4","tabletop_3_bowl_convnextT_4","tabletop_3_bowl_convnextS_4", "tabletop_3_bowl_resnet18_0_4", "tabletop_3_bowl_resnet18_1_4", "tabletop_3_bowl_resnet18_3_4","tabletop_3_bowl_resnet50_3"]
+#EXP_NAME_LIST = ["tabletop_3_can_convnextB_4","tabletop_3_can_convnextT_4","tabletop_3_can_convnextS_4", "tabletop_3_can_resnet18_0_3", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_3_3","tabletop_3_can_resnet50_4",
+#                "tabletop_3_bowl_convnextB_4","tabletop_3_bowl_convnextT_4","tabletop_3_bowl_convnextS_4", "tabletop_3_bowl_resnet18_0_4", "tabletop_3_bowl_resnet18_1_4", "tabletop_3_bowl_resnet18_3_4","tabletop_3_bowl_resnet50_3"]
+EXP_NAME_LIST = ["tabletop_3_bowl_4", "tabletop_3_bowl_ana_1"]
+ROT_EPOCH = ["20", "20"]
+TRANS_EPOCH = ["20", "final"]
 
+SAVE_PATH = P("output")
+
+
+def save_adds(adds, threshold):
+    assert len(adds)==len(threshold)
+    f_name = str(SAVE_PATH/(exp_name+"_adds_.txt"))
+
+    with open(f_name, "w") as f:
+        f.write("\n")
+        for (i, adds) in enumerate(adds):
+            f.write(f"({str(threshold[i].item())}, {str(adds)})\n")
+    
+
+                
 
 
 def evaluate_model(exp_name):
@@ -22,7 +40,6 @@ def evaluate_model(exp_name):
     if not os.path.isdir(exp_dir):
         raise FileNotFoundError(
             errno.ENOENT, os.strerror(errno.ENOENT), exp_dir)
-    import ipdb; ipdb.set_trace()
     if args.wandb == True:
 
         if args.mode==0:
@@ -104,17 +121,18 @@ def evaluate_model(exp_name):
                 model = models.load_ensamble_model(
                     hyper_param_rot=hyper_param_rot,
                     hyper_param_trans=hyper_param_trans,
-                    arguments=args
+                    arguments=args,
+                    exp_name=exp_name
                 )
 
                 # Load the dataset
-                dataset = data.load_model_dataset(hyper_param=hyper_param, validation_only=True)
+                dataset = data.load_model_dataset(hyper_param=hyper_param_rot, validation_only=True)
 
                 # Load the object model
-                if hyper_param["dataset"]=="tabletop":
-                    obj_model, diameter = data.load_ycbv_object_model(hyper_param["obj_id"], pointcloud_only=True)
-                elif hyper_param["dataset"]=="tless":
-                    obj_model, diameter = data.load_tless_object_model(hyper_param["obj_id"], pointcloud_only=True)
+                if hyper_param_rot["dataset"]=="tabletop":
+                    obj_model, diameter = data.load_ycbv_object_model(hyper_param_rot["obj_id"][0], pointcloud_only=True)
+                elif hyper_param_rot["dataset"]=="tless":
+                    obj_model, diameter = data.load_tless_object_model(hyper_param_rot["obj_id"], pointcloud_only=True)
                 else:
                     print("Object model for dataset/object was not found!")
 
@@ -123,7 +141,9 @@ def evaluate_model(exp_name):
                 if not os.path.isdir(save_dir):
                         os.makedirs(save_dir)
 
-                evaluation.full_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, model_points=obj_model)
+                evaluation.adds_evaluation(model=model, dataset=dataset[0], hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, diameter=diameter, model_points=obj_model)
+
+                #evaluation.full_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, model_points=obj_model)
     
     else:
         if args.mode==0:
@@ -196,10 +216,46 @@ def evaluate_model(exp_name):
 
                 wandb.run.name = exp_name +"_"+args.rot_epoch+"_"+args.trans_epoch
 
+                
+                # Load translation model configuration
+                config_file_name = os.path.join(exp_dir, "config_translation.yaml")
+                with open(config_file_name, 'r') as f:
+                    hyper_param_trans = yaml.safe_load(f)
+
+                # Load rotation model configuration
+                config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
+                with open(config_file_name, 'r') as f:
+                    hyper_param_rot = yaml.safe_load(f)
+
+                # Load the ensamble model
+                model = models.load_ensamble_model(
+                    hyper_param_rot=hyper_param_rot,
+                    hyper_param_trans=hyper_param_trans,
+                    arguments=args,
+                    exp_name=exp_name
+                )
+
+                # Load the dataset
+                dataset = data.load_model_dataset(hyper_param=hyper_param_rot, validation_only=True)
+
+                # Load the object model
+                if hyper_param_rot["dataset"]=="tabletop":
+                    obj_model, diameter = data.load_ycbv_object_model(hyper_param_rot["obj_id"][0], pointcloud_only=True)
+                elif hyper_param_rot["dataset"]=="tless":
+                    obj_model, diameter = data.load_tless_object_model(hyper_param_rot["obj_id"], pointcloud_only=True)
+                else:
+                    print("Object model for dataset/object was not found!")
+
+
                 save_dir=os.path.join(exp_dir, os.path.join("experiments", ("evaluation_"+args.rot_epoch+"_"+args.trans_epoch)))
                 if not os.path.isdir(save_dir):
                         os.makedirs(save_dir)
-                evaluation.full_evaluation(args, visualization=args.vis)
+
+                #evaluation.full_evaluation(model=model, dataset=dataset, hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, model_points=obj_model)
+
+                adds, threshold, mean_adds = evaluation.adds_evaluation(model=model, dataset=dataset[0], hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, diameter=diameter, model_points=obj_model)
+
+                save_adds(adds, threshold)
     
     wandb.finish()
 

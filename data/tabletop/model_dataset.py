@@ -43,6 +43,7 @@ class TabletopPoseDataset(Dataset):
                 mask=False,
                 full=False,
                 occlusion=False,
+                include_trans_img=False,
                 device="cpu"):
         super().__init__()
 
@@ -60,6 +61,7 @@ class TabletopPoseDataset(Dataset):
         self.train_mode = train_mode
         self.full_data = full_data
         self.pseudo_gt = pseudo_gt
+        self.include_trans_img=include_trans_img,
         self.Resizer = torchvision.transforms.Resize(size=self.img_size)
         self.ResNetTransform = torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
         self.OccTransform = torchvision.transforms.RandomErasing(p=0.8, scale=(0.1,0.5), inplace=True)
@@ -75,6 +77,7 @@ class TabletopPoseDataset(Dataset):
 
     def __getitem__(self, idx):
         # Set index for training or validation set
+
         if self.train_set == False:
             idx = 15000+idx
         data = os.path.join(self.data_dir, str(idx).zfill(6))
@@ -108,11 +111,11 @@ class TabletopPoseDataset(Dataset):
                 return self.__getitem__((idx+1)%self.__len__())
 
             if self.full_data:
-
                 try:
                     depth_data = torch.load(os.path.join(data, "depth_tensor.pt"))
                     seg_data = torch.load(os.path.join(data, "seg_tensor.pt"))
                     image_full = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3].permute(2,0,1) / 255.
+                    image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt")) / 255.
 
                 except:
                     return self.__getitem__((idx+1)%self.__len__())
@@ -122,6 +125,7 @@ class TabletopPoseDataset(Dataset):
                     'image': image,
                     'image_raw': image_raw,
                     'image_original': image_full,
+                    'image_trans_input': image_full_resize_mask,
                     'depth_image': depth_data,
                     'seg_image': seg_data,
                     'obj_pose_in_camera': ground_truth,

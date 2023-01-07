@@ -92,6 +92,7 @@ def evaluation_adds(pseudo_gt, ground_truth, object_model, diameter, obj_id):
     point_cloud_pgt = torch.einsum('aj,bjk->bak', object_model, torch.transpose(pseudo_gt[:,:3,:3], -2, -1)) +  pseudo_gt[:,:3,-1].unsqueeze(1)
 
     adds_distance, idx, nn = ops.knn_points(point_cloud_pgt, point_cloud_gt)
+    adds_distance = torch.sqrt(adds_distance)
     adds_distance = torch.mean(adds_distance.squeeze(), dim=-1)
 
     under_threshold = []

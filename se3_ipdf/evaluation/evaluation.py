@@ -255,20 +255,16 @@ def eval_adds(model, dataset,
                 model_points,
                 threshold_list,
                 eval_iter,
+                diameter,
                 mode=0,
                 gradient_ascent=False,
                 device="cpu"):
-
     # Take median from the k lowest/highest values to prevent the impact of unique outliers
-    maximum = torch.median(torch.topk(model_points[:,0], k=5)[0])
-    minimum = torch.median(torch.topk(model_points[:,0], k=5, largest=False)[0])       
-
-    model_diameter = maximum-minimum
 
     model_points = torch.repeat_interleave(model_points.unsqueeze(0), batch_size, dim=0)                
     progress_bar = tqdm(enumerate(dataset), total=eval_iter)
 
-    threshold_distance = torch.FloatTensor(threshold_list) * model_diameter
+    threshold_distance = torch.arange(0.001,0.1, 0.001)
     num_examples = batch_size * eval_iter
     
     adds_distance_list = []
@@ -292,12 +288,14 @@ def eval_adds(model, dataset,
             model_estimation = pose_gt
             model_estimation[:,:3, -1] = translation_estimation
         else:
-            model_estimation = model.predict_pose(images, gradient_ascent)
+            image_trans = input['image_trans_input'].to(device)
+            model_estimation = model.predict_pose(image_rot=images, image_trans=image_trans, gradient_ascent=gradient_ascent)
 
         # Transform point clouds
         pc_ground_truth = torch.bmm(model_points, torch.transpose(pose_gt[:,:3,:3], -2, -1)) + pose_gt[:,:3,-1].unsqueeze(1)
         pc_rendered = torch.bmm(model_points, torch.transpose(model_estimation[:,:3,:3], -2, -1)) + model_estimation[:,:3,-1].unsqueeze(1)
         adds_distance, idx, nn = ops.knn_points(pc_ground_truth, pc_rendered)
+        adds_distance = torch.sqrt(adds_distance)
         adds_distance = torch.mean(adds_distance.squeeze(-1), dim=-1)
         #visualize_pointclouds(pc_ground_truth.squeeze().cpu(), pc_rendered.squeeze().cpu(), filename="output/pc_test.png")
         

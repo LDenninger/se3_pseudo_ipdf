@@ -8,18 +8,25 @@ import se3_ipdf.evaluation as evaluation
 import data
 import utils.visualizations as visualizations
 
-if __name__=="__main__":
-    parser = argparse.ArgumentParser(description="Hyperparameters for visualization of the model output")
-    parser.add_argument("-exp_name", type=str, help="Name of the experiment")
-    parser.add_argument("-rot_epoch", type=str, default=None, help="Epoch the checkpoint to load the rotation-model is taken from")
-    parser.add_argument("-trans_epoch", type=str, default=None, help="Epoch the checkpoint to load the rotation-model is taken from")
+EXP_NAME_LIST = [
+    "tabletop_3_bowl_4",
+    "tabletop_3_bowl_single_2",
+    "tabletop_3_bowl_uni_4",
+     "tabletop_3_can_3",
+    "tabletop_3_can_uni_3",
+     "tabletop_3_crackerbox_3",
+    "tabletop_3_crackerbox_single_2",
 
-    args = parser.parse_args()
+]
+ROT_EPOCH_LIST = ["10", "20", "10", "40", "40", "40", "40"]
+TRANS_EPOCH_LIST = ["20", "10", "20", "20", "20", "20", "20"]
 
-    exp_dir = "experiments/exp_" + args.exp_name
+def visualize(exp_name, rot_epoch, trans_epoch, mode):
 
-    # Determine which model type is to be evaluated
-    if args.rot_epoch is not None and args.trans_epoch is not None:
+    exp_dir = "experiments/exp_" + exp_name
+
+
+    if mode==0:
 
         # Load the config file for the rotation model
         config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
@@ -38,7 +45,7 @@ if __name__=="__main__":
         visualizations.visualize_ensamble_model(model=model, dataset=dataset, hyper_param=hyper_param_rot)
 
 
-    elif args.rot_epoch is not None:
+    elif mode==1:
         # Load the config file for the rotation model
         config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
         with open(config_file_name, 'r') as f:
@@ -51,7 +58,7 @@ if __name__=="__main__":
             obj_id = hyper_param_rot["obj_id"][i]
             visualizations.visualize_rotation_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, f"visualizations/obj_0{obj_id}"), hyper_param=hyper_param_rot)
     
-    elif args.trans_epoch is not None:
+    elif mode==2:
         # Load the config file for the translation model
         config_file_name = os.path.join(exp_dir, "config_translation.yaml")
         with open(config_file_name, 'r') as f:
@@ -66,3 +73,15 @@ if __name__=="__main__":
 
     else:
         print("\nPlease define a model to be loaded and evaluated!")
+
+
+if __name__=="__main__":
+    parser = argparse.ArgumentParser(description="Hyperparameters for visualization of the model output")
+    parser.add_argument("-mode", type=int, default=0)
+
+    args = parser.parse_args()
+
+    for (i, exp_name) in enumerate(EXP_NAME_LIST):
+        visualize(exp_name, ROT_EPOCH_LIST[i], TRANS_EPOCH_LIST[i], args.mode)
+    # Determine which model type is to be evaluated
+

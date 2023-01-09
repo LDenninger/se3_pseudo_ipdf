@@ -43,6 +43,8 @@ class TabletopPoseDataset(Dataset):
                 mask=False,
                 full=False,
                 occlusion=False,
+                preset_occ=False,
+                trans_out=False,
                 include_trans_img=False,
                 device="cpu"):
         super().__init__()
@@ -58,6 +60,7 @@ class TabletopPoseDataset(Dataset):
         self.mask = mask
         self.full = full
         self.occlusion = occlusion
+        self.preset_occ=preset_occ
         self.train_mode = train_mode
         self.full_data = full_data
         self.pseudo_gt = pseudo_gt
@@ -88,8 +91,10 @@ class TabletopPoseDataset(Dataset):
 
             if ground_truth is None or ground_truth.shape[0]==0:
                 return self.__getitem__((idx+1)%self.__len__())
-
-            image = self.load_image(idx)
+            if not self.preset_occ:
+                image = self.load_image(idx)
+            else:
+                image = self.load_image(idx,occlusion=True)
             if image is None:
                 return self.__getitem__((idx+1)%self.__len__())
              
@@ -104,8 +109,15 @@ class TabletopPoseDataset(Dataset):
         else:
             # Dataloader used for evaluation
             ground_truth = self.load_ground_truth(idx)
-            image = self.load_image(idx)
-            image_raw = self.load_image(idx, edit=False)
+            if not self.preset_occ:
+                image = self.load_image(idx)
+                image_raw = self.load_image(idx, edit=False)
+                image
+            else:
+                image = self.load_image(idx, occlusion=True)
+                image_raw = self.load_image(idx, edit=False, occlusion=True)
+
+
 
             if image is None:
                 return self.__getitem__((idx+1)%self.__len__())
@@ -115,7 +127,9 @@ class TabletopPoseDataset(Dataset):
                     depth_data = torch.load(os.path.join(data, "depth_tensor.pt"))
                     seg_data = torch.load(os.path.join(data, "seg_tensor.pt"))
                     image_full = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3].permute(2,0,1) / 255.
+                    
                     image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt")) / 255.
+
 
                 except:
                     return self.__getitem__((idx+1)%self.__len__())
@@ -141,24 +155,43 @@ class TabletopPoseDataset(Dataset):
             
 
 
-    def load_image(self, idx, edit=True):
-        data = os.path.join(self.data_dir, str(idx).zfill(6))
+    def load_image(self, idx, edit=True, preset_occ=False):
+        data = os.path.join(self.data_dir, str(idx).zfill(6))            
         try:
             if not self.full:
                 if self.bb_crop and self.mask:
-                    image = torch.load(os.path.join(data, "mask_crop_rgb_tensor.pt"))
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt.pt"))
+                    else:
+                        image = torch.load(os.path.join(data, "mask_crop_rgb_tensor.pt"))
                 elif self.bb_crop and not self.mask:
-                    image = torch.load(os.path.join(data, "crop_rgb_tensor.pt"))
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt.pt"))
+                    else:
+                        image = torch.load(os.path.join(data, "crop_rgb_tensor.pt"))
                 elif not self.bb_crop and self.mask:
-                    image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensorpt"))
+                    else:
+                        image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
                 elif not self.bb_crop and not self.mask:
-                    image = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3]
-                    image = image.permute(2,0,1)
-                    image = self.Resizer(image)
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "occ_rgb_tensorpt"))
+                    else:
+                        image = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3]
+                        image = image.permute(2,0,1)
+                        image = self.Resizer(image)
             else:
                 if self.mask:
-                    image = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt"))
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "resize_mask_occ_rgb_tensor.pt"))
+                        
+                    else:
+                        image = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt"))
                 else:
+                    if preset_occ:
+                        image = torch.load(os.path.join(data, "resize_occ_rgb_tensor.pt"))
+
                     image = torch.load(os.path.join(data, "rgb_tensor.pt"))
                     image = image.permute(2,0,1)
                     image = self.Resizer(image)
@@ -170,7 +203,9 @@ class TabletopPoseDataset(Dataset):
         image_edit = image / 255.
 
         if edit==True:
-            if self.occlusion == True:
+            if self.occlusion == True and not preset_occ:
+                
+
                 self.OccTransform(image_edit)
             image_edit = torchvision.transforms.functional.adjust_gamma(image_edit, gamma=self.gamma)
             image_edit = self.ResNetTransform(image_edit)

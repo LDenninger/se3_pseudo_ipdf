@@ -10,15 +10,21 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 IPDF = False
 
 
-def load_single_model_dataset(hyper_param, validation_only=False):
+def load_single_model_dataset(hyper_param, translation=False, validation_only=False):
 
-    # Validation data
-    if hyper_param["material"]:
-        data_dir = data.id_to_path[hyper_param["obj_id"][0]]
-    else:
-        data_dir = data.id_to_path_uniform[hyper_param["obj_id"][0]]
+
 
     if hyper_param["dataset"]=="tabletop":
+
+        preset_occ=False
+        if hyper_param["occlusion"]:
+            preset_occ = True
+        # Validation data
+        if hyper_param["material"]:
+            data_dir = data.id_to_path[hyper_param["obj_id"][0]]
+        else:
+            data_dir = data.id_to_path_uniform[hyper_param["obj_id"][0]]
+
         data_val = data.TabletopPoseDataset(data_dir=data_dir, 
                                             obj_id = hyper_param["obj_id"][0],
                                             img_size= hyper_param['img_size'],
@@ -28,6 +34,7 @@ def load_single_model_dataset(hyper_param, validation_only=False):
                                             pseudo_gt = False,
                                             single_gt=True,
                                             length=hyper_param["length"],
+                                            preset_occ=preset_occ,
                                             train_set=False,
                                             train_mode=False if validation_only else True,
                                             full_data=validation_only,
@@ -54,6 +61,7 @@ def load_single_model_dataset(hyper_param, validation_only=False):
                                                 pseudo_gt=hyper_param["pseudo_gt"],
                                                 single_gt=hyper_param["single_gt"],
                                                 length=hyper_param["length"],
+                                                preset_occ=preset_occ,
                                                 train_set=True,
                                                 train_mode=True,
                                                 occlusion=hyper_param['occlusion'],

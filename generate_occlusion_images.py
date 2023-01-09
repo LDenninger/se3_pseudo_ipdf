@@ -2,6 +2,7 @@ import torch
 import torchvision
 from pathlib import Path as P
 from tqdm import tqdm
+import argparse
 
 import data
 import utils
@@ -47,7 +48,7 @@ def occlude_bounding_box(rgb_img, seg_data, obj_id,full_size=(1080,1920)):
 
     rgb_img[:,top_y:low_y, left_x:right_x] = occ_img
 
-    return rgb_img
+    return rgb_img, occ_img, seg_data
 
 
 
@@ -57,6 +58,8 @@ def generate_occlusion_image(data_path):
     progress_bar = tqdm(range(20000), total=20000)
 
     for i in progress_bar:
+        if i == 20000:
+            break
 
         index = str(i).zfill(6)
 
@@ -68,24 +71,47 @@ def generate_occlusion_image(data_path):
         except:
             print("file does not exist!")
             continue
-        occ_img = occlude_bounding_box(image, seg_data, id)
+
+        occ_img, occ_crop_img, seg_data_crop = occlude_bounding_box(image, seg_data, id)
+        seg_mask = torch.repeat_interleave((seg_data==id).int().unsqueeze(-1), 3, dim=-1).permute(2,0,1)
+        mask_occ_img = seg_mask * occ_img
+        seg_mask = torch.repeat_interleave((seg_data_crop==id).int().unsqueeze(-1), 3, dim=-1).permute(2,0,1)
+        mask_occ_crop_img = seg_mask * occ_crop_img
+
         resize_occ_img = Resizer(occ_img)
+        resize_occ_crop_img = Resizer(occ_crop_img)
+        resize_mask_occ_crop_img = Resizer(mask_occ_crop_img)
+        resize_mask_occ_img = Resizer(mask_occ_img)
+
 
         torch.save(occ_img, str(path/"occ_rgb_tensor.pt"))
         torch.save(resize_occ_img, str(path/"resize_occ_rgb_tensor.pt"))
+        torch.save(resize_occ_crop_img, str(path/"resize_occ_crop_rgb_tensor.pt"))
+
+        torch.save(mask_occ_crop_img, str(path/"mask_occ_crop_rgb_tensor.pt"))
+        torch.save(mask_occ_img, str(path/"mask_occ_rgb_tensor.pt"))
+        torch.save(resize_mask_occ_crop_img, str(path/"resize_mask_occ_crop_rgb_tensor.pt"))
+        torch.save(resize_mask_occ_img, str(path/"resize_mask_occ_rgb_tensor.pt"))
 
 
 
 
-OBJ_ID = [3,4,5]
+
+
+
+OBJ_ID = [3]
 
 if __name__=="__main__":
 
-    for id in OBJ_ID:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-obj_id", type=int)
+    args = parser.parse_args()
 
-        data_path = P(data.id_to_path[id])
-        generate_occlusion_image(data_path)
-        data_path = P(data.id_to_path_uniform[id])
-        generate_occlusion_image(data_path)
+    id = args.obj_id
+
+    data_path = P(data.id_to_path[id])
+    generate_occlusion_image(data_path)
+    data_path = P(data.id_to_path_uniform[id])
+    generate_occlusion_image(data_path)
 
         

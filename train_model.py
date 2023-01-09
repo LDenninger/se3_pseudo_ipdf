@@ -15,15 +15,19 @@ import se3_ipdf.models as models
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
-EXP_NAME_LIST = [
+
+"""EXP_NAME_LIST = ["tless_3_obj_05_1", "tless_3_obj_07_1", "tless_3_obj_17_1", "tless_3_obj_20_1", "tless_3_obj_23_1", "tless_3_obj_27_1"]"""
+
+"""EXP_NAME_LIST = [
         "tabletop_3_bowl_4", "tabletop_3_bowl_ana_2", "tabletop_3_bowl_single_2", "tabletop_3_bowl_uni_4",
         "tabletop_3_can_3", "tabletop_3_can_ana_2", "tabletop_3_can_single_2", "tabletop_3_can_uni_3",
         "tabletop_3_crackerbox_3", "tabletop_3_crackerbox_ana_2", "tabletop_3_crackerbox_single_2", "tabletop_3_crackerbox_uni_3"
     ]
-
+"""
 #EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
-MODEL_TYPE = [1]*12
-
+EXP_NAME_LIST = ["tabletop_3_bowl_resnet18_0_5", "tabletop_3_bowl_resnet50_3", "tabletop_3_can_convnextB_5", "tabletop_3_can_convnextS_5"]
+MODEL_TYPE = [1]*4
+START_EPOCH = [30, 0, 0, 0]
 
 def train_model():
     wandb.login()
@@ -80,7 +84,7 @@ def train_model():
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param)
+                train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
 
@@ -138,7 +142,7 @@ def train_model():
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param)
+                train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
                 wandb.watch(model, log='all', log_freq=10)
@@ -176,7 +180,9 @@ if __name__ == "__main__":
     for (i, exp_dir) in enumerate(experiment_dir_list):
         exp_name = exp_names[i]
         model_type = model_type_list[i]
-
+        args.c_rot = None
+        if START_EPOCH[i]!=0:
+            args.c_rot = str(START_EPOCH[i])
         print("_"*40)
         print(f"Start training model (type {model_type_list[i]}) in experiment {exp_dir}...")
         print("_"*40)

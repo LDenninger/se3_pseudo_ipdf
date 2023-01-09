@@ -159,7 +159,7 @@ def load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, exp_name=
         model_path = os.path.join("experiments/exp_"+ exp_name, os.path.join("models_ensamble",  ("ensamble_"+arguments.rot_epoch+"_"+arguments.trans_epoch+".pth")))
 
         try:
-            model_ensamble.load_state_dict(torch.load(model_path)['model_state_dict'])
+            model_ensamble.load_state_dict(torch.load(model_path))
             print("Model was load from: ", model_path) 
         except:
             print("Model could not be loaded...\nTrying to initialize new ensamble model from existing models...\n")

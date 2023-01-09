@@ -13,12 +13,10 @@ import data
 
 def script_1():
 
-    EXP_NAME_LIST = [
-        "tabletop_3_bowl_4", "tabletop_3_bowl_ana_2", "tabletop_3_bowl_single_2", "tabletop_3_bowl_uni_4",
-        "tabletop_3_can_3", "tabletop_3_can_ana_2", "tabletop_3_can_single_2", "tabletop_3_can_uni_3",
-        "tabletop_3_crackerbox_3", "tabletop_3_crackerbox_ana_2", "tabletop_3_crackerbox_single_2", "tabletop_3_crackerbox_uni_3"
-    ]
-    
+    EXP_NAME_LIST = ["tabletop_3_can_occ_3", "tabletop_3_can_uni_occ_1", "tabletop_3_can_uni_3", "tabletop_3_can_occ_ana_1", "tabletop_3_can_occ_single_1",
+                "tabletop_3_crackerbox_occ_2", "tabletop_3_crackerbox_uni_occ_2", "tabletop_3_crackerbox_occ_ana_1", "tabletop_3_crackerbox_occ_ana_1",
+                "tabletop_3_bowl_5", "tabletop_3_bowl_occ_3", "tabletop_3_bowl_uni_occ_2", "tabletop_3_bowl_occ_ana_1", "tabletop_3_bowl_occ_single_1",
+                "tabletop_3_bowl_ana_4"]
     #EXP_NAME_LIST = [ "tabletop_3_bowl_ana_1", "tabletop_3_bowl_single_1", "tabletop_3_can_ana_1", "tabletop_3_can_single_1", "tabletop_3_crackerbox_ana_1", "tabletop_3_crackerbox_single_1"]
 
     #OBJ_ID = 3
@@ -64,6 +62,8 @@ def script_1():
         #config["pseudo_gt"] = True
         config["num_fourier_comp"] = 2
         config["num_val_iter"] = 30
+        config["warmup_steps"] = 40
+        config["eval_freq"] = 2
         #config["eval_freq"] = 2
 
 

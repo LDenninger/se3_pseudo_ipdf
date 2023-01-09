@@ -125,10 +125,12 @@ def eval_recall_error(model, dataset,
             images = input_['image'].to(device)
             pose_gt = input_['obj_pose_in_camera'].to(device)
             rot_gt = input_['obj_pose_in_camera'][:,:3,:3].to(device)
-            obj_id = input_["obj_id"][0]
+            
             if hyper_param["dataset"] == "tabletop":
+                obj_id = input_["obj_id"][0]
                 ground_truth_set = produce_ground_truth_set(rot_gt, obj_id)
             elif hyper_param["dataset"] == "tless":
+                obj_id = input_["obj_id"]
                 ground_truth_set = torch.einsum('bij,ajk->baik', rot_gt.float(), obj_sym)
 
 

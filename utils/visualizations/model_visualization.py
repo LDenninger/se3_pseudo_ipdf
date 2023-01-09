@@ -26,6 +26,7 @@ def visualize_rotation_model(model, dataset, hyper_param, save_dir, num_batch=1,
         rot_gt = batch['obj_pose_in_camera'][:,:3,:3]
         obj_id = batch['obj_id'][0]
         # Produce IPDF
+        import ipdb; ipdb.set_trace()
         query_rotation, probabalities = model.output_pdf(img.float())
         probabalities = torch.squeeze(probabalities, dim=-1)
 

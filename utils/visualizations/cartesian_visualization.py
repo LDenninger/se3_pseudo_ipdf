@@ -28,11 +28,16 @@ def visualize_translation_probabilities(translations,
             translations[which_to_display,2],
             s=scatterpoint_scaling * probabilities[which_to_display],
             c=display_color,
-            alpha=0.3)
+            alpha=0.2)
 
-    ax.set_xlim(-0.5,0.5)
-    ax.set_ylim(-0.5,0.5)
-    ax.set_zlim(-1,0)
+    ax.set_xlim(-0.3,0.3)
+    ax.set_ylim(-0.3,0.3)
+    ax.set_zlim(-0.8,-0.3)
+
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    ax.set_zlabel("Z")
+
 
 
     if translation_gt is not None:
@@ -41,7 +46,7 @@ def visualize_translation_probabilities(translations,
             translation_gt[0], 
             translation_gt[1], 
             translation_gt[2],
-            s=10,
+            s=12,
             c=gt_color)
     
     if save_path is None:

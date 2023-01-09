@@ -68,25 +68,29 @@ class ImplicitSE3_Ensamble(nn.Module):
 
 
 
-    def output_pdf(self, images, rotation=True, translation=True, joint_distribution=False):
+    def output_pdf(self, images_1, images_2=None, rotation=True, translation=True, joint_distribution=False):
+
+        if images_2 is None:
+            images_2 = images_1
+
         with torch.no_grad():
             if rotation and translation:
-                query_rotations, rotation_prob = self.rotation_model.output_pdf(images)
+                query_rotations, rotation_prob = self.rotation_model.output_pdf(images_1)
                 if joint_distribution:
-                    query_translation = self.translation_model.predict_rotation(images, gradient_ascent=True)
+                    query_translation = self.translation_model.predict_rotation(images_2, gradient_ascent=True)
                     translation_prob = torch.ones_like(query_translation)
                 else:
-                    query_translation, translation_prob = self.translation_model.output_pdf(images)
+                    query_translation, translation_prob = self.translation_model.output_pdf(images_2)
                 return query_rotations, query_translation, rotation_prob, translation_prob
             if rotation:
-                query_rotations, rotation_prob = self.rotation_model.output_pdf(images)
+                query_rotations, rotation_prob = self.rotation_model.output_pdf(images_1)
                 return query_rotations, rotation_prob
             if translation:
                 if joint_distribution:
-                    query_translation = self.translation_model.predict_rotation(images, gradient_ascent=True)
+                    query_translation = self.translation_model.predict_rotation(images_1, gradient_ascent=True)
                     translation_prob = torch.ones_like(query_translation)
                 else:
-                    query_translation, translation_prob = self.translation_model.output_pdf(images)
+                    query_translation, translation_prob = self.translation_model.output_pdf(images_2)
                 return query_translation, translation_prob
 
         

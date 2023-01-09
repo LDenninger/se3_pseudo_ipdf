@@ -86,18 +86,18 @@ def visualize_translation_model(model, dataset, hyper_param, save_dir, num_batch
 
 def visualize_ensamble_model(model, dataset, hyper_param, save_dir, num_batch=1, batch_size=8, displ_threshold=1e-4):
     progress_bar = tqdm(enumerate(dataset), total=num_batch)
-    
     for (step, batch) in progress_bar:
         if step==num_batch:
             break
             
         img = batch['image'].to(DEVICE)
+        img_trans = batch['image_trans_input'].to(DEVICE)
         img_raw = batch['image_raw']
         img_org = batch['image_original']
         rot_gt = batch['obj_pose_in_camera'][:,:3,:3]
         trans_gt = batch['obj_pose_in_camera'][:,:3,-1]
 
-        query_rotation, query_translation, prob_rot, prob_trans = model.output_pdf(img.float())
+        query_rotation, query_translation, prob_rot, prob_trans = model.output_pdf(img.float(), img_trans.float())
         prob_rot = torch.squeeze(prob_rot, dim=-1)
         prob_trans = torch.squeeze(prob_trans, dim=-1)
 
@@ -116,7 +116,7 @@ def visualize_ensamble_model(model, dataset, hyper_param, save_dir, num_batch=1,
             # Save the visualizations of the model rotation output
             visualizations.visualize_so3_probabilities(rotations=query_rotation, probabilities=prob_rot.detach()[i], rotations_gt=rot_gt[i],
                                                     dataset=hyper_param["dataset"],
-                                                    obj_id=hyper_param["obj_id"],
+                                                    obj_id=hyper_param["obj_id"][0],
                                                     canonical_rotation=world_to_cam,
                                                     save_path=os.path.join(save_dir, f"visualization_rot_{step}_{i}.png"),
                                                     display_gt_set=True,
@@ -124,5 +124,5 @@ def visualize_ensamble_model(model, dataset, hyper_param, save_dir, num_batch=1,
             
             # Save the visualizations of the model translation output
             visualizations.visualize_translation_probabilities(translations=query_translation, probabilities=prob_trans.detach()[i], translation_gt=trans_gt[i],
-                                                    save_path=os.path.join(save_dir, f"visualization_rot_{step}_{i}.png"),
+                                                    save_path=os.path.join(save_dir, f"visualization_trans_{step}_{i}.png"),
                                                     display_threshold_probability=displ_threshold)

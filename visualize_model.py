@@ -18,10 +18,10 @@ EXP_NAME_LIST = [
     "tabletop_3_crackerbox_single_2",
 
 ]
-ROT_EPOCH_LIST = ["10", "20", "10", "40", "40", "40", "40"]
+ROT_EPOCH_LIST = ["20", "20", "10", "40", "40", "40", "40"]
 TRANS_EPOCH_LIST = ["20", "10", "20", "20", "20", "20", "20"]
 
-def visualize(exp_name, rot_epoch, trans_epoch, mode):
+def visualize(exp_name, mode):
 
     exp_dir = "experiments/exp_" + exp_name
 
@@ -37,12 +37,11 @@ def visualize(exp_name, rot_epoch, trans_epoch, mode):
         config_file_name = os.path.join(exp_dir, "config_translation.yaml")
         with open(config_file_name, 'r') as f:
             hyper_param_trans = yaml.safe_load(f)
-        
-        model = models.load_ensamble_model(hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, arguments=args)
+        model = models.load_ensamble_model(hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, arguments=args, exp_name=exp_name)
+        obj_id = hyper_param_rot["obj_id"][0]
+        dataset = data.load_model_dataset(hyper_param_rot, validation_only=True)[0]
 
-        dataset = data.load_dataset(hyper_param_rot, validation_only=True)
-
-        visualizations.visualize_ensamble_model(model=model, dataset=dataset, hyper_param=hyper_param_rot)
+        visualizations.visualize_ensamble_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_rot)
 
 
     elif mode==1:
@@ -82,6 +81,8 @@ if __name__=="__main__":
     args = parser.parse_args()
 
     for (i, exp_name) in enumerate(EXP_NAME_LIST):
-        visualize(exp_name, ROT_EPOCH_LIST[i], TRANS_EPOCH_LIST[i], args.mode)
+        args.rot_epoch = ROT_EPOCH_LIST[i]
+        args.trans_epoch = TRANS_EPOCH_LIST[i]
+        visualize(exp_name, args.mode)
     # Determine which model type is to be evaluated
 

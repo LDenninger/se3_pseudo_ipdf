@@ -13,9 +13,18 @@ import data
 
 #EXP_NAME_LIST = ["tabletop_3_can_convnextB_4","tabletop_3_can_convnextT_4","tabletop_3_can_convnextS_4", "tabletop_3_can_resnet18_0_3", "tabletop_3_can_resnet18_1_3", "tabletop_3_can_resnet18_3_3","tabletop_3_can_resnet50_4",
 #                "tabletop_3_bowl_convnextB_4","tabletop_3_bowl_convnextT_4","tabletop_3_bowl_convnextS_4", "tabletop_3_bowl_resnet18_0_4", "tabletop_3_bowl_resnet18_1_4", "tabletop_3_bowl_resnet18_3_4","tabletop_3_bowl_resnet50_3"]
-EXP_NAME_LIST = ["tabletop_3_bowl_4", "tabletop_3_bowl_ana_1"]
-ROT_EPOCH = ["20", "20"]
-TRANS_EPOCH = ["20", "final"]
+EXP_NAME_LIST = [
+    "tabletop_3_bowl_4",
+    "tabletop_3_bowl_single_2",
+    "tabletop_3_bowl_uni_4",
+     "tabletop_3_can_3",
+    "tabletop_3_can_uni_3",
+     "tabletop_3_crackerbox_3",
+    "tabletop_3_crackerbox_single_2",
+
+]
+ROT_EPOCH_LIST = ["20", "20", "10", "40", "40", "40", "40"]
+TRANS_EPOCH_LIST = ["20", "10", "20", "20", "20", "20", "20"]
 
 SAVE_PATH = P("output")
 
@@ -266,12 +275,14 @@ if __name__=="__main__":
     parser.add_argument("-rot_epoch", type=str, help="Epoch the checkpoint to load the rotation-model is taken from")
     parser.add_argument("-trans_epoch", type=str, help="Epoch the checkpoint to load the rotation-model is taken from")
     parser.add_argument('-r_seed', metavar='INTEGER', type=int, default='42', help='Random seed used for evaluation')
-    parser.add_argument("--mode", type=int, help="evaluation mode: 0: evaluation on rotation model, 1: evaluation on translation model, 2: full evaluation on the ensamble model")
+    parser.add_argument("-mode", type=int, help="evaluation mode: 0: evaluation on rotation model, 1: evaluation on translation model, 2: full evaluation on the ensamble model")
     parser.add_argument('--wandb', action='store_true', help='Log data to WandB')
 
     args = parser.parse_args()
     
-    for exp_name in EXP_NAME_LIST:
+    for (i, exp_name) in enumerate(EXP_NAME_LIST):
+        args.rot_epoch = ROT_EPOCH_LIST[i]
+        args.trans_epoch = TRANS_EPOCH_LIST[i]
         try:
             evaluate_model(exp_name)
         except:

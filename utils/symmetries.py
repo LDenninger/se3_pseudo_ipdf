@@ -6,7 +6,6 @@ import json
 
 
 def get_symmetry_ground_truth(rotation_gt, obj_id, dataset, num=720):
-
     if dataset=="tabletop":
         if obj_id==3:
             flip = tt.euler_angles_to_matrix(torch.repeat_interleave(torch.tensor([[0, 0, np.pi]]),int(num/2),dim=0), 'ZYX').float()

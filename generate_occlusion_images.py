@@ -71,6 +71,9 @@ def generate_occlusion_image(data_path):
         occ_img = occlude_bounding_box(image, seg_data, id)
         resize_occ_img = Resizer(occ_img)
 
+        seg_mask = torch.repeat_interleave((seg_data==id).int().unsqueeze(-1), 3, dim=-1)
+        mask_img = seg_mask * image
+
         torch.save(occ_img, str(path/"occ_rgb_tensor.pt"))
         torch.save(resize_occ_img, str(path/"resize_occ_rgb_tensor.pt"))
 

@@ -143,7 +143,7 @@ def load_model_dataset(hyper_param, include_translation=False, validation_only=F
                                                 occlusion=hyper_param["occlusion"])
             training_datasets.append(data_train)
     
-    val_loader_list = [DataLoader(dataset=dat, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8) for dat in validation_datasets]
+    val_loader_list = [DataLoader(dataset=dat, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=0) for dat in validation_datasets]
     if validation_only:
         return val_loader_list
 

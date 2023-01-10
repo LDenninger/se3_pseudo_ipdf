@@ -1,5 +1,6 @@
 import torch
 import wandb
+import numpy as np
 
 from .evaluation import eval_llh, eval_adds, eval_accuracy_angular_error, eval_recall_error, eval_spread, eval_translation_error, eval_adds
 
@@ -12,11 +13,12 @@ def adds_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_po
                                                                 batch_size=hyper_param_rot['batch_size_val'],
                                                                 model_points=model_points,
                                                                 threshold_list=THRESHOLD,
-                                                                eval_iter=hyper_param_rot['num_val_iter'],
+                                                                eval_iter=30,
                                                                 gradient_ascent=True,
                                                                 diameter=diameter,
                                                                 mode=2,
                                                                 device=DEVICE)
+    auc = np.mean(adds)*100
     print("\nMean ADD-S Distance: ", mean_distance_adds)
     print("\nThreshold (percentage): ", THRESHOLD)
     print("\nThreshold (in centimeters): ", (100*threshold_distance_adds).tolist())
@@ -26,7 +28,7 @@ def adds_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_po
     print("______________________________________\nEvaluation finished!\n")
 
 
-    return adds, threshold_distance_adds, mean_distance_adds                                                          
+    return adds, threshold_distance_adds, mean_distance_adds, auc                                                          
 
 
 def full_evaluation(model, dataset, hyper_param_rot, hyper_param_trans, model_points):

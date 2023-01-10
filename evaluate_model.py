@@ -52,7 +52,7 @@ def evaluate_model(exp_name):
     if args.wandb == True:
 
         if args.mode==0:
-            with wandb.init(project="SO3_IPDF", entity="ipdf_se3", resume="allow", id=exp_name):
+            with wandb.init(project="SO3_IPDF", entity="ipdf_se3", resume="allow", id=exp_name):    
                 wandb.run.name = exp_name
 
                 config_file_name = os.path.join(exp_dir, "config_rotation.yaml")

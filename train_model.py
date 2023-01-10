@@ -25,10 +25,11 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     ]"""
 
 #EXP_NAME_LIST = ["tabletop_3_bowl_ana_4", "tabletop_3_bowl_ana_3"]
-EXP_NAME_LIST = ["tabletop_3_can_occ_3", "tabletop_3_can_uni_occ_1", "tabletop_3_can_uni_3", "tabletop_3_can_occ_ana_1", "tabletop_3_can_occ_single_1",
+"""EXP_NAME_LIST = ["tabletop_3_can_occ_3", "tabletop_3_can_uni_occ_1", "tabletop_3_can_uni_3", "tabletop_3_can_occ_ana_1", "tabletop_3_can_occ_single_1",
                 "tabletop_3_crackerbox_occ_2", "tabletop_3_crackerbox_uni_occ_2", "tabletop_3_crackerbox_occ_ana_1", "tabletop_3_crackerbox_occ_ana_1",
                 "tabletop_3_bowl_5", "tabletop_3_bowl_occ_3", "tabletop_3_bowl_uni_occ_2", "tabletop_3_bowl_occ_ana_1", "tabletop_3_bowl_occ_single_1",
-                "tabletop_3_bowl_ana_4"]
+                "tabletop_3_bowl_ana_4"]"""
+EXP_NAME_LIST = ["tabletop_3_bowl_resnet18_0_5", "tabletop_3_bowl_resnet50_3"]
 #EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
 MODEL_TYPE = [1]*14 + [0]
 START_EPOCH = [0]*15

@@ -9,8 +9,7 @@ import argparse
 PATH_NAME = P("experiments/aa_evaluation_models")
 
 EXP_NAME_LIST = [
-    "tabletop_3_bowl_uni_4",
-    "tabletop_3_crackerbox_uni_3"
+   "tabletop_bowl_"
 
 
 ]

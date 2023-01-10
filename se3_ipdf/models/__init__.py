@@ -12,4 +12,4 @@ from .icp_baseline import IterativeClosestPoint
 from .implicit_translation import ImplicitTranslation
 
 # Loading functions for the models
-from .load_model import load_ensamble_model, load_rotation_model, load_translation_model
+from .load_model import load_ensamble_model, load_rotation_model, load_translation_model, load_evaluation_model

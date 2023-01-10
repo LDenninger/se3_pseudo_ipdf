@@ -1,5 +1,6 @@
 import torch
 import os
+from pathlib import Path as P
 from torch.optim import Adam
 
 from .convNext import load_convnext_model
@@ -164,6 +165,43 @@ def load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, exp_name=
         except:
             print("Model could not be loaded...\nTrying to initialize new ensamble model from existing models...\n")
             return load_ensamble_model(hyper_param_rot, hyper_param_trans, arguments, exp_name, init_mode=True)
+
+    model_ensamble = model_ensamble.to(DEVICE)
+
+    return model_ensamble
+
+
+def load_evaluation_model(hyper_param_rot, hyper_param_trans, exp_dir):
+
+    feature_extractor, feature_dim = load_backbone(hyper_param_rot)
+    
+    model_rot = ImplicitSO3(feature_extractor=feature_extractor,
+                                    feat_dim=feature_dim, # 
+                                    mlp_layer_sizes=hyper_param_rot['mlp_layers'],
+                                    num_fourier_comp=hyper_param_rot['num_fourier_comp'],
+                                    num_train_queries=hyper_param_rot['num_train_queries'],
+                                    num_eval_queries=2**19)
+
+
+    feature_extractor, feature_dim = load_backbone(hyper_param_trans)
+
+    model_trans = ImplicitTranslation(feature_extractor=feature_extractor, feat_dim=feature_dim, # 100352
+                                mlp_layer_sizes=hyper_param_trans['mlp_layers'],
+                                num_fourier_comp=hyper_param_trans['num_fourier_comp'],
+                                num_train_queries=hyper_param_trans['num_train_queries'],
+                                translation_range = translation_range)
+    model_ensamble = ImplicitSE3_Ensamble(
+        rotation_model=model_rot,
+        translation_model=model_trans,
+    )
+
+    try:
+        model_path = next((P(exp_dir) / "models").glob('*.pth'))
+
+        model_ensamble.load_state_dict(torch.load(str(model_path)))
+        print("Model was load from: ", str(model_path)) 
+    except:
+        print("Model could not been loaded from: ", str(model_path))
 
     model_ensamble = model_ensamble.to(DEVICE)
 

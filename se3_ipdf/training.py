@@ -23,7 +23,6 @@ def run_single_epoch(model, data_loader, hyper_param, num_iter, mode=0, optimize
     progress_bar = tqdm(enumerate(data_loader), total=num_iter)
     epoch_losses = []
     #ipdb.set_trace()
-    import ipdb; ipdb.set_trace()
     for (i, input_) in progress_bar:
         #load the images from the batch
         img = input_['image']
@@ -66,7 +65,6 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
     median_errors = []
     num_epochs = hyper_param['num_epochs']
 
-    rotation_model_evaluation(model=model, dataset=val_dataset, hyper_param_rot=hyper_param)
 
 
     for epoch in range(start_epoch+1, num_epochs+1):
@@ -91,6 +89,10 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
                                             num_eval_iter=hyper_param['num_val_iter'], 
                                             mode=0,
                                             device=DEVICE))
+        
+        if epoch==1:
+            rotation_model_evaluation(model=model, dataset=val_dataset, hyper_param_rot=hyper_param)
+
         train_losses.append(train_loss)
         loglikelihood.append(llh)
         # log the loss values 

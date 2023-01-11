@@ -14,9 +14,10 @@ import data
 def script_1():
 
     #EXP_NAME_LIST = ["tabletop_3_can_convnextT_1_1", "tabletop_3_can_convnextT_2_1", "tabletop_3_crackerbox_convnextT_1_1", "tabletop_3_crackerbox_convnextT_2_1", "tabletop_3_bowl_convnextT_1_1", "tabletop_3_bowl_convnextT_2_1", ]
-    EXP_NAME_LIST = ["tabletop_3_can_convnextT_3_1", "tabletop_3_crackerbox_convnextT_3_1", "tabletop_3_bowl_convnextT_3_1"]
+    #EXP_NAME_LIST = ["tabletop_3_can_convnextT_3_1", "tabletop_3_crackerbox_convnextT_3_1", "tabletop_3_bowl_convnextT_3_1"]
     #EXP_NAME_LIST = [ "tabletop_3_bowl_ana_1", "tabletop_3_bowl_single_1", "tabletop_3_can_ana_1", "tabletop_3_can_single_1", "tabletop_3_crackerbox_ana_1", "tabletop_3_crackerbox_single_1"]
-
+    EXP_NAME_LIST = ["tabletop_4_can_1", "tabletop_4_can_ana_1", "tabletop_4_can_single_1", "tabletop_4_can_uni_1", "tabletop_4_can_uni_occ_1", 
+                "tabletop_4_can_ana_occ_1", "tabletop_4_can_single_occ_1", "tabletop_4_can_conv2_1", "tabletop_3_can_conv3_1"]
     #OBJ_ID = 3
     #MATERIAL = [True, False, True, True, False, True, True, False, True]
 
@@ -40,12 +41,14 @@ def script_1():
         with open(f1, "r") as f:
             config = yaml.safe_load(f)
         config["backbone"] = "convnext_tiny"
-        config["backbone_layer"] = 3
+        config["backbone_layer"] = 1
         config["num_epochs"] = 50
         config["num_train_iter"] = 400
+        config["mlp_layers"] = [256]*3
         config["warmup_steps"] = 40
         config["num_val_iter"] = 40
         config["occlusion"] = False
+        config["pseudo_gt"] = True
 
 
         with open(f1, "w") as f:
@@ -57,8 +60,9 @@ def script_1():
         #config["backbone"] = "convnext_tiny"
         ##config["obj_id"] = [config["obj_id"]]
         config["backbone"] = "convnext_tiny"
-        config["backbone_layer"] = 3
+        config["backbone_layer"] = 1
         config["num_epochs"] = 30
+        config["mlp_layers"] = [256]*3
         config["num_train_iter"] = 400
         #config["single_gt"] = False
         #config["pseudo_gt"] = True
@@ -67,6 +71,8 @@ def script_1():
         config["warmup_steps"] = 40
         config["eval_freq"] = 2
         config["occlusion"] = False
+        config["pseudo_gt"] = True
+
 
         #config["eval_freq"] = 2
 

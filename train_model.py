@@ -16,25 +16,10 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
 
-"""EXP_NAME_LIST = ["tless_3_obj_05_1", "tless_3_obj_07_1", "tless_3_obj_17_1", "tless_3_obj_20_1", "tless_3_obj_23_1", "tless_3_obj_27_1"]"""
-
-"""EXP_NAME_LIST = [
-        "tabletop_3_bowl_4", "tabletop_3_bowl_ana_2", "tabletop_3_bowl_single_2", "tabletop_3_bowl_uni_4",
-        "tabletop_3_can_3", "tabletop_3_can_ana_2", "tabletop_3_can_single_2", "tabletop_3_can_uni_3",
-        "tabletop_3_crackerbox_3", "tabletop_3_crackerbox_ana_2", "tabletop_3_crackerbox_single_2", "tabletop_3_crackerbox_uni_3"
-    ]"""
-
-#EXP_NAME_LIST = ["tabletop_3_bowl_ana_4", "tabletop_3_bowl_ana_3"]
-"""EXP_NAME_LIST = ["tabletop_3_can_occ_3", "tabletop_3_can_uni_occ_1", "tabletop_3_can_uni_3", "tabletop_3_can_occ_ana_1", "tabletop_3_can_occ_single_1",
-                "tabletop_3_crackerbox_occ_2", "tabletop_3_crackerbox_uni_occ_2", "tabletop_3_crackerbox_occ_ana_1", "tabletop_3_crackerbox_occ_ana_1",
-                "tabletop_3_bowl_5", "tabletop_3_bowl_occ_3", "tabletop_3_bowl_uni_occ_2", "tabletop_3_bowl_occ_ana_1", "tabletop_3_bowl_occ_single_1",
-                "tabletop_3_bowl_ana_4"]"""
-EXP_NAME_LIST = ["tabletop_3_can_convnextT_1_1", "tabletop_3_can_convnextT_2_1", "tabletop_3_crackerbox_convnextT_1_1", "tabletop_3_crackerbox_convnextT_2_1", "tabletop_3_bowl_convnextT_1_1", "tabletop_3_bowl_convnextT_2_1",
-"tabletop_3_can_convnextT_1_1", "tabletop_3_can_convnextT_2_1", "tabletop_3_crackerbox_convnextT_1_1", "tabletop_3_crackerbox_convnextT_2_1", "tabletop_3_bowl_convnextT_1_1", "tabletop_3_bowl_convnextT_2_1" ]
-
-#EXP_NAME_LIST = ["tabletop_2_can_uni_3","tabletop_2_can_uni_occ_2","tabletop_2_crackerbox_uni_1","tabletop_2_crackerbox_uni_occ_1","tabletop_2_bowl_uni_1","tabletop_2_bowl_uni_occ_1"]
-MODEL_TYPE = [0]*6+[1]*6
-START_EPOCH = [0]*12
+EXP_NAME_LIST = ["tabletop_4_can_1", "tabletop_4_can_ana_1", "tabletop_4_can_single_1", "tabletop_4_can_uni_1", "tabletop_4_can_uni_occ_1", 
+                "tabletop_4_can_ana_occ_1", "tabletop_4_can_single_occ_1", "tabletop_4_can_conv2_1", "tabletop_3_can_conv3_1"]
+MODEL_TYPE = [1]*9
+START_EPOCH = [0]*9
 
 def train_model():
     wandb.login()

@@ -125,10 +125,13 @@ class TabletopPoseDataset(Dataset):
                 try:
                     depth_data = torch.load(os.path.join(data, "depth_tensor.pt"))
                     seg_data = torch.load(os.path.join(data, "seg_tensor.pt"))
-                    image_full = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3].permute(2,0,1) / 255.
-                    
-                    image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt")) / 255.
 
+                    if not self.preset_occ:
+                        image_full = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3].permute(2,0,1) / 255.
+                        image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_rgb_tensor.pt")) / 255.
+                    else:
+                        image_full = torch.load(os.path.join(data, "occ_rgb_tensor.pt")) / 255.
+                        image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_occ_rgb_tensor.pt")) / 255.
 
                 except:
                     return self.__getitem__((idx+1)%self.__len__())
@@ -160,22 +163,22 @@ class TabletopPoseDataset(Dataset):
             if not self.full:
                 if self.bb_crop and self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt.pt"))
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "mask_crop_rgb_tensor.pt"))
                 elif self.bb_crop and not self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt.pt"))
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "crop_rgb_tensor.pt"))
                 elif not self.bb_crop and self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensorpt"))
+                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
                 elif not self.bb_crop and not self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "occ_rgb_tensorpt"))
+                        image = torch.load(os.path.join(data, "occ_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "rgb_tensor.pt"))[...,:3]
                         image = image.permute(2,0,1)

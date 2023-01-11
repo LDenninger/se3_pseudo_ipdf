@@ -10,7 +10,7 @@ from torch.nn import functional as F
 import torchvision.models as models
 from itertools import repeat
 
-def load_convnext_model(size):
+def load_convnext_model(size, remove_layer=0):
     convnext_weights = {
         "tiny": [torch.load("se3_ipdf/models/weights/ConvNeXt_Tiny_Weights.pth"),
                 [
@@ -49,9 +49,13 @@ def load_convnext_model(size):
     blocks = setup[1]
     stoch_prob = setup[2]
 
-    model = ConvNeXt(block_setting=blocks, stochastic_depth_prob=stoch_prob)
+    model = ConvNeXt(block_setting=blocks, stochastic_depth_prob=stoch_prob, remove_layer=remove_layer)
+    import ipdb; ipdb.set_trace()
     if weights is not None:
         model.load_state_dict(weights)
+    
+    if remove_layer==3:
+        model.remove_last_conv_block()
 
     return model
 
@@ -59,6 +63,7 @@ class ConvNeXt(nn.Module):
     def __init__(
         self,
         block_setting,
+        remove_layer = 0,
         stochastic_depth_prob: float = 0.0,
         layer_scale: float = 1e-6,
         num_classes: int = 1000,
@@ -68,6 +73,7 @@ class ConvNeXt(nn.Module):
     ) -> None:
         super().__init__()
 
+        self.remove_layer = remove_layer
         if not block_setting:
             raise ValueError("The block_setting should not be empty")
         elif not (isinstance(block_setting, Sequence) and all([isinstance(s, CNBlockConfig) for s in block_setting])):
@@ -134,13 +140,23 @@ class ConvNeXt(nn.Module):
                     nn.init.zeros_(m.bias)
 
     def _forward_impl(self, x: Tensor) -> Tensor:
+        import ipdb; ipdb.set_trace()
         x = self.features(x)
+        if self.remove_layer in [2,3]:
+            x = torch.flatten(x, -3, -1)
+            return x
         x = self.avgpool(x)
+        if self.remove_layer==1:
+            return x.squeeze()
         x = self.classifier(x)
         return x
 
     def forward(self, x: Tensor) -> Tensor:
         return self._forward_impl(x)
+    
+    def remove_last_conv_block(self):
+        self.features = self.features[:-2]
+
 
 
 class ConvNormActivation(torch.nn.Sequential):

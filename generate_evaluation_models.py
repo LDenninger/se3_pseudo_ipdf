@@ -9,12 +9,12 @@ import argparse
 PATH_NAME = P("experiments/aa_evaluation_models")
 
 EXP_NAME_LIST = [
-   "tabletop_bowl_"
-
+"tabletop_3_crackerbox_uni_3"
 
 ]
-ROT_EPOCH_LIST = ["20","40"]
-TRANS_EPOCH_LIST = ["20", "10"]
+
+ROT_EPOCH_LIST = ["40"]
+TRANS_EPOCH_LIST = ["10"]
 
 def generate_file_structure(exp_name):
 

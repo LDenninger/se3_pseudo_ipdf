@@ -13,10 +13,8 @@ import data
 
 def script_1():
 
-    EXP_NAME_LIST = ["tabletop_3_can_occ_3", "tabletop_3_can_uni_occ_1", "tabletop_3_can_uni_3", "tabletop_3_can_occ_ana_1", "tabletop_3_can_occ_single_1",
-                "tabletop_3_crackerbox_occ_2", "tabletop_3_crackerbox_uni_occ_2", "tabletop_3_crackerbox_occ_ana_1", "tabletop_3_crackerbox_occ_ana_1",
-                "tabletop_3_bowl_5", "tabletop_3_bowl_occ_3", "tabletop_3_bowl_uni_occ_2", "tabletop_3_bowl_occ_ana_1", "tabletop_3_bowl_occ_single_1",
-                "tabletop_3_bowl_ana_4"]
+    #EXP_NAME_LIST = ["tabletop_3_can_convnextT_1_1", "tabletop_3_can_convnextT_2_1", "tabletop_3_crackerbox_convnextT_1_1", "tabletop_3_crackerbox_convnextT_2_1", "tabletop_3_bowl_convnextT_1_1", "tabletop_3_bowl_convnextT_2_1", ]
+    EXP_NAME_LIST = ["tabletop_3_can_convnextT_3_1", "tabletop_3_crackerbox_convnextT_3_1", "tabletop_3_bowl_convnextT_3_1"]
     #EXP_NAME_LIST = [ "tabletop_3_bowl_ana_1", "tabletop_3_bowl_single_1", "tabletop_3_can_ana_1", "tabletop_3_can_single_1", "tabletop_3_crackerbox_ana_1", "tabletop_3_crackerbox_single_1"]
 
     #OBJ_ID = 3
@@ -41,11 +39,13 @@ def script_1():
 
         with open(f1, "r") as f:
             config = yaml.safe_load(f)
-        
-        #config["num_epochs"] = 100
-        #config["num_train_iter"] = 200
-        #config["warmup_steps"] = 20
-        #config["num_val_iter"] = 40
+        config["backbone"] = "convnext_tiny"
+        config["backbone_layer"] = 3
+        config["num_epochs"] = 50
+        config["num_train_iter"] = 400
+        config["warmup_steps"] = 40
+        config["num_val_iter"] = 40
+        config["occlusion"] = False
 
 
         with open(f1, "w") as f:
@@ -56,6 +56,8 @@ def script_1():
         #config["length"] = 15000
         #config["backbone"] = "convnext_tiny"
         ##config["obj_id"] = [config["obj_id"]]
+        config["backbone"] = "convnext_tiny"
+        config["backbone_layer"] = 3
         config["num_epochs"] = 30
         config["num_train_iter"] = 400
         #config["single_gt"] = False
@@ -64,6 +66,8 @@ def script_1():
         config["num_val_iter"] = 30
         config["warmup_steps"] = 40
         config["eval_freq"] = 2
+        config["occlusion"] = False
+
         #config["eval_freq"] = 2
 
 

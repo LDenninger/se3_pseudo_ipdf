@@ -5,10 +5,11 @@ import argparse
 import config
 
 
-EXP_NAME_LIST = ["tless_3_obj_05_1", "tless_3_obj_07_1", "tless_3_obj_17_1", "tless_3_obj_20_1", "tless_3_obj_23_1", "tless_3_obj_27_1"]
-DATASET_LIST = ["tabletop"]*6
-OBJ_ID_LIST = [5,7,17,20,23,27]
-MODEL_TYPE = [0]*6
+EXP_NAME_LIST = ["tabletop_4_can_1", "tabletop_4_can_ana_1", "tabletop_4_can_single_1", "tabletop_4_can_uni_1", "tabletop_4_can_uni_occ_1", 
+                "tabletop_4_can_ana_occ_1", "tabletop_4_can_single_occ_1", "tabletop_4_can_conv2_1", "tabletop_3_can_conv3_1"]
+DATASET_LIST = ["tabletop"]*9
+OBJ_ID_LIST = [3]*9
+MODEL_TYPE = [2]*9
 
 def initiate_experiment(exp_dir, model_type, dataset, obj_id):
     os.makedirs(exp_dir)

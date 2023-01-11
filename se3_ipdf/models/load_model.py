@@ -25,8 +25,17 @@ resnet_feature_dim = {
     }
 }
 
-def load_backbone(hyper_param):
+convnext_feature_dim = {
+    "tiny" : {
+        0: 1000,
+        1: 768,
+        2: 37632,
+        3: 75264,
+    }
+}
 
+def load_backbone(hyper_param):
+    import ipdb; ipdb.set_trace()
     if hyper_param["backbone"]=="resnet18":
         feature_extractor = ResNet(depth=18, layer=hyper_param["backbone_layer"], pretrained=True)
         feature_dim = resnet_feature_dim[18][hyper_param["backbone_layer"]]
@@ -34,16 +43,16 @@ def load_backbone(hyper_param):
         feature_extractor = ResNet(depth=50, layer=hyper_param["backbone_layer"], pretrained=True)
         feature_dim = resnet_feature_dim[50][hyper_param["backbone_layer"]]
     elif hyper_param["backbone"]=="convnext_tiny":
-        feature_extractor = load_convnext_model(size="tiny")
-        feature_dim = 1000
+        feature_extractor = load_convnext_model(size="tiny", remove_layer=hyper_param["backbone_layer"])
+        feature_dim = convnext_feature_dim["tiny"][hyper_param["backbone_layer"]]
     elif hyper_param["backbone"]=="convnext_small":
-        feature_extractor = load_convnext_model(size="small")
+        feature_extractor = load_convnext_model(size="small", remove_layer=hyper_param["backbone_layer"])
         feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_base":
-        feature_extractor = load_convnext_model(size="base")
+        feature_extractor = load_convnext_model(size="base", remove_layer=hyper_param["backbone_layer"])
         feature_dim = 1000
     elif hyper_param["backbone"]=="convnext_large":
-        feature_extractor = load_convnext_model(size="large")
+        feature_extractor = load_convnext_model(size="large", remove_layer=hyper_param["backbone_layer"])
         feature_dim = 0
     elif hyper_param["backbone"]=="vgg":
         feature_extractor = torch.hub.load('pytorch/vision:v0.10.0', 'vgg11', pretrained=True)

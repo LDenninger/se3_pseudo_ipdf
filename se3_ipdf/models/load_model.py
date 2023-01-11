@@ -35,7 +35,6 @@ convnext_feature_dim = {
 }
 
 def load_backbone(hyper_param):
-    import ipdb; ipdb.set_trace()
     if hyper_param["backbone"]=="resnet18":
         feature_extractor = ResNet(depth=18, layer=hyper_param["backbone_layer"], pretrained=True)
         feature_dim = resnet_feature_dim[18][hyper_param["backbone_layer"]]

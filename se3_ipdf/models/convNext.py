@@ -50,7 +50,6 @@ def load_convnext_model(size, remove_layer=0):
     stoch_prob = setup[2]
 
     model = ConvNeXt(block_setting=blocks, stochastic_depth_prob=stoch_prob, remove_layer=remove_layer)
-    import ipdb; ipdb.set_trace()
     if weights is not None:
         model.load_state_dict(weights)
     
@@ -140,7 +139,6 @@ class ConvNeXt(nn.Module):
                     nn.init.zeros_(m.bias)
 
     def _forward_impl(self, x: Tensor) -> Tensor:
-        import ipdb; ipdb.set_trace()
         x = self.features(x)
         if self.remove_layer in [2,3]:
             x = torch.flatten(x, -3, -1)

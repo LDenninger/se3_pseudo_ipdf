@@ -10,67 +10,75 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 IPDF = False
 
 
-def load_single_model_dataset(hyper_param, translation=False, validation_only=False):
+def load_single_model_dataset(hyper_param, translation=False, validation_only=False, demo=False):
 
+    if demo:
+        data_val = data.YCBPoseDataset(obj_id=hyper_param["obj_id"][0],
+                                        remove_texture=not hyper_param["material"])
 
+    else:
 
-    if hyper_param["dataset"]=="tabletop":
-
-        preset_occ=False
-        if hyper_param["occlusion"] and translation:
-            preset_occ = True
-        # Validation data
-        if hyper_param["material"]:
-            data_dir = data.id_to_path[hyper_param["obj_id"][0]]
-        else:
-            data_dir = data.id_to_path_uniform[hyper_param["obj_id"][0]]
-
-        data_val = data.TabletopPoseDataset(data_dir=data_dir, 
-                                            obj_id = hyper_param["obj_id"][0],
-                                            img_size= hyper_param['img_size'],
-                                            bb_crop=hyper_param['crop_image'],
-                                            mask=hyper_param['mask'],
-                                            full=hyper_param['full_img'],
-                                            pseudo_gt = False,
-                                            single_gt=True,
-                                            length=hyper_param["length"],
-                                            preset_occ=preset_occ,
-                                            train_set=False,
-                                            train_mode=False if validation_only else True,
-                                            full_data=validation_only,
-                                            occlusion=hyper_param['occlusion'],
-                                            device=DEVICE)
-    if hyper_param["dataset"]=="tless":
-        data_val = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
-                                            ground_truth_mode=0,
-                                            occlusion=hyper_param["occlusion"],
-                                            train_set=False,
-                                            train_as_test=hyper_param["train_as_test"])
-
-    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8)
-
-    # Training data
-    if not validation_only:
         if hyper_param["dataset"]=="tabletop":
-            data_train = data.TabletopPoseDataset(data_dir=data_dir,
+
+            preset_occ=False
+            if hyper_param["occlusion"] and translation:
+                preset_occ = True
+            # Validation data
+            if hyper_param["material"]:
+                data_dir = data.id_to_path[hyper_param["obj_id"][0]]
+            else:
+                data_dir = data.id_to_path_uniform[hyper_param["obj_id"][0]]
+
+            data_val = data.TabletopPoseDataset(data_dir=data_dir, 
                                                 obj_id = hyper_param["obj_id"][0],
                                                 img_size= hyper_param['img_size'],
                                                 bb_crop=hyper_param['crop_image'],
                                                 mask=hyper_param['mask'],
                                                 full=hyper_param['full_img'],
-                                                pseudo_gt=hyper_param["pseudo_gt"],
-                                                single_gt=hyper_param["single_gt"],
+                                                pseudo_gt = False,
+                                                single_gt=True,
                                                 length=hyper_param["length"],
                                                 preset_occ=preset_occ,
-                                                train_set=True,
-                                                train_mode=True,
+                                                train_set=False,
+                                                train_mode=False if validation_only else True,
+                                                full_data=validation_only,
                                                 occlusion=hyper_param['occlusion'],
                                                 device=DEVICE)
-        if hyper_param["dataset"]=="tless":
-            data_train = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
-                                            ground_truth_mode=1 if hyper_param["pseudo_gt"] else 0,
-                                            train_set=True,
-                                            occlusion=hyper_param["occlusion"])
+        elif hyper_param["dataset"]=="tless":
+            data_val = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
+                                                ground_truth_mode=0,
+                                                occlusion=hyper_param["occlusion"],
+                                                train_set=False,
+                                                train_as_test=hyper_param["train_as_test"])
+
+    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8)
+
+    # Training data
+    if not validation_only:
+        if demo:
+            data_train = data.YCBPoseDataset(obj_id=hyper_param["obj_id"],
+                                            remove_texture=not hyper_param["material"])
+        else:
+            if hyper_param["dataset"]=="tabletop":
+                data_train = data.TabletopPoseDataset(data_dir=data_dir,
+                                                    obj_id = hyper_param["obj_id"][0],
+                                                    img_size= hyper_param['img_size'],
+                                                    bb_crop=hyper_param['crop_image'],
+                                                    mask=hyper_param['mask'],
+                                                    full=hyper_param['full_img'],
+                                                    pseudo_gt=hyper_param["pseudo_gt"],
+                                                    single_gt=hyper_param["single_gt"],
+                                                    length=hyper_param["length"],
+                                                    preset_occ=preset_occ,
+                                                    train_set=True,
+                                                    train_mode=True,
+                                                    occlusion=hyper_param['occlusion'],
+                                                    device=DEVICE)
+            if hyper_param["dataset"]=="tless":
+                data_train = data.TLESSPoseDataset(obj_id = hyper_param['obj_id'],
+                                                ground_truth_mode=1 if hyper_param["pseudo_gt"] else 0,
+                                                train_set=True,
+                                                occlusion=hyper_param["occlusion"])
         train_loader = DataLoader(dataset=data_train, batch_size=hyper_param['batch_size'], drop_last=True,shuffle=True, num_workers=8)
         return train_loader, val_loader
 

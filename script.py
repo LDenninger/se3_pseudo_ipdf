@@ -16,7 +16,7 @@ def script_1():
     #EXP_NAME_LIST = ["tabletop_3_can_convnextT_1_1", "tabletop_3_can_convnextT_2_1", "tabletop_3_crackerbox_convnextT_1_1", "tabletop_3_crackerbox_convnextT_2_1", "tabletop_3_bowl_convnextT_1_1", "tabletop_3_bowl_convnextT_2_1", ]
     #EXP_NAME_LIST = ["tabletop_3_can_convnextT_3_1", "tabletop_3_crackerbox_convnextT_3_1", "tabletop_3_bowl_convnextT_3_1"]
     #EXP_NAME_LIST = [ "tabletop_3_bowl_ana_1", "tabletop_3_bowl_single_1", "tabletop_3_can_ana_1", "tabletop_3_can_single_1", "tabletop_3_crackerbox_ana_1", "tabletop_3_crackerbox_single_1"]
-    EXP_NAME_LIST = ["tless_3_obj_05_1","tless_3_obj_07_1","tless_3_obj_17_1","tless_3_obj_20_1","tless_3_obj_23_1","tless_3_obj_27_1"]
+    EXP_NAME_LIST = ["demonstration_bowl_1", "demonstration_box_1", "demonstration_can_1"]
 
     #OBJ_ID = 3
     #MATERIAL = [True, False, True, True, False, True, True, False, True]
@@ -47,10 +47,12 @@ def script_1():
         #config["mlp_layers"] = [256]*3
         #config["warmup_steps"] = 20
         #config["num_val_iter"] = 40
-        #config["occlusion"] = True
-        #config["pseudo_gt"] = True
+        config["single_gt"] = False
+        config["occlusion"] = False
+        config["pseudo_gt"] = False
         config["backbone"] = "convnext_tiny"
         config["backbone_layer"] = 1
+        config["obj_id"] = [config["obj_id"]]
 
         with open(f1, "w") as f:
             config = yaml.safe_dump(config, f)

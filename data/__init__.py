@@ -18,7 +18,7 @@ from .load_dataset import load_model_dataset, load_single_model_dataset
 from .load_dataset import load_pls_dataset
 
 # Loading script for the demonstration dataset
-from .load_dataset import load_demonstration_dataset
+from .load_dataset import load_demo_dataset
 
 # Loading script for the object models
 from .object_models.load_mesh import load_sl_cad_model, load_tless_object_model, load_ycbv_object_model

@@ -6,16 +6,17 @@ import yaml
 import se3_ipdf.models as models
 import argparse
 
-PATH_NAME = P("experiments/aa_evaluation_models")
+PATH_NAME = P("experiments/aa_evaluation_models_2")
 
 EXP_NAME_LIST = [
-"tabletop_3_crackerbox_uni_3"
+"tabletop_4_box_single_occ_1",
+
+
 
 ]
 
-ROT_EPOCH_LIST = ["40"]
-TRANS_EPOCH_LIST = ["10"]
-
+ROT_EPOCH_LIST = ["40"]*1
+TRANS_EPOCH_LIST = ["10"]*1
 def generate_file_structure(exp_name):
 
     p = PATH_NAME / exp_name
@@ -48,7 +49,7 @@ def load_experiment(exp_name, args):
         
     model = models.load_ensamble_model(hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, exp_name=exp_name, arguments=args)
 
-    save_path = P("experiments")/"aa_evaluation_models"/ exp_name[:-2] / "models"
+    save_path = PATH_NAME / exp_name[:-2] / "models"
 
     torch.save(model.state_dict(), str(save_path / f"model_{args.rot_epoch}_{args.trans_epoch}.pth"))
 

@@ -9,17 +9,11 @@ import data
 import utils.visualizations as visualizations
 
 EXP_NAME_LIST = [
-    "tabletop_3_bowl_4",
-    "tabletop_3_bowl_single_2",
-    "tabletop_3_bowl_uni_4",
-     "tabletop_3_can_3",
-    "tabletop_3_can_uni_3",
-     "tabletop_3_crackerbox_3",
-    "tabletop_3_crackerbox_single_2",
+  "tabletop_box_trans_test"
 
 ]
-ROT_EPOCH_LIST = ["20", "20", "10", "40", "40", "40", "40"]
-TRANS_EPOCH_LIST = ["20", "10", "20", "20", "20", "20", "20"]
+ROT_EPOCH_LIST = ["10"]
+TRANS_EPOCH_LIST = ["20"]
 
 def visualize(exp_name, mode):
 
@@ -51,7 +45,7 @@ def visualize(exp_name, mode):
             hyper_param_rot = yaml.safe_load(f)
 
         
-        model = models.load_rotation_model(hyper_param=hyper_param_rot, exp_name=args.exp_name, arguments=args)[0]
+        model = models.load_rotation_model(hyper_param=hyper_param_rot, exp_name=exp_name, arguments=args)[0]
         dataset_list = data.load_model_dataset(hyper_param_rot, validation_only=True)
         for (i, dataset) in enumerate(dataset_list):
             obj_id = hyper_param_rot["obj_id"][i]
@@ -64,11 +58,11 @@ def visualize(exp_name, mode):
             hyper_param_trans = yaml.safe_load(f)
 
         
-        model = models.load_translation_model(hyper_param=hyper_param_trans,exp_name=args.exp_name, arguments=args)[0]
+        model = models.load_translation_model(hyper_param=hyper_param_trans,exp_name=exp_name, arguments=args)[0]
 
-        dataset = data.load_model_dataset(hyper_param_trans, validation_only=True)
+        dataset = data.load_single_model_dataset(hyper_param_trans, validation_only=True)
 
-        visualizations.visualize_translation_model(model=model, dataset=dataset[0], save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_trans)
+        visualizations.visualize_translation_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_trans)
 
     else:
         print("\nPlease define a model to be loaded and evaluated!")

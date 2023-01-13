@@ -14,12 +14,11 @@ import se3_ipdf.models as models
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
+EXP_NAME_LIST = ["tless_3_obj_05_1","tless_3_obj_07_1","tless_3_obj_17_1","tless_3_obj_20_1","tless_3_obj_23_1","tless_3_obj_27_1"]
 
-EXP_NAME_LIST = ["tabletop_4_can_1", "tabletop_4_can_ana_1", "tabletop_4_can_single_1", "tabletop_4_can_uni_1", "tabletop_4_can_uni_occ_1", 
-                "tabletop_4_can_ana_occ_1", "tabletop_4_can_single_occ_1", "tabletop_4_can_conv2_1", "tabletop_3_can_conv3_1"]
-MODEL_TYPE = [1]*9
-START_EPOCH = [0]*9
+
+MODEL_TYPE = [0]*6
+START_EPOCH = [0]*6 
 
 def train_model():
     wandb.login()

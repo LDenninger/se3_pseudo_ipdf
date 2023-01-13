@@ -1,10 +1,13 @@
 import numpy as np
 import torch
 import pytorch3d.transforms as tt
+import scipy.spatial.transform.rotation as R
 
 def generate_dataset(file_name=None, mode=0):
     if mode==0:
         dataset_poses = _gen_method_01()
+    if mode==1:
+        dataset_poses = _gen_method_random
     if file_name is not None:
         try:
             torch.save(dataset_poses, file_name)
@@ -13,6 +16,12 @@ def generate_dataset(file_name=None, mode=0):
 
         print(f"Dataset was saved to: {file_name}")
     return dataset_poses
+
+def _gen_method_random():
+    random_rotations = R.random(50000)
+    random_rotations = torch.from_numpy(random_rotations.as_matrix())
+
+    return random_rotations
 
 def _gen_method_01():
 

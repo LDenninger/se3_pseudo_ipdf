@@ -6,15 +6,17 @@ import numpy as np
 
 wandb_api = wandb.Api()
 
-EXP_NAMES=["tabletop_3_bowl_uni_3", "tabletop_3_bowl_3", "tabletop_3_can_2", "tabletop_3_can_uni_1", "tabletop_3_crackerbox_1", "tabletop_3_crackerbox_uni_1"]
+EXP_NAMES = [
+"tabletop_4_bowl_uni_1",
+]
 ROTATION_DIR = P("ipdf_se3/SO3_IPDF")
 TRANSLATION_DIR = P("ipdf_se3/Translation_IPDF")
 SAVE_PATH = P("output")
 
 
-def save_data(variable_names, data, exp_name):
+def save_data(variable_names, data, exp_name, model):
 
-    f_name = str(SAVE_PATH/(exp_name+"_"+str(args.model)+".txt"))
+    f_name = str(SAVE_PATH/(exp_name+"_"+str(model)+".txt"))
 
     with open(f_name, "w") as f:
         f.write("\n")
@@ -27,9 +29,9 @@ def save_data(variable_names, data, exp_name):
 
 
 
-def export_data(variable_names, exp_name):
+def export_data(variable_names, exp_name, model):
 
-    if args.model==0:
+    if model==0:
         path = ROTATION_DIR / exp_name
     else:
         path = TRANSLATION_DIR / exp_name
@@ -43,7 +45,7 @@ def export_data(variable_names, exp_name):
         
         export_data.append(data)
     
-    save_data(variable_names, export_data, exp_name)
+    save_data(variable_names, export_data, exp_name, model)
 
     return export_data
 
@@ -61,8 +63,13 @@ if __name__=="__main__":
     elif args.model==1:
         var_names = ["TrainLoss", "Loglikelihood", "EstimateError"]
 
-
+    
     for exp_name in EXP_NAMES:
-        export_data(var_names, exp_name)
+        for i in [0,1]:
+            if i==0:
+                var_names = ["TrainLoss", "Loglikelihood", "MeanAngularError", "RecallMeanAngularError"]
+            elif i==1:
+                var_names = ["TrainLoss", "Loglikelihood", "EstimateError"]
+            export_data(var_names, exp_name, i)
 
 

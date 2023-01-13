@@ -29,6 +29,8 @@ def model_evaluation(exp_dir):
         return False
     import ipdb; ipdb.set_trace()
 
+    utils.set_random_seed(42)
+
     print("_"*60)
     print(f"Starting evaluation for model under path: {str(exp_dir)}")
 

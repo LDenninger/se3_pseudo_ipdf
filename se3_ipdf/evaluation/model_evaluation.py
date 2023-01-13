@@ -208,7 +208,6 @@ def rotation_model_evaluation(model, dataset, hyper_param_rot, model_points=None
     acc15_list = []
     acc30_list = []
 
-
     for (i, dataset_obj) in enumerate(dataset):
         print(f"\nEvaluation for object no. {i+3}: \n")
         # Evaluation of the Loglikelihood

@@ -2,7 +2,6 @@ import cv2
 from matplotlib import pyplot as plt
 import numpy as np
 import stillleben as sl
-sl.init_cuda()
 
 import torch
 import torchvision

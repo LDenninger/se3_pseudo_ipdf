@@ -5,7 +5,8 @@ import argparse
 import config
 
 
-EXP_NAME_LIST = ["tabletop_4_can_occ_2", "tabletop_4_box_occ_2","tabletop_4_bowl_occ_2"]
+#EXP_NAME_LIST = ["tabletop_4_can_occ_2", "tabletop_4_box_occ_2","tabletop_4_bowl_occ_2"]
+EXP_NAME_LIST = ["tabletop_4_box_occ_1", "tabletop_4_bowl_occ_1", "tabletop_4_can_occ_1"]
 DATASET_LIST = ["tabletop"]*3
 OBJ_ID_LIST = [3,4,5]
 MODEL_TYPE = [2]*3

@@ -61,7 +61,7 @@ if __name__=="__main__":
     elif args.model==1:
         var_names = ["TrainLoss", "Loglikelihood", "EstimateError"]
 
-
+    
     for exp_name in EXP_NAMES:
         for i in [0,1]:
             if i==0:
@@ -69,6 +69,5 @@ if __name__=="__main__":
             elif i==1:
                 var_names = ["TrainLoss", "Loglikelihood", "EstimateError"]
             export_data(var_names, exp_name, i)
-
 
 

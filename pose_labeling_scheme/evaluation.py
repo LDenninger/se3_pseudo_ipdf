@@ -4,6 +4,7 @@ import pytorch3d.ops as ops
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -70,12 +71,15 @@ def evaluation_mann(pseudo_gt):
 
     return mean
 
-def evaluation_adds(pseudo_gt, ground_truth, object_model, diameter, obj_id):
+def evaluation_adds(pseudo_gt, ground_truth, object_model):
+
 
 
     pseudo_gt = pseudo_gt.to(DEVICE).float()
     ground_truth = ground_truth.to(DEVICE).float()
     object_model = object_model.float()
+
+
 
     batch_size = pseudo_gt.shape[0]
 
@@ -83,7 +87,6 @@ def evaluation_adds(pseudo_gt, ground_truth, object_model, diameter, obj_id):
     """if obj_id==5:
         pseudo_gt[:,:3,-1] = torch.repeat_interleave(torch.mean(pseudo_gt[:,:3,-1], dim=0).unsqueeze(0), batch_size, dim=0)"""
 
-    threshold = torch.arange(start=1, end=150, step=1)*1e-3*diameter
 
 
     point_cloud_gt = object_model @ ground_truth[:3,:3].T + ground_truth[:3,-1]
@@ -92,19 +95,12 @@ def evaluation_adds(pseudo_gt, ground_truth, object_model, diameter, obj_id):
     point_cloud_pgt = torch.einsum('aj,bjk->bak', object_model, torch.transpose(pseudo_gt[:,:3,:3], -2, -1)) +  pseudo_gt[:,:3,-1].unsqueeze(1)
 
     adds_distance, idx, nn = ops.knn_points(point_cloud_pgt, point_cloud_gt)
-    adds_distance = torch.sqrt(adds_distance)
-    adds_distance = torch.mean(adds_distance.squeeze(), dim=-1)
+    adds_distance = torch.sqrt(adds_distance).squeeze()
+    adds_distance = torch.mean(adds_distance, dim=-1)
 
-    under_threshold = []
 
-    mean_distance = torch.mean(adds_distance)
+    return adds_distance.tolist()
 
-    """for t in threshold:
-        tmp = adds_distance < t
-        tmp = torch.sum(torch.nonzero(tmp))/batch_size
-        under_threshold.append(tmp)"""
-    
-    return mean_distance.item()
 
 
 def visualize_pointclouds(p_1, p_2, filename="output/test.png"):

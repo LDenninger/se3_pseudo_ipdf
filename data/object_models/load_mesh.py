@@ -5,7 +5,6 @@ import torch
 from pytorch3d.io import load_ply
 from pytorch3d.renderer import TexturesVertex
 import stillleben as sl
-sl.init_cuda()
 
 
 obj_id_to_file= {

@@ -3,6 +3,7 @@ import yaml
 
 from .pls_config import tless_pls_config_data, tabletop_pls_config_data
 from .se3_ipdf_config import tabletop_rot_config_data, tabletop_trans_config_data, tless_rot_config_data, tless_trans_config_data
+from .demo_set import demo_config_data
 
 
 MODEL_CONFIG_PATH = P("config/se3_ipdf_config")
@@ -40,6 +41,14 @@ def load_model_translation_config(dataset: str, obj_id: str):
         return load_model_translation_config(dataset, obj_id)
     
     return config
+
+def load_demo_config(obj_id):
+
+    hyper_param = demo_config_data
+    hyper_param["obj_id"] = obj_id
+
+    return hyper_param
+
 
 def load_pls_config(dataset: str, obj_id: str):
 

@@ -16,10 +16,13 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ## Define multiple pre-defined experiments to run, automatically used, if no experiment is provided as an argument ##
 
-EXP_NAME_LIST = ["tabletop_4_can_1", "tabletop_4_can_ana_1", "tabletop_4_can_single_1", "tabletop_4_can_uni_1", "tabletop_4_can_uni_occ_1", 
-                "tabletop_4_can_ana_occ_1", "tabletop_4_can_single_occ_1", "tabletop_4_can_conv2_1", "tabletop_3_can_conv3_1"]
-MODEL_TYPE = [1]*9
-START_EPOCH = [0]*9
+EXP_NAME_LIST = ["tabletop_4_can_3","tabletop_4_can_ana_3","tabletop_4_can_ana_occ_2","tabletop_4_can_occ_3", "tabletop_4_can_single_2", "tabletop_4_can_single_occ_2", "tabletop_4_can_uni_3"]
+
+
+
+
+MODEL_TYPE = [1]*7
+START_EPOCH = [0]*7
 
 def train_model():
     wandb.login()

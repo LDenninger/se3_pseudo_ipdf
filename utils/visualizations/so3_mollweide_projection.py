@@ -17,7 +17,7 @@ def visualize_so3_probabilities(rotations,
                                 save_path=None,
                                 display_gt_set=False,
                                 display_threshold_probability=0,
-                                show_color_wheel=True,
+                                show_color_wheel=False,
                                 canonical_rotation=Rotation.from_euler('XYZ', np.float32([0.1, 0.2, 0.3])).as_matrix(),
                                 return_img=False):
     """Plot a single distribution on SO(3) using the tilt-colored method.
@@ -190,7 +190,7 @@ def visualize_so3_rotations(rotations,
                                 display_gt_set=False,
                                 fig=None,
                                 save_path=None,
-                                show_color_wheel=True,
+                                show_color_wheel=False,
                                 canonical_rotation=Rotation.from_euler('XYZ', np.float32([0.1, 0.2, 0.3])).as_matrix(),
                                 labels=None):
     """Plot a single distribution on SO(3) using the tilt-colored method.

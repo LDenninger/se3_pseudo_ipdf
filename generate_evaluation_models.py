@@ -6,7 +6,7 @@ import yaml
 import se3_ipdf.models as models
 import argparse
 
-<<<<<<< HEAD
+
 PATH_NAME = P("experiments/aa_evaluation_models_3")
 
 EXP_NAME_LIST =["tabletop_4_can_3","tabletop_4_can_ana_3","tabletop_4_can_ana_occ_2","tabletop_4_can_occ_3", "tabletop_4_can_single_2", "tabletop_4_can_single_occ_2", "tabletop_4_can_uni_3",
@@ -15,19 +15,8 @@ EXP_NAME_LIST =["tabletop_4_can_3","tabletop_4_can_ana_3","tabletop_4_can_ana_oc
 
 ROT_EPOCH_LIST = ["40"]*14
 TRANS_EPOCH_LIST = ["20"]*14
-=======
-PATH_NAME = P("experiments/aa_evaluation_models_2")
-
-EXP_NAME_LIST = [
-"tabletop_4_box_single_occ_1",
 
 
-
-]
->>>>>>> 3a2aa259b2e9e5ebbdf50034ad6626ea77ea865f
-
-ROT_EPOCH_LIST = ["40"]*1
-TRANS_EPOCH_LIST = ["10"]*1
 def generate_file_structure(exp_name):
 
     p = PATH_NAME / exp_name

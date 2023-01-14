@@ -7,13 +7,21 @@ import se3_ipdf.models as models
 import se3_ipdf.evaluation as evaluation
 import data
 import utils.visualizations as visualizations
+import utils
 
 EXP_NAME_LIST = [
-  "tabletop_box_trans_test"
+  #"tabletop_4_can_uni_3",
+  #"tabletop_4_can_3",
+  "tabletop_4_can_occ_3",
+  #"tabletop_4_can_single_2",
+  #"tabletop_4_can_ana_3"
+
+
+
 
 ]
-ROT_EPOCH_LIST = ["10"]
-TRANS_EPOCH_LIST = ["20"]
+ROT_EPOCH_LIST = ["30"]*5
+TRANS_EPOCH_LIST = ["final"]*5
 
 def visualize(exp_name, mode):
 
@@ -33,7 +41,7 @@ def visualize(exp_name, mode):
             hyper_param_trans = yaml.safe_load(f)
         model = models.load_ensamble_model(hyper_param_rot=hyper_param_rot, hyper_param_trans=hyper_param_trans, arguments=args, exp_name=exp_name)
         obj_id = hyper_param_rot["obj_id"][0]
-        dataset = data.load_model_dataset(hyper_param_rot, validation_only=True)[0]
+        dataset = data.load_single_model_dataset(hyper_param_rot, translation=True, validation_only=True)
 
         visualizations.visualize_ensamble_model(model=model, dataset=dataset, save_dir=os.path.join(exp_dir, "visualizations"), hyper_param=hyper_param_rot)
 

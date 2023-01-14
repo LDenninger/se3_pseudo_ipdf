@@ -17,17 +17,28 @@ DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 EXP_NAME_LIST = ["demonstration_can_1", "demonstration_box_1", "demonstration_bowl_1"]
 
-EXP_NAME_LIST = ["tabletop_4_can_3","tabletop_4_can_ana_3","tabletop_4_can_ana_occ_2","tabletop_4_can_occ_3", "tabletop_4_can_single_2", "tabletop_4_can_single_occ_2", "tabletop_4_can_uni_3"]
+
+"""EXP_NAME_LIST =[
+        "tabletop_4_bowl_4",
+        "tabletop_4_bowl_ana_3",
+        "tabletop_4_bowl_ana_occ_3",
+        "tabletop_4_bowl_occ_4",
+        "tabletop_4_bowl_single_3",
+        "tabletop_4_bowl_single_occ_3",
+        "tabletop_4_bowl_uni_4",
 
 
 
+    ]"""
 
-MODEL_TYPE = [1]*7
-START_EPOCH = [0]*7
+
+MODEL_TYPE = [1]*3
+START_EPOCH = [0]*3
 
 def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
+    
     if args.log:
         if model_type==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")

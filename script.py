@@ -18,6 +18,18 @@ def script_1():
     #EXP_NAME_LIST = [ "tabletop_3_bowl_ana_1", "tabletop_3_bowl_single_1", "tabletop_3_can_ana_1", "tabletop_3_can_single_1", "tabletop_3_crackerbox_ana_1", "tabletop_3_crackerbox_single_1"]
     EXP_NAME_LIST = ["demonstration_bowl_1", "demonstration_box_1", "demonstration_can_1"]
 
+    EXP_NAME_LIST =[
+        "tabletop_4_bowl_4",
+        "tabletop_4_bowl_ana_3",
+        "tabletop_4_bowl_ana_occ_3",
+        "tabletop_4_bowl_occ_4",
+        "tabletop_4_bowl_single_3",
+        "tabletop_4_bowl_single_occ_3",
+        "tabletop_4_bowl_uni_4",
+
+
+
+    ]
     #OBJ_ID = 3
     #MATERIAL = [True, False, True, True, False, True, True, False, True]
 
@@ -47,23 +59,23 @@ def script_1():
         #config["mlp_layers"] = [256]*3
         #config["warmup_steps"] = 20
         #config["num_val_iter"] = 40
-        config["single_gt"] = False
-        config["occlusion"] = False
-        config["pseudo_gt"] = False
+        #config["single_gt"] = False
+        #config["occlusion"] = False
+        #config["pseudo_gt"] = False
         config["backbone"] = "convnext_tiny"
         config["backbone_layer"] = 1
-        config["obj_id"] = [config["obj_id"]]
+        config["obj_id"] = [5]
 
         with open(f1, "w") as f:
             config = yaml.safe_dump(config, f)
         
-        """with open(f2, "r") as f:
+        with open(f2, "r") as f:
             config = yaml.safe_load(f)
         #config["length"] = 15000
         #config["backbone"] = "convnext_tiny"
         #config["obj_id"] = [config["obj_id"]]
         config["backbone"] = "convnext_tiny"
-        config["backbone_layer"] = 1"""
+        config["backbone_layer"] = 1
         #config["num_epochs"] = 50
         #config["mlp_layers"] = [256]*2
         #config["num_train_iter"] = 200
@@ -75,7 +87,10 @@ def script_1():
         #config["eval_freq"] = 2
         ##config["occlusion"] = True
         #config["pseudo_gt"] = True
-#
+        config["backbone"] = "convnext_tiny"
+        config["backbone_layer"] = 1
+        config["obj_id"] = [5]
+
         #config["eval_freq"] = 2
 
 

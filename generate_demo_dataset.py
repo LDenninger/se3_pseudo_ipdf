@@ -2,12 +2,12 @@ import torch
 from pathlib import Path as P
 
 import data
-EXP_NAME = ["demonstration_can_1", "demonstration_box_1", "demonstration_bowl_1"]
+EXP_NAME = ["demonstration_can_2", "demonstration_box_2", "demonstration_bowl_2"]
+
 
 if __name__=="__main__":
         
 
-    import ipdb; ipdb.set_trace()
 
     for (i, exp_name) in enumerate(EXP_NAME):
 

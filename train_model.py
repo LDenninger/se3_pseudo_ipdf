@@ -4,6 +4,7 @@ import yaml
 import os
 import torch
 import ipdb
+import stillleben as sl
 
 import utils
 import data
@@ -14,11 +15,12 @@ import se3_ipdf.models as models
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-EXP_NAME_LIST = ["tless_3_obj_05_1","tless_3_obj_07_1","tless_3_obj_17_1","tless_3_obj_20_1","tless_3_obj_23_1","tless_3_obj_27_1"]
+EXP_NAME_LIST = ["demonstration_can_1", "demonstration_box_1", "demonstration_bowl_1"]
 
 
-MODEL_TYPE = [0]*6
-START_EPOCH = [0]*6 
+
+MODEL_TYPE = [0]*3
+START_EPOCH = [0]*3 
 
 def train_model():
     wandb.login()
@@ -41,8 +43,12 @@ def train_model():
 
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param, demo=args.demo)
+                if args.demo:
+                    train_poses = torch.load(os.path.join(exp_dir, "dataset", "train_dataset.pt"))
+                    train_loader, val_loader = data.load_demo_dataset(hyper_param, poses=train_poses)
+                
+                else:
+                    train_loader, val_loader = data.load_single_model_dataset(hyper_param)
                 
 
                 
@@ -75,8 +81,12 @@ def train_model():
 
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
-
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True, demo=args.demo)
+                if args.demo:
+                    train_poses = torch.load(os.path.join(exp_dir, "dataset", "train_dataset.pt"))
+                    train_loader, val_loader = data.load_demo_dataset(hyper_param, poses=train_poses)
+                
+                else:
+                    train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
 
@@ -105,8 +115,11 @@ def train_model():
 
                 print("Config file was loaded from: " + config_file_name + "\n")
 
-                
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param, demo=args.demo)
+                if args.demo:
+                    train_poses = torch.load(os.path.join(exp_dir, "dataset", "train_dataset.pt"))
+                    train_loader, val_loader = data.load_demo_dataset(hyper_param, poses=train_poses)
+                else:             
+                    train_loader, val_loader = data.load_single_model_dataset(hyper_param, demo=args.demo)
                 model, optimizer, start_epoch = models.load_rotation_model(hyper_param, args, exp_name)
 
                 wandb.watch(model, log='all', log_freq=10)
@@ -133,8 +146,12 @@ def train_model():
 
                 wandb.config = hyper_param
                 print("Config file was loaded from: " + config_file_name + "\n")
-
-                train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True)
+                if args.demo:
+                    train_poses = torch.load(os.path.join(exp_dir, "dataset", "train_dataset.pt"))
+                    train_loader, val_loader = data.load_demo_dataset(hyper_param, poses=train_poses)
+                
+                else:
+                    train_loader, val_loader = data.load_single_model_dataset(hyper_param, translation=True)
                 
                 model, optimizer, start_epoch = models.load_translation_model(hyper_param, args, exp_name)
                 wandb.watch(model, log='all', log_freq=10)
@@ -158,6 +175,8 @@ if __name__ == "__main__":
     parser.add_argument('--demo', default=False, action="store_true")
     args = parser.parse_args()
 
+    if args.demo:
+        sl.init_cuda()
 
     if args.exp_name is not None:
         experiment_dir_list = [("experiments/exp_" + args.exp_name)]

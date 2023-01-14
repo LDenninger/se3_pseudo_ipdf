@@ -29,6 +29,9 @@ class YCBPoseDataset(Dataset):
         )
 
         self.poses = poses
+        self.gamma = 0.12
+
+
 
     def __getitem__(self, idx):
         if self.poses is not None:
@@ -62,4 +65,5 @@ class YCBPoseDataset(Dataset):
         }
 
     def __len__(self):
-        return self.poses.shape[0]
+        
+        return self.poses.shape[0] if self.poses is not None else 20000

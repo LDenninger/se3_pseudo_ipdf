@@ -19,7 +19,6 @@ class Renderer:
     FOV_X = 20.0 * pi / 180.0
     
     def __init__(self, obj_id, img_size=(640, 480)):
-        sl.init()
         camera_position = torch.Tensor([0, 1e-20, -2.5])
         bbox_scale = 0.7
     

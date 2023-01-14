@@ -62,7 +62,7 @@ def load_single_model_dataset(hyper_param, translation=False, validation_only=Fa
                                             train_set=False,
                                             train_as_test=hyper_param["train_as_test"])
 
-    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8)
+    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=0)
 
     # Training data
     if not validation_only:
@@ -99,7 +99,7 @@ def load_model_dataset(hyper_param, translation=False, validation_only=False):
     #import ipdb; ipdb.set_trace()
 
     for obj_id in hyper_param["obj_id"]:
-        
+
         # Validation data
         if hyper_param["material"]:
             data_dir = data.id_to_path[obj_id]

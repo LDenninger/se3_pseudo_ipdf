@@ -79,7 +79,6 @@ def run_rotation_training(model, train_dataset, val_dataset, optimizer, hyper_pa
                                       optimizer=optimizer)
         # validation
         model.eval()
-
         with torch.no_grad():
             
             llh = []

@@ -15,7 +15,7 @@ import se3_ipdf.models as models
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-EXP_NAME_LIST = ["demonstration_can_1", "demonstration_box_1", "demonstration_bowl_1"]
+EXP_NAME_LIST = ["demonstration_can_2", "demonstration_box_2", "demonstration_bowl_2"]
 
 
 """EXP_NAME_LIST =[
@@ -38,7 +38,6 @@ START_EPOCH = [0]*3
 def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
-    
     if args.log:
         if model_type==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")

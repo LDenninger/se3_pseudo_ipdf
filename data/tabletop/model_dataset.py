@@ -80,6 +80,7 @@ class TabletopPoseDataset(Dataset):
 
     def __getitem__(self, idx):
         # Set index for training or validation set
+        import ipdb; ipdb.set_trace()
         if self.train_set == False:
             idx = 15000+idx
         data = os.path.join(self.data_dir, str(idx).zfill(6))
@@ -165,17 +166,17 @@ class TabletopPoseDataset(Dataset):
             if not self.full:
                 if self.bb_crop and self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
+                        image = torch.load(os.path.join(data, "resize_mask_occ_crop_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "mask_crop_rgb_tensor.pt"))
                 elif self.bb_crop and not self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
+                        image = torch.load(os.path.join(data, "resize_occ_crop_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "crop_rgb_tensor.pt"))
                 elif not self.bb_crop and self.mask:
                     if preset_occ:
-                        image = torch.load(os.path.join(data, "mask_occ_crop_rgb_tensor.pt"))
+                        image = torch.load(os.path.join(data, "resize_mask_occ_rgb_tensor.pt"))
                     else:
                         image = torch.load(os.path.join(data, "mask_rgb_tensor.pt"))
                 elif not self.bb_crop and not self.mask:

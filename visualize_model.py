@@ -26,7 +26,7 @@ TRANS_EPOCH_LIST = ["final"]*5
 def visualize(exp_name, mode):
 
     exp_dir = "experiments/exp_" + exp_name
-
+    utils.set_random_seed(24)
 
     if mode==0:
 

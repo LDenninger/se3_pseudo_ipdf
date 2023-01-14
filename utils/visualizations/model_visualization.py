@@ -87,6 +87,7 @@ def visualize_translation_model(model, dataset, hyper_param, save_dir, num_batch
 
 def visualize_ensamble_model(model, dataset, hyper_param, save_dir, num_batch=1, batch_size=8, displ_threshold=1e-4):
     progress_bar = tqdm(enumerate(dataset), total=num_batch)
+    import ipdb; ipdb.set_trace()
     for (step, batch) in progress_bar:
         if step==num_batch:
             break

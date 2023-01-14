@@ -80,7 +80,6 @@ class TabletopPoseDataset(Dataset):
 
     def __getitem__(self, idx):
         # Set index for training or validation set
-        import ipdb; ipdb.set_trace()
         if self.train_set == False:
             idx = 15000+idx
         data = os.path.join(self.data_dir, str(idx).zfill(6))

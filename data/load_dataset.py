@@ -62,7 +62,7 @@ def load_single_model_dataset(hyper_param, translation=False, validation_only=Fa
                                             train_set=False,
                                             train_as_test=hyper_param["train_as_test"])
 
-    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=0)
+    val_loader = DataLoader(dataset=data_val, batch_size=hyper_param['batch_size_val'], drop_last=True ,shuffle=True, num_workers=8)
 
     # Training data
     if not validation_only:

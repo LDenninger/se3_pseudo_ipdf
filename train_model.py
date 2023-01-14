@@ -23,7 +23,7 @@ START_EPOCH = [0]*6
 def train_model():
     wandb.login()
     # Set up Weights'n'Biases logging
-    import ipdb; ipdb.set_trace()
+    
     if args.log:
         if model_type==0:
             config_file_name = os.path.join(exp_dir, "config_rotation.yaml")
@@ -155,7 +155,7 @@ if __name__ == "__main__":
     parser.add_argument('-c_trans', metavar='PATH', type=str, default=None, dest="trans_epoch", help="Checkpoint epoch for the translation model")
     parser.add_argument('-model', type=int, default=0, help="0: Rotation model, 1: Translation model")
     parser.add_argument('-wandb', action="store_true", dest="log", help="Observed training using wandb")
-    parser.add_argument('--demo', type=bool, default=False, action="store_true")
+    parser.add_argument('--demo', default=False, action="store_true")
     args = parser.parse_args()
 
 

@@ -7,13 +7,21 @@ import se3_ipdf.models as models
 import se3_ipdf.evaluation as evaluation
 import data
 import utils.visualizations as visualizations
+import utils
 
 EXP_NAME_LIST = [
-  "tabletop_box_trans_test"
+  "tabletop_4_box_uni_3",
+  "tabletop_4_box_3",
+  "tabletop_4_box_occ_3",
+  "tabletop_4_box_single_2",
+  "tabletop_4_box_ana_2"
+
+
+
 
 ]
-ROT_EPOCH_LIST = ["10"]
-TRANS_EPOCH_LIST = ["20"]
+ROT_EPOCH_LIST = ["40"]*5
+TRANS_EPOCH_LIST = ["final"]*5
 
 def visualize(exp_name, mode):
 

@@ -132,6 +132,8 @@ class TabletopPoseDataset(Dataset):
                     else:
                         image_full = torch.load(os.path.join(data, "occ_rgb_tensor.pt")) / 255.
                         image_full_resize_mask = torch.load(os.path.join(data, "resize_mask_occ_rgb_tensor.pt")) / 255.
+                    image_full_resize_mask = torchvision.transforms.functional.adjust_gamma(image_full_resize_mask, gamma=self.gamma)
+                    image_full_resize_mask = self.ResNetTransform(image_full_resize_mask)
 
                 except:
                     return self.__getitem__((idx+1)%self.__len__())

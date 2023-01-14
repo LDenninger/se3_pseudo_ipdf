@@ -90,7 +90,7 @@ def visualize_ensamble_model(model, dataset, hyper_param, save_dir, num_batch=1,
     for (step, batch) in progress_bar:
         if step==num_batch:
             break
-            
+        
         img = batch['image'].to(DEVICE)
         img_trans = batch['image_trans_input'].to(DEVICE)
         img_raw = batch['image_raw']

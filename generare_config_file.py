@@ -3,6 +3,8 @@ import argparse
 
 import config
 
+## Script to generate a new config file based on the default config file. ##
+
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser(description="Hyperparameters for the configuration")

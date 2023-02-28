@@ -7,6 +7,8 @@ import argparse
 import data
 import utils
 
+## Script to generate and save occlusion images for the photorealistic dataset ##
+
 
 img_size=(224,224)
 BB_SIZE = (560,560)

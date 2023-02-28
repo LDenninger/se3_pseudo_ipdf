@@ -2,6 +2,8 @@ from utils import tensor_extraction, tensor_correction
 from data import id_to_path, id_to_path_uniform
 
 
+## Script to run the exraction of the data of the photorealistic dataset and save them separately in pytorch tensor files. ##
+
 START_LIST = [0]*2
 END_LIST = [20000]*2
 DATA_DIR_LIST = [""]

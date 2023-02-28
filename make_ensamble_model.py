@@ -5,6 +5,8 @@ import yaml
 
 import se3_ipdf.models as models
 
+## Script to generate an ImplicitPosePDF model from the trained Rotation-IPDF and Translation-IPDF models. ##
+
 EXP_NAME_LIST = ["tabletop_3_bowl_4", "tabletop_3_bowl_uni_3", "tabletop_3_can_2", "tabletop_3_can_uni_2","tabletop_3_crackerbox_2", "tabletop_3_crackerbox_uni_2", ]
 
 ROT_EPOCH_LIST = ["20", "20", "60", "60", "30", "30"]

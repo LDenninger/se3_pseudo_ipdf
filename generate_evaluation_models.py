@@ -6,6 +6,7 @@ import yaml
 import se3_ipdf.models as models
 import argparse
 
+## Script to generate evaluation models from pre-trained models ##
 
 PATH_NAME = P("experiments/aa_evaluation_models_3")
 

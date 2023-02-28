@@ -12,6 +12,8 @@ import config
 import se3_ipdf
 import se3_ipdf.models as models
 
+## Script to train the Rotation-IPDF and Translation-IPDF models. ##
+
 
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

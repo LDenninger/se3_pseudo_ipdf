@@ -7,6 +7,8 @@ import numpy as np
 import ipdb
 
 
+## Script to run the evaluation of the pseudo ground-truth sets ##
+
 import utils.visualizations as visualizations
 import utils
 import config

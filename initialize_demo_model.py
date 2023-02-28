@@ -5,6 +5,9 @@ import yaml
 
 import data
 import config
+
+## Script to initialize the file system for the demonstration models ##
+
 EXP_NAME = ["demonstration_can_1", "demonstration_box_1", "demonstration_bowl_1"]
 OBJ_ID = [3,4,5]
 

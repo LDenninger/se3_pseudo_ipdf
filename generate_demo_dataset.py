@@ -2,6 +2,9 @@ import torch
 from pathlib import Path as P
 
 import data
+
+## Script to generate a demonstration dataset ##
+
 EXP_NAME = ["demonstration_can_2", "demonstration_box_2", "demonstration_bowl_2"]
 
 

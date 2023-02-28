@@ -9,6 +9,8 @@ import data
 import utils
 import utils.visualizations as visualizations
 
+## Script to generate the visualizations used in the thesis ##
+
 IMG_SIZE= (500,500)
 DIR = P("output/thesis_demo")
 

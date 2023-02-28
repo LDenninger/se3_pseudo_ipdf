@@ -5,6 +5,8 @@ import argparse
 import config
 
 
+## Script to initialize the file structure and config for a new experiment ##
+
 #EXP_NAME_LIST = ["tabletop_4_can_occ_2", "tabletop_4_box_occ_2","tabletop_4_bowl_occ_2"]
 EXP_NAME_LIST = ["tabletop_4_box_occ_1", "tabletop_4_bowl_occ_1", "tabletop_4_can_occ_1"]
 DATASET_LIST = ["tabletop"]*3

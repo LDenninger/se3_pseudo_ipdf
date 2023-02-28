@@ -11,6 +11,8 @@ from pose_labeling_scheme import pose_labeling_scheme
 from pose_labeling_scheme.utils import convert_points_opencv_opengl
 import utils.visualizations as visualizations
 
+## Script to run the pose labeling scheme for a given dataset ##
+
 DEVICE = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 OBJ_ID_LIST = [8]*2

@@ -8,6 +8,10 @@ import se3_ipdf.evaluation as evaluation
 import utils.visualizations as vis
 import data
 import utils
+
+## Script to run the evaluation performed for the thesis ##
+
+
 BASE_DIR = "experiments/aa_evaluation_models"
 
 

@@ -9,6 +9,8 @@ import data
 import utils.visualizations as visualizations
 import utils
 
+## Script to generate visualizations of the results of a trained model. ##
+
 EXP_NAME_LIST = [
   #"tabletop_4_can_uni_3",
   #"tabletop_4_can_3",

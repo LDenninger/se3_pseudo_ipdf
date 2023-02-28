@@ -4,6 +4,9 @@ import argparse
 from pathlib import Path as P
 import numpy as np
 
+## Script to retrieve the evaluation data from the W&B API ##
+
+
 wandb_api = wandb.Api()
 
 EXP_NAMES=["tabletop_4_can_2", "tabletop_4_can_uni_1"]

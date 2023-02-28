@@ -12,7 +12,7 @@ Each distribution is parametrized through a neural network. Using an efficient e
 Furthermore, this thesis proposes the Automatic Pose Labeling Scheme to generate multiple pseudo ground-truth poses for each image corresponding to the symmetries to train the ImplicitPosePDF model.
 Given an RGB-D image and a 3D object model, the pipeline produces the set of pseudo ground-truth poses through a two-stage point cloud registration process with a succeeding render-and-compare validation stage.
 
-![Demonstration of pose distribution]{./demo_data/bowl_demo.gif}
+
 
 ##Running Guide
 The project can be run within a singularity image. The  singularity image can be found in the shared filesystem under: /* /home/nfs/inf6/data/singularity_images/rnc.sif */

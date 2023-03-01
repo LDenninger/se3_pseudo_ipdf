@@ -12,6 +12,8 @@ Each distribution is parametrized through a neural network. Using an efficient e
 Furthermore, this thesis proposes the Automatic Pose Labeling Scheme to generate multiple pseudo ground-truth poses for each image corresponding to the symmetries to train the ImplicitPosePDF model.
 Given an RGB-D image and a 3D object model, the pipeline produces the set of pseudo ground-truth poses through a two-stage point cloud registration process with a succeeding render-and-compare validation stage.
 
+![](./demo_data/can_demo.gif)
+
 For further questions you can contact me under: `l_denninger@uni-bonn.de` or `Luis0512@web.de`
 
 ## Installation/Running Guide

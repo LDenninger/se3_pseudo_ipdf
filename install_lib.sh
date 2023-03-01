@@ -1,0 +1,1 @@
+singularity run --nv  --bind /usr/share/glvnd/egl_vendor.d:/usr/share/glvnd/egl_vendor.d -B /home/nfs/inf6/data/datasets/ --env PATH=$HOME/.local/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin /home/nfs/inf6/data/singularity_images/rnc.sif python -m pip install open3d 

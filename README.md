@@ -19,7 +19,7 @@ The project can be simply cloned from the repository. The files can be run using
 Unfortunately, the image is missing a few necessary packages. Thus, please make sure to run the the script `install_lib.sh`. 
 
 Moreover, to be able to use the Stillleben library we require an older version of the PyTorch library that does not include the ConvNeXt feature extractor and the pre-trained weights. \
-Thus, we implemented the ConvNeXt ourselves according to the PyTorch implementation and the pre-trained weights have to be manually loaded from the PyTorch Hub to: `./se3_ipdf/models/weights/{ConvNeXt_TIny_Weights.pth/ConvNeXt_Small_Weights.pth/ConvNeXt_Base_Weights.pth}` \
+Thus, we implemented the ConvNeXt ourselves according to the PyTorch implementation and the pre-trained weights have to be manually loaded from the PyTorch Hub to: `./se3_ipdf/models/weights/{ConvNeXt_TIny_Weights.pth/ConvNeXt_Small_Weights.pth/ConvNeXt_Base_Weights.pth}` 
 
 ### Running
 
@@ -32,32 +32,32 @@ For evaluation of the trained model use `./evaluate_model.py`. To produce visual
 ## Datasets
 The model is evaluated on a custom dataset, the Photorealistic dataset and the T-Less dataset. The datasets can be found in the shared filesystem. \
 Photorealistic dataset: `/home/nfs/inf6/data/datasets/IPDF_tabletop` \
-T-Less dataset: `/home/nfs/inf6/data/datasets/T-Less` \
+T-Less dataset: `/home/nfs/inf6/data/datasets/T-Less` 
 
 ## Project Structure
 
 ### Configurations
 The config files and utils functions for the config for the ImplicitPosePDF and Automatic Pose Labeling Scheme can be found under: `./config` \
-The default configuration files are provided. Specific config files for the different datasets and objects can be generated manually using `./generate_config_file.py` \
+The default configuration files are provided. Specific config files for the different datasets and objects can be generated manually using `./generate_config_file.py` 
 
 ### Data
-The PyTorch dataloader for the different dataset and the functions to load the object models can be found under: `./data` \
+The PyTorch dataloader for the different dataset and the functions to load the object models can be found under: `./data` 
 
 ### ImplicitPosePDF Model
 The ImplicitPosePDF model and all corresponding methods can be found under: `./se3_ipdf` \
 The Rotation-IPDF, Translation-IPDF, IPPDF and ConvNeXt models can be found under: `./se3_ipdf/models` \
 The functions used for sampling the rotation and translation space can be found under: `./se3_ipdf/utils` \
-The functions for evaluation can be found under: `./se3_ipdf/evaluation` \
+The functions for evaluation can be found under: `./se3_ipdf/evaluation` 
 
 ### Automatic Pose Labeling Scheme
 The complete pose labeling scheme can be found under: `./pose_labeling_scheme` \
-The methods used in the three different stages can be found under: `./pose_labeling_scheme/registration` \
+The methods used in the three different stages can be found under: `./pose_labeling_scheme/registration` 
 
 ### Visualization
 The functions used for visualization to produce the qualitative results can be found under: `./utils/visualizations`
 
 ## Thesis
-A copy of the thesis and complementary material can be found under `./thesis` \
+A copy of the thesis and complementary material can be found under `./thesis` 
 
 
 

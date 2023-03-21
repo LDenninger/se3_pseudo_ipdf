@@ -1,9 +1,4 @@
-# Bachelor Thesis: Luis Denninger
-Title: "Learning Implicit Probability Distribution Functions for 6D Object Poses" \
-Author: Luis Denninger \
-Supervisor: Arul Selvam Periyasamy \
-First Examiner: Prof. Dr. Sven Behnke \
-Second Examiner: Prof. Dr. Florian Bernard 
+# Learning Implicit Probability Distribution Functions for 6D Object Poses
 
 Description:\
 This thesis proposes the ImplicitPosePDF model which aims to model pose distributions over all rigid body transformation $\mathbf{SE}(3)$ to capture object symmetries.
